@@ -39,18 +39,20 @@ Compress(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
-EXAC_FILES_DIRECTORY = '../exac_data/'
+# EXAC_FILES_DIRECTORY = '../exac_data/'
+EXAC_FILES_DIRECTORY = '/Volumes/tour-matt/exac_browser/exac_data'
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DB_HOST='localhost',
     DB_PORT=27017,
-    DB_NAME='exac', 
+    DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = 4,  # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
+    SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'new_data.vep.vcf.gz')),
+    # SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -66,7 +68,7 @@ app.config.update(dict(
     #   zcat b142_SNPChrPosOnRef_105.bcp.gz | awk '$3 != ""' | perl -pi -e 's/ +/\t/g' | sort -k2,2 -k3,3n | bgzip -c > dbsnp142.txt.bgz
     #   tabix -s 2 -b 3 -e 3 dbsnp142.txt.bgz
     DBSNP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
-    
+
     READ_VIZ_DIR="/mongo/readviz"
 ))
 
@@ -301,7 +303,7 @@ def load_gene_models():
 
 def load_cnv_models():
     db = get_db()
-    
+
     db.cnvs.drop()
     print 'Dropped db.cnvs.'
 
@@ -309,8 +311,8 @@ def load_cnv_models():
     with open(app.config['CNV_FILE']) as cnv_txt_file:
         for cnv in get_cnvs_from_txt(cnv_txt_file):
             db.cnvs.insert(cnv, w=0)
-            #progress.update(gtf_file.fileobj.tell())                                                                                                                                                                                    
-        #progress.finish()                                                                                                                                                                                                               
+            #progress.update(gtf_file.fileobj.tell())
+        #progress.finish()
 
     print 'Done loading CNVs. Took %s seconds' % int(time.time() - start_time)
 
@@ -325,8 +327,8 @@ def load_cnv_genes():
     with open(app.config['CNV_GENE_FILE']) as cnv_gene_file:
         for cnvgene in get_cnvs_per_gene(cnv_gene_file):
             db.cnvgenes.insert(cnvgene, w=0)
-            #progress.update(gtf_file.fileobj.tell())                                                                                                                                                                                    
-        #progress.finish()                                                                                                                                                                                                               
+            #progress.update(gtf_file.fileobj.tell())
+        #progress.finish()
 
     print 'Done loading CNVs in genes. Took %s seconds' % int(time.time() - start_time)
 
@@ -498,7 +500,7 @@ def precalculate_metrics():
             'hist': list(hist[0])
         })
     db.metrics.ensure_index('metric')
-    print 'Done pre-calculating metrics!'
+    # print 'Done pre-calculating metrics!'
 
 
 def get_db():

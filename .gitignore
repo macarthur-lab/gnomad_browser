@@ -7,3 +7,5 @@ misc/
 .gitignore
 autocomplete_strings.txt
 gene_cache/
+exac_env/
+database/
