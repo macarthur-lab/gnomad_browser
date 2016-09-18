@@ -729,8 +729,22 @@ def transcript_page(transcript_id):
 
             add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
 
-            t = render_template(
-                'transcript.html',
+            # t = render_template(
+            #     'transcript.html',
+            #     transcript=transcript,
+            #     transcript_json=json.dumps(transcript),
+            #     variants_in_transcript=variants_in_transcript,
+            #     variants_in_transcript_json=json.dumps(variants_in_transcript),
+            #     coverage_stats=coverage_stats,
+            #     coverage_stats_json=json.dumps(coverage_stats),
+            #     gene=gene,
+            #     gene_json=json.dumps(gene),
+            #     cnvs = cnvs_in_transcript,
+            #     cnvs_json=json.dumps(cnvs_in_transcript),
+            #     cnvgenes = cnvs_per_gene,
+            #     cnvgenes_json=json.dumps(cnvs_per_gene)
+            # )
+            t = jsonify(
                 transcript=transcript,
                 transcript_json=json.dumps(transcript),
                 variants_in_transcript=variants_in_transcript,
@@ -785,8 +799,7 @@ def region_page(region_id):
             xstart = get_xpos(chrom, start)
             xstop = get_xpos(chrom, stop)
             coverage_array = lookups.get_coverage_for_bases(db, xstart, xstop)
-            t = render_template(
-                'region.html',
+            t = jsonify(
                 genes_in_region=genes_in_region,
                 variants_in_region=variants_in_region,
                 chrom=chrom,
@@ -794,6 +807,15 @@ def region_page(region_id):
                 stop=stop,
                 coverage=coverage_array
             )
+            # t = render_template(
+            #     'region.html',
+            #     genes_in_region=genes_in_region,
+            #     variants_in_region=variants_in_region,
+            #     chrom=chrom,
+            #     start=start,
+            #     stop=stop,
+            #     coverage=coverage_array
+            # )
         print 'Rendering region: %s' % region_id
         return t
     except Exception, e:
@@ -810,8 +832,17 @@ def dbsnp_page(rsid):
         start = None
         stop = None
         print 'Rendering rsid: %s' % rsid
-        return render_template(
-            'region.html',
+        # return render_template(
+        #     'region.html',
+        #     rsid=rsid,
+        #     variants_in_region=variants,
+        #     chrom=chrom,
+        #     start=start,
+        #     stop=stop,
+        #     coverage=None,
+        #     genes_in_region=None
+        # )
+        return jsonify(
             rsid=rsid,
             variants_in_region=variants,
             chrom=chrom,

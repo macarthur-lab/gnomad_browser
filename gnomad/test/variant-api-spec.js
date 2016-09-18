@@ -1,6 +1,7 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 import R from 'ramda'
+
 import metricsExample from './exampleData/metricsExample'
 
 const API_URL = 'http://127.0.0.1:5002'

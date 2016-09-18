@@ -7,7 +7,7 @@
     "build": "webpack -d",
     "test": "node_modules/.bin/mocha",
     "test:watch": "node_modules/.bin/mocha --watch",
-    "start": "../exac_env/bin/python ../exac.py",
+    "start:browser": "../exac_env/bin/python ../exac.py",
     "start:api": "../exac_env/bin/python ../api.py --port 5002"
   },
   "author": "",
