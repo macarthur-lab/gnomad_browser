@@ -1,0 +1,26 @@
+{
+  "name": "exac-static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack -d",
+    "test": "node_modules/.bin/mocha",
+    "test:watch": "node_modules/.bin/mocha --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-latest": "^6.14.0",
+    "eslint": "^3.5.0",
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "underscore": "^1.8.3"
+  }
+}

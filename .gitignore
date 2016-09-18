@@ -4,8 +4,9 @@ static/tablesorter-master
 .idea/
 *.pyc
 misc/
-.gitignore
 autocomplete_strings.txt
 gene_cache/
 exac_env/
-database/
+node_modules/
+gnomad/npm-debug.log
+gnomad/dist
