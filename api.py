@@ -558,7 +558,7 @@ def awesome():
         raise Exception
 
 
-@app.route('/variant/<variant_str>')
+@app.route('/variant/<variant_str>', methods=['GET'])
 def variant_page(variant_str):
     db = get_db()
     try:
@@ -627,8 +627,7 @@ def variant_page(variant_str):
 
 
         print 'Rendering variant: %s' % variant_str
-        return render_template(
-            'variant.html',
+        return jsonify(
             variant=variant,
             base_coverage=base_coverage,
             consequences=consequences,
@@ -636,6 +635,15 @@ def variant_page(variant_str):
             metrics=metrics,
             read_viz=read_viz_dict,
         )
+        # return render_template(
+        #     'variant.html',
+        #     variant=variant,
+        #     base_coverage=base_coverage,
+        #     consequences=consequences,
+        #     any_covered=any_covered,
+        #     metrics=metrics,
+        #     read_viz=read_viz_dict,
+        # )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
         abort(404)

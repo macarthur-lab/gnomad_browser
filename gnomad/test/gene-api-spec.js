@@ -6,7 +6,7 @@ const API_URL = 'http://127.0.0.1:5002'
 describe('gene api', () => {
   const geneId = 'ENSG00000169174'
   const URL = `${API_URL}/gene/${geneId}`
-  it('gets object with keys', (done) => {
+  it('gets gene object with keys', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
@@ -116,7 +116,7 @@ describe('gene api', () => {
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('get transcripts in gene', () => {
+  it('gets transcripts in gene', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
@@ -159,9 +159,10 @@ describe('gene api', () => {
           xstop: 1055530524
         }])
          // eslint-disable-next-line
+         done()
       }).catch(error => console.log(error))
   })
-  it('gets coverage stats', () => {
+  it('gets coverage stats', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
@@ -232,34 +233,38 @@ describe('gene api', () => {
           median: 7,
           pos: 55505464
         }])
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets constraint data, currently null', () => {
+  it('gets constraint data, currently null', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
         expect(data.constraint).toBe(null)
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets cnvs data, currently empty array', () => {
+  it('gets cnvs data, currently empty array', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
         expect(data.cnvs).toEqual([])
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets cnvgenes data, currently empty array', () => {
+  it('gets cnvgenes data, currently empty array', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
         expect(data.cnvgenes).toEqual([])
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets variants_in_gene data', () => {
+  it('gets variants_in_gene data', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
@@ -329,15 +334,17 @@ describe('gene api', () => {
             variant_id: '1-55505475-C-T'
           }
         )
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets variants_in_transcript', () => {
+  it('gets variants_in_transcript', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
         // console.log(data.variants_in_transcript)
         expect(data.variants_in_transcript.length).toBe(759)
+        done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })

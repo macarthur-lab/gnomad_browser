@@ -1,6 +1,6 @@
 {
-  "name": "exac-static",
-  "version": "1.0.0",
+  "name": "gnomad",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,12 +18,14 @@
     "babel-preset-latest": "^6.14.0",
     "eslint": "^3.5.0",
     "expect": "^1.20.2",
+    "json-loader": "^0.5.4",
     "mocha": "^3.0.2",
     "webpack": "^1.13.2"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.1.0",
+    "ramda": "^0.22.1",
     "underscore": "^1.8.3"
   }
 }
