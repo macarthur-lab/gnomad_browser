@@ -8,5 +8,5 @@ autocomplete_strings.txt
 gene_cache/
 exac_env/
 node_modules/
-gnomad/npm-debug.log
+*npm-debug.log
 gnomad/dist
