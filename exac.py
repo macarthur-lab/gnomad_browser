@@ -39,8 +39,7 @@ Compress(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
-# EXAC_FILES_DIRECTORY = '../exac_data/'
-EXAC_FILES_DIRECTORY = '/Volumes/tour-matt/exac_browser/exac_data'
+EXAC_FILES_DIRECTORY = '../exac_data/'
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
 # Load default config and override config from an environment variable
@@ -51,8 +50,7 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = 4,  # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'new_data.vep.vcf.gz')),
-    # SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
+    SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -595,34 +593,46 @@ def variant_page(variant_str):
             "combined_bams",
             chrom,
             "combined_chr%s_%03d.db" % (chrom, pos % 1000))
-        print(sqlite_db_path)
+        logging.info(sqlite_db_path)
         try:
             read_viz_db = sqlite3.connect(sqlite_db_path)
-            n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'het')).fetchone()
-            n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+            if chrom in ('X', 'Y'):
+                n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'het')).fetchone()
+                n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+                n_hemi = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hemi')).fetchone()
+            else:
+                n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'het')).fetchone()
+                n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+                n_hemi = None
             read_viz_db.close()
         except Exception, e:
-            logging.debug("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
-            n_het = n_hom = None
+            logging.error("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
+            n_het = n_hom = n_hemi = None
 
         read_viz_dict = {
             'het': {'n_expected': n_het[0] if n_het is not None and n_het[0] is not None else -1, 'n_available': n_het[1] if n_het and n_het[1] else 0,},
             'hom': {'n_expected': n_hom[0] if n_hom is not None and n_hom[0] is not None else -1, 'n_available': n_hom[1] if n_hom and n_hom[1] else 0,},
+            'hemi': {'n_expected': n_hemi[0] if n_hemi is not None and n_hemi[0] is not None else -1, 'n_available': n_hemi[1] if n_hemi and n_hemi[1] else 0,},
         }
 
-        for het_or_hom in ('het', 'hom',):
-            #read_viz_dict[het_or_hom]['some_samples_missing'] = (read_viz_dict[het_or_hom]['n_expected'] > 0)    and (read_viz_dict[het_or_hom]['n_expected'] - read_viz_dict[het_or_hom]['n_available'] > 0)
-            read_viz_dict[het_or_hom]['all_samples_missing'] = (read_viz_dict[het_or_hom]['n_expected'] != 0) and (read_viz_dict[het_or_hom]['n_available'] == 0)
-            read_viz_dict[het_or_hom]['readgroups'] = [
-                '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom)s%(i)s' % locals()
-                    for i in range(read_viz_dict[het_or_hom]['n_available'])
+        for het_or_hom_or_hemi in ('het', 'hom', 'hemi'):
+            #read_viz_dict[het_or_hom_or_hemi]['some_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] > 0)    and (read_viz_dict[het_or_hom_or_hemi]['n_expected'] - read_viz_dict[het_or_hom_or_hemi]['n_available'] > 0)
+            read_viz_dict[het_or_hom_or_hemi]['all_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] != 0) and (read_viz_dict[het_or_hom_or_hemi]['n_available'] == 0)
+            read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
+                '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
+                    for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+
             ]   #eg. '1-157768000-G-C_hom1',
 
-            read_viz_dict[het_or_hom]['urls'] = [
+            read_viz_dict[het_or_hom_or_hemi]['urls'] = [
+                #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
                 os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-                    for i in range(read_viz_dict[het_or_hom]['n_available'])
+                    for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
             ]
 
 

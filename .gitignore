@@ -7,6 +7,7 @@ misc/
 autocomplete_strings.txt
 gene_cache/
 exac_env/
-node_modules/
 *npm-debug.log
-gnomad/dist
+exac_env
+*dist
+*node_modules
