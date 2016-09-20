@@ -270,6 +270,13 @@ describe('variant api', () => {
       .then(response => response.json())
       .then(data => {
         expect(data.read_viz).toEqual({
+          hemi: {
+            all_samples_missing: true,
+            n_available: 0,
+            n_expected: -1,
+            readgroups: [],
+            urls: []
+          },
           het: {
             all_samples_missing: true,
             n_available: 0,

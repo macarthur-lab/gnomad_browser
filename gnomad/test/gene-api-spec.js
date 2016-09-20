@@ -237,29 +237,82 @@ describe('gene api', () => {
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets constraint data, currently null', (done) => {
+  it('gets constraint data', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
-        expect(data.constraint).toBe(null)
+        expect(data.constraint).toEqual({
+          bp: 2079,
+          cnv_z: 0.0240543837022767,
+          exp_cnv: 6.17154136168847,
+          exp_lof: 16.9187162512,
+          exp_mis: 276.909800337,
+          exp_syn: 136.853201549,
+          lof_z: 0.221252094879999,
+          mis_z: 0.555820087234748,
+          mu_lof: 0.00000133968418904,
+          mu_mis: 0.0000288302652318,
+          mu_syn: 0.0000143023722955,
+          n_cnv: 6,
+          n_exons: 12,
+          n_lof: 16,
+          n_mis: 258,
+          n_syn: 111,
+          pLI: 1.02507611210468e-10,
+          syn_z: 1.37004966509371,
+          transcript: 'ENST00000302118',
+          tx_end: 55529257,
+          tx_start: 55505510
+        })
         done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets cnvs data, currently empty array', (done) => {
+  it('gets cnvs data', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
-        expect(data.cnvs).toEqual([])
+        expect(data.cnvs.length).toBe(12)
+        expect(data.cnvs[0]).toEqual({
+          chrom: '1',
+          del0: 6,
+          del60: 3,
+          delpop0: 'Deletions:6|NFE:6/32850',
+          delpop60: 'Deletions:3|NFE:3/32850',
+          dup0: 3,
+          dup60: 1,
+          duppop0: 'Duplications:3|NFE:2/32850,SAS:1/8205',
+          duppop60: 'Duplications:1|NFE:1/32850',
+          gene: 'PCSK9',
+          start: 55505221,
+          stop: 55505717,
+          transcript: 'ENST00000302118',
+          xstart: 1055505221,
+          xstop: 1055505717
+        })
         done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
   })
-  it('gets cnvgenes data, currently empty array', (done) => {
+  it('gets cnvgenes data', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
-        expect(data.cnvgenes).toEqual([])
+        expect(data.cnvgenes.length).toBe(1)
+        expect(data.cnvgenes).toEqual([{
+          cnv0: 25,
+          cnv60: 6,
+          cnv_score: -0.0840450951954554,
+          del0: 12,
+          del60: 3,
+          del_score: -0.525966132581613,
+          dup0: 13,
+          dup60: 3,
+          dup_score: 0.231824190713529,
+          gene: 'ENSG00000169174',
+          rank: 9896,
+          symbol: 'PCSK9'
+        }])
         done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
