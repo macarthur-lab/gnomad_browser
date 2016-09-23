@@ -330,6 +330,7 @@ describe('gene api', () => {
             HGVSp: '',
             ac_female: '0',
             ac_male: '1',
+
             allele_count: 1,
             allele_freq: 0.000032634945499641017,
             allele_num: 30642,
@@ -338,7 +339,10 @@ describe('gene api', () => {
             an_male: '17480',
             category: 'other_variant',
             chrom: '1',
-            filter: 'PASS',
+            filter: {
+              exac: 'PASS',
+              gnomad: 'Fails'
+            },
             flags: [],
             hom_count: 0,
             major_consequence: '5_prime_UTR_variant',
