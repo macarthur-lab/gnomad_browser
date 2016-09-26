@@ -51,7 +51,7 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = 4,  # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
     EXAC_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
-    GNOMAD_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
+    GNOMAD_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'new_data.vep.vcf.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -181,6 +181,39 @@ def load_variants_file():
 
     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 
+def load_gnomad_vcf():
+    def load_variants(sites_file, i, n, db):
+        variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
+        try:
+            db.gnomadVariants.insert(variants_generator, w=0)
+        except pymongo.errors.InvalidOperation:
+            pass  # handle error when variant_generator is empty
+
+    db = get_db()
+    db.gnomadVariants.drop()
+    print("Dropped db.gnomadVariants")
+
+    # grab variants from sites VCF
+    db.gnomadVariants.ensure_index('xpos')
+    db.gnomadVariants.ensure_index('xstart')
+    db.gnomadVariants.ensure_index('xstop')
+    db.gnomadVariants.ensure_index('rsid')
+    db.gnomadVariants.ensure_index('genes')
+    db.gnomadVariants.ensure_index('transcripts')
+
+    sites_vcfs = app.config['GNOMAD_SITES_VCFS']
+    if len(sites_vcfs) == 0:
+        raise IOError("No vcf file found")
+    elif len(sites_vcfs) > 1:
+        raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+
+    procs = []
+    num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
+    for i in range(num_procs):
+        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs, db))
+        p.start()
+        procs.append(p)
+    return procs
 
 def load_constraint_information():
     db = get_db()

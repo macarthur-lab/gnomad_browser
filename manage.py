@@ -24,6 +24,10 @@ def load_base_coverage():
 def load_variants_file():
     exac.load_variants_file()
 
+@manager.command
+def load_gnomad_vcf():
+    exac.load_gnomad_vcf()
+
 
 @manager.command
 def reload_variants():
