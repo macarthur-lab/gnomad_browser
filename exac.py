@@ -676,8 +676,7 @@ def variant_api(variant_str):
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
         abort(404)
 
-def get_gene_data(gene_id, gene,request_type, cache_key):
-    db = get_db()
+def get_gene_data(db, gene_id, gene,request_type, cache_key):
     try:
         variants_in_gene = lookups.get_variants_in_gene(db, gene_id)
         transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
@@ -735,7 +734,7 @@ def gene_page(gene_id):
         cache_key = 'template-gene-{}'.format(gene_id)
         template = cache.get(cache_key)
         if template is None:
-            template = get_gene_data(gene_id, gene, 'template', cache_key)
+            template = get_gene_data(db, gene_id, gene, 'template', cache_key)
         print 'Rendering gene: %s' % gene_id
         return template
 
@@ -748,30 +747,21 @@ def gene_api(gene_id):
     cache_key = 'json-gene-{}'.format(gene_id)
     json = cache.get(cache_key)
     if json is None:
-        json = get_gene_data(gene_id, gene, 'json', cache_key)
+        json = get_gene_data(db, gene_id, gene, 'json', cache_key)
     print 'Sending json for gene: %s' % gene_id
     return json
 
-@app.route('/transcript/<transcript_id>')
-def transcript_page(transcript_id):
-    db = get_db()
+def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
     try:
-        transcript = lookups.get_transcript(db, transcript_id)
-
-        cache_key = 't-transcript-{}'.format(transcript_id)
-        t = cache.get(cache_key)
-        if t is None:
-
-            gene = lookups.get_gene(db, transcript['gene_id'])
-            gene['transcripts'] = lookups.get_transcripts_in_gene(db, transcript['gene_id'])
-            variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
-            cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
-            cnvs_per_gene = lookups.get_cnvs(db, transcript['gene_id'])
-            coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
-
-            add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
-
-            t = render_template(
+        gene = lookups.get_gene(db, transcript['gene_id'])
+        gene['transcripts'] = lookups.get_transcripts_in_gene(db, transcript['gene_id'])
+        variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
+        cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
+        cnvs_per_gene = lookups.get_cnvs(db, transcript['gene_id'])
+        coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
+        if request_type == 'template':
+            result = render_template(
                 'transcript.html',
                 transcript=transcript,
                 transcript_json=json.dumps(transcript),
@@ -786,12 +776,53 @@ def transcript_page(transcript_id):
                 cnvgenes = cnvs_per_gene,
                 cnvgenes_json=json.dumps(cnvs_per_gene)
             )
-            cache.set(cache_key, t, timeout=1000*60)
-        print 'Rendering transcript: %s' % transcript_id
-        return t
+        if request_type == 'json':
+            result = jsonify(
+                transcript=transcript,
+                transcript_json=json.dumps(transcript),
+                variants_in_transcript=variants_in_transcript,
+                variants_in_transcript_json=json.dumps(variants_in_transcript),
+                coverage_stats=coverage_stats,
+                coverage_stats_json=json.dumps(coverage_stats),
+                gene=gene,
+                gene_json=json.dumps(gene),
+                cnvs = cnvs_in_transcript,
+                cnvs_json=json.dumps(cnvs_in_transcript),
+                cnvgenes = cnvs_per_gene,
+                cnvgenes_json=json.dumps(cnvs_per_gene)
+            )
+        cache.set(cache_key, result, timeout=1000*60)
+        return result
     except Exception, e:
         print 'Failed on transcript:', transcript_id, ';Error=', traceback.format_exc()
         abort(404)
+
+@app.route('/transcript/<transcript_id>')
+def transcript_template(transcript_id):
+    db = get_db()
+    transcript = lookups.get_transcript(db, transcript_id)
+    if transcript is None:
+        abort(404)
+    cache_key = 'template-transcript-{}'.format(transcript_id)
+    template = cache.get(cache_key)
+    if template is None:
+        template = get_transcript_data(db, transcript_id, transcript, 'template', cache_key)
+    print 'Sending template for transcript: %s' % transcript_id
+    return template
+
+
+@app.route('/api/transcript/<transcript_id>')
+def transcript_api(transcript_id):
+    db = get_db()
+    transcript = lookups.get_transcript(db, transcript_id)
+    if transcript is None:
+        abort(404)
+    cache_key = 'json-transcript-{}'.format(transcript_id)
+    json = cache.get(cache_key)
+    if json is None:
+        json = get_transcript_data(db, transcript_id, transcript, 'json', cache_key)
+    print 'Sending json for transcript: %s' % transcript_id
+    return json
 
 
 @app.route('/region/<region_id>')
@@ -842,6 +873,52 @@ def region_page(region_id):
         print 'Failed on region:', region_id, ';Error=', traceback.format_exc()
         abort(404)
 
+@app.route('/api/region/<region_id>')
+def region_json(region_id):
+    db = get_db()
+    try:
+        region = region_id.split('-')
+        cache_key = 't-region-{}'.format(region_id)
+        t = cache.get(cache_key)
+        if t is None:
+            chrom = region[0]
+            start = None
+            stop = None
+            if len(region) == 3:
+                chrom, start, stop = region
+                start = int(start)
+                stop = int(stop)
+            if start is None or stop - start > REGION_LIMIT or stop < start:
+                return render_template(
+                    'region.html',
+                    genes_in_region=None,
+                    variants_in_region=None,
+                    chrom=chrom,
+                    start=start,
+                    stop=stop,
+                    coverage=None
+                )
+            if start == stop:
+                start -= 20
+                stop += 20
+            genes_in_region = lookups.get_genes_in_region(db, chrom, start, stop)
+            variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
+            xstart = get_xpos(chrom, start)
+            xstop = get_xpos(chrom, stop)
+            coverage_array = lookups.get_coverage_for_bases(db, xstart, xstop)
+            t = jsonify(
+                genes_in_region=genes_in_region,
+                variants_in_region=variants_in_region,
+                chrom=chrom,
+                start=start,
+                stop=stop,
+                coverage=coverage_array
+            )
+        print 'Rendering region: %s' % region_id
+        return t
+    except Exception, e:
+        print 'Failed on region:', region_id, ';Error=', traceback.format_exc()
+        abort(404)
 
 @app.route('/dbsnp/<rsid>')
 def dbsnp_page(rsid):
@@ -854,6 +931,28 @@ def dbsnp_page(rsid):
         print 'Rendering rsid: %s' % rsid
         return render_template(
             'region.html',
+            rsid=rsid,
+            variants_in_region=variants,
+            chrom=chrom,
+            start=start,
+            stop=stop,
+            coverage=None,
+            genes_in_region=None
+        )
+    except Exception, e:
+        print 'Failed on rsid:', rsid, ';Error=', traceback.format_exc()
+        abort(404)
+
+@app.route('/api/dbsnp/<rsid>')
+def dbsnp_json(rsid):
+    db = get_db()
+    try:
+        variants = lookups.get_variants_by_rsid(db, rsid)
+        chrom = None
+        start = None
+        stop = None
+        print 'Rendering rsid: %s' % rsid
+        return jsonify(
             rsid=rsid,
             variants_in_region=variants,
             chrom=chrom,

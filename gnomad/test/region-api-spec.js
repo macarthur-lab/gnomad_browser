@@ -1,7 +1,7 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 
-const API_URL = 'http://127.0.0.1:5003'
+const API_URL = 'http://127.0.0.1:5000/api'
 
 describe('region api', () => {
   const regionId = '22-46615715-46615880'

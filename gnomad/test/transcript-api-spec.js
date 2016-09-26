@@ -1,7 +1,7 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 
-const API_URL = 'http://127.0.0.1:5003'
+const API_URL = 'http://127.0.0.1:5000/api'
 
 describe('transcript api', () => {
   const transcriptId = 'ENST00000407236'
@@ -28,6 +28,19 @@ describe('transcript api', () => {
           'variants_in_transcript',
           'variants_in_transcript_json'
         ])
+        done()
+         // eslint-disable-next-line
+      }).catch(error => console.log(error))
+  })
+  it('gets variants in transcript', (done) => {
+    fetch(URL)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(Object.keys(data))
+        // similar to gene schema
+        // no constraint field
+        // additional `json` fields...
+        expect(data.variants_in_transcript.length).toBe(575)
         done()
          // eslint-disable-next-line
       }).catch(error => console.log(error))
