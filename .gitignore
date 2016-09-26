@@ -11,3 +11,4 @@ exac_env/
 exac_env
 *dist
 *node_modules
+*public
