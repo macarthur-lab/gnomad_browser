@@ -1,7 +1,7 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 
-const API_URL = 'http://127.0.0.1:5002'
+const API_URL = 'http://127.0.0.1:5003'
 
 describe('region api', () => {
   const regionId = '22-46615715-46615880'
@@ -81,6 +81,7 @@ describe('region api', () => {
           filter: 'PASS',
           flags: [],
           hom_count: 0,
+          indel: false,
           major_consequence: 'missense_variant',
           pop_acs: {
             African: 0,

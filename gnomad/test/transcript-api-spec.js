@@ -1,7 +1,7 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 
-const API_URL = 'http://127.0.0.1:5002'
+const API_URL = 'http://127.0.0.1:5003'
 
 describe('transcript api', () => {
   const transcriptId = 'ENST00000407236'

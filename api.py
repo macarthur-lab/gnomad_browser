@@ -662,6 +662,7 @@ def variant_page(variant_str):
 @app.route('/gene/<gene_id>')
 def gene_page(gene_id):
     if gene_id in GENES_TO_CACHE:
+        print 'accessing from gene page'
         return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
     else:
         return get_gene_page_content(gene_id)
@@ -675,7 +676,9 @@ def get_gene_page_content(gene_id):
             abort(404)
         cache_key = 't-gene-{}'.format(gene_id)
         t = cache.get(cache_key)
+        print 'the gene was in the cash'
         if t is None:
+            print 'getting data from database'
             variants_in_gene = lookups.get_variants_in_gene(db, gene_id)
             transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
 

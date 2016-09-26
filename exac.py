@@ -556,133 +556,143 @@ def awesome():
     else:
         raise Exception
 
+def variant_data(variant_str):
+    db = get_db()
+    chrom, pos, ref, alt = variant_str.split('-')
+    pos = int(pos)
+    # pos, ref, alt = get_minimal_representation(pos, ref, alt)
+    xpos = get_xpos(chrom, pos)
+    variant = lookups.get_variant(db, xpos, ref, alt)
+
+    if variant is None:
+        variant = {
+            'chrom': chrom,
+            'pos': pos,
+            'xpos': xpos,
+            'ref': ref,
+            'alt': alt
+        }
+    consequences = OrderedDict()
+    if 'vep_annotations' in variant:
+        add_consequence_to_variant(variant)
+        variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
+        variant['vep_annotations'] = order_vep_by_csq(variant['vep_annotations'])  # Adds major_consequence
+        for annotation in variant['vep_annotations']:
+            annotation['HGVS'] = get_proper_hgvs(annotation)
+            consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
+    base_coverage = lookups.get_coverage_for_bases(db, xpos, xpos + len(ref) - 1)
+    any_covered = any([x['has_coverage'] for x in base_coverage])
+    metrics = lookups.get_metrics(db, variant)
+
+    # check the appropriate sqlite db to get the *expected* number of
+    # available bams and *actual* number of available bams for this variant
+    sqlite_db_path = os.path.join(
+        app.config["READ_VIZ_DIR"],
+        "combined_bams",
+        chrom,
+        "combined_chr%s_%03d.db" % (chrom, pos % 1000))
+    logging.info(sqlite_db_path)
+    try:
+        read_viz_db = sqlite3.connect(sqlite_db_path)
+        if chrom in ('X', 'Y'):
+            n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'het')).fetchone()
+            n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+            n_hemi = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hemi')).fetchone()
+        else:
+            n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'het')).fetchone()
+            n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+            n_hemi = None
+        read_viz_db.close()
+    except Exception, e:
+        logging.error("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
+        n_het = n_hom = n_hemi = None
+
+    read_viz_dict = {
+        'het': {'n_expected': n_het[0] if n_het is not None and n_het[0] is not None else -1, 'n_available': n_het[1] if n_het and n_het[1] else 0,},
+        'hom': {'n_expected': n_hom[0] if n_hom is not None and n_hom[0] is not None else -1, 'n_available': n_hom[1] if n_hom and n_hom[1] else 0,},
+        'hemi': {'n_expected': n_hemi[0] if n_hemi is not None and n_hemi[0] is not None else -1, 'n_available': n_hemi[1] if n_hemi and n_hemi[1] else 0,},
+    }
+
+    for het_or_hom_or_hemi in ('het', 'hom', 'hemi'):
+        #read_viz_dict[het_or_hom_or_hemi]['some_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] > 0)    and (read_viz_dict[het_or_hom_or_hemi]['n_expected'] - read_viz_dict[het_or_hom_or_hemi]['n_available'] > 0)
+        read_viz_dict[het_or_hom_or_hemi]['all_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] != 0) and (read_viz_dict[het_or_hom_or_hemi]['n_available'] == 0)
+        read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
+            '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
+                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+
+        ]   #eg. '1-157768000-G-C_hom1',
+
+        read_viz_dict[het_or_hom_or_hemi]['urls'] = [
+            #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+            os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+        ]
+    return {
+        'variant': variant,
+        'base_coverage': base_coverage,
+        'consequences': consequences,
+        'any_covered': any_covered,
+        'metrics': metrics,
+        'read_viz': read_viz_dict,
+    }
 
 @app.route('/variant/<variant_str>')
 def variant_page(variant_str):
-    db = get_db()
     try:
-        chrom, pos, ref, alt = variant_str.split('-')
-        pos = int(pos)
-        # pos, ref, alt = get_minimal_representation(pos, ref, alt)
-        xpos = get_xpos(chrom, pos)
-        variant = lookups.get_variant(db, xpos, ref, alt)
-
-        if variant is None:
-            variant = {
-                'chrom': chrom,
-                'pos': pos,
-                'xpos': xpos,
-                'ref': ref,
-                'alt': alt
-            }
-        consequences = OrderedDict()
-        if 'vep_annotations' in variant:
-            add_consequence_to_variant(variant)
-            variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
-            variant['vep_annotations'] = order_vep_by_csq(variant['vep_annotations'])  # Adds major_consequence
-            for annotation in variant['vep_annotations']:
-                annotation['HGVS'] = get_proper_hgvs(annotation)
-                consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
-        base_coverage = lookups.get_coverage_for_bases(db, xpos, xpos + len(ref) - 1)
-        any_covered = any([x['has_coverage'] for x in base_coverage])
-        metrics = lookups.get_metrics(db, variant)
-
-        # check the appropriate sqlite db to get the *expected* number of
-        # available bams and *actual* number of available bams for this variant
-        sqlite_db_path = os.path.join(
-            app.config["READ_VIZ_DIR"],
-            "combined_bams",
-            chrom,
-            "combined_chr%s_%03d.db" % (chrom, pos % 1000))
-        logging.info(sqlite_db_path)
-        try:
-            read_viz_db = sqlite3.connect(sqlite_db_path)
-            if chrom in ('X', 'Y'):
-                n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'het')).fetchone()
-                n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hom')).fetchone()
-                n_hemi = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hemi')).fetchone()
-            else:
-                n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'het')).fetchone()
-                n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom=?", (chrom, pos, ref, alt, 'hom')).fetchone()
-                n_hemi = None
-            read_viz_db.close()
-        except Exception, e:
-            logging.error("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
-            n_het = n_hom = n_hemi = None
-
-        read_viz_dict = {
-            'het': {'n_expected': n_het[0] if n_het is not None and n_het[0] is not None else -1, 'n_available': n_het[1] if n_het and n_het[1] else 0,},
-            'hom': {'n_expected': n_hom[0] if n_hom is not None and n_hom[0] is not None else -1, 'n_available': n_hom[1] if n_hom and n_hom[1] else 0,},
-            'hemi': {'n_expected': n_hemi[0] if n_hemi is not None and n_hemi[0] is not None else -1, 'n_available': n_hemi[1] if n_hemi and n_hemi[1] else 0,},
-        }
-
-        for het_or_hom_or_hemi in ('het', 'hom', 'hemi'):
-            #read_viz_dict[het_or_hom_or_hemi]['some_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] > 0)    and (read_viz_dict[het_or_hom_or_hemi]['n_expected'] - read_viz_dict[het_or_hom_or_hemi]['n_available'] > 0)
-            read_viz_dict[het_or_hom_or_hemi]['all_samples_missing'] = (read_viz_dict[het_or_hom_or_hemi]['n_expected'] != 0) and (read_viz_dict[het_or_hom_or_hemi]['n_available'] == 0)
-            read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
-                '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
-                    for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-
-            ]   #eg. '1-157768000-G-C_hom1',
-
-            read_viz_dict[het_or_hom_or_hemi]['urls'] = [
-                #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-                os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-                    for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-            ]
-
-
+        data = variant_data(variant_str)
         print 'Rendering variant: %s' % variant_str
         return render_template(
             'variant.html',
-            variant=variant,
-            base_coverage=base_coverage,
-            consequences=consequences,
-            any_covered=any_covered,
-            metrics=metrics,
-            read_viz=read_viz_dict,
+            variant=data['variant'],
+            base_coverage=data['base_coverage'],
+            consequences=data['consequences'],
+            any_covered=data['any_covered'],
+            metrics=data['metrics'],
+            read_viz=data['read_viz'],
         )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
         abort(404)
 
+@app.route('/api/variant/<variant_str>')
+def variant_api(variant_str):
+    try:
+        data = variant_data(variant_str)
+        print 'Sending json for variant: %s' % variant_str
+        return jsonify(
+            variant=data['variant'],
+            base_coverage=data['base_coverage'],
+            consequences=data['consequences'],
+            any_covered=data['any_covered'],
+            metrics=data['metrics'],
+            read_viz=data['read_viz'],
+        )
+    except Exception:
+        print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
+        abort(404)
 
-@app.route('/gene/<gene_id>')
-def gene_page(gene_id):
-    if gene_id in GENES_TO_CACHE:
-        return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
-    else:
-        return get_gene_page_content(gene_id)
-
-
-def get_gene_page_content(gene_id):
+def get_gene_data(gene_id, gene,request_type, cache_key):
     db = get_db()
     try:
-        gene = lookups.get_gene(db, gene_id)
-        if gene is None:
-            abort(404)
-        cache_key = 't-gene-{}'.format(gene_id)
-        t = cache.get(cache_key)
-        if t is None:
-            variants_in_gene = lookups.get_variants_in_gene(db, gene_id)
-            transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
+        variants_in_gene = lookups.get_variants_in_gene(db, gene_id)
+        transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
 
-            # Get some canonical transcript and corresponding info
-            transcript_id = gene['canonical_transcript']
-            transcript = lookups.get_transcript(db, transcript_id)
-            variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
-            cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
-            cnvs_per_gene = lookups.get_cnvs(db, gene_id)
-            coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
-            add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
-            constraint_info = lookups.get_constraint_for_transcript(db, transcript_id)
-
-            t = render_template(
+        # Get some canonical transcript and corresponding info
+        transcript_id = gene['canonical_transcript']
+        transcript = lookups.get_transcript(db, transcript_id)
+        variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
+        cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
+        cnvs_per_gene = lookups.get_cnvs(db, gene_id)
+        coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
+        constraint_info = lookups.get_constraint_for_transcript(db, transcript_id)
+        if request_type == 'template':
+            result = render_template(
                 'gene.html',
                 gene=gene,
                 transcript=transcript,
@@ -694,13 +704,53 @@ def get_gene_page_content(gene_id):
                 cnvgenes = cnvs_per_gene,
                 constraint=constraint_info
             )
-            cache.set(cache_key, t, timeout=1000*60)
-        print 'Rendering gene: %s' % gene_id
-        return t
+        if request_type == 'json':
+            result = jsonify(
+                gene=gene,
+                transcript=transcript,
+                variants_in_gene=variants_in_gene,
+                variants_in_transcript=variants_in_transcript,
+                transcripts_in_gene=transcripts_in_gene,
+                coverage_stats=coverage_stats,
+                cnvs = cnvs_in_transcript,
+                cnvgenes = cnvs_per_gene,
+                constraint=constraint_info
+            )
+        cache.set(cache_key, result, timeout=1000*60)
+        return result
     except Exception, e:
         print 'Failed on gene:', gene_id, ';Error=', traceback.format_exc()
         abort(404)
 
+@app.route('/gene/<gene_id>')
+def gene_page(gene_id):
+    if gene_id in GENES_TO_CACHE:
+        return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
+        print 'accessing from gene page'
+    else:
+        db = get_db()
+        gene = lookups.get_gene(db, gene_id)
+        if gene is None:
+            abort(404)
+        cache_key = 'template-gene-{}'.format(gene_id)
+        template = cache.get(cache_key)
+        if template is None:
+            template = get_gene_data(gene_id, gene, 'template', cache_key)
+        print 'Rendering gene: %s' % gene_id
+        return template
+
+@app.route('/api/gene/<gene_id>')
+def gene_api(gene_id):
+    db = get_db()
+    gene = lookups.get_gene(db, gene_id)
+    if gene is None:
+        abort(404)
+    cache_key = 'json-gene-{}'.format(gene_id)
+    json = cache.get(cache_key)
+    if json is None:
+        json = get_gene_data(gene_id, gene, 'json', cache_key)
+    print 'Sending json for gene: %s' % gene_id
+    return json
 
 @app.route('/transcript/<transcript_id>')
 def transcript_page(transcript_id):
