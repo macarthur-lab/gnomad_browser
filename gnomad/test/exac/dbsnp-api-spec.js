@@ -1,7 +1,8 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
+import config from 'config'
 
-const API_URL = 'http://127.0.0.1:5000/api'
+const API_URL = config.get('EXAC_API_URL')
 
 describe('dbsnp api', () => {
   const dbsnpId = '22-46615715-46615880'

@@ -1,10 +1,11 @@
 import expect from 'expect'
 import fetch from 'isomorphic-fetch'
 import R from 'ramda'
+import config from 'config'
 
-import metricsExample from './exampleData/metricsExample'
+import metricsExample from '../exampleData/metricsExample'
 
-const API_URL = 'http://127.0.0.1:5000/api'
+const API_URL = config.get('EXAC_API_URL')
 
 describe('variant api', () => {
   const variantId = '22-46615880-T-C'

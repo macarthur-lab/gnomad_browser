@@ -2,8 +2,9 @@ import expect from 'expect'
 import R from 'ramda'
 import _ from 'underscore'
 import fetch from 'isomorphic-fetch'
+import config from 'config'
 
-const API_URL = 'http://127.0.0.1:5003'
+const API_URL = config.get('EXAC_API_URL')
 
 const csq_order = [
   'transcript_ablation',
