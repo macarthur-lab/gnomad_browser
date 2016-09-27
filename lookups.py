@@ -25,12 +25,15 @@ def get_transcript(db, transcript_id):
     return transcript
 
 
-def get_raw_variant(db, xpos, ref, alt, get_id=False):
-    return db.variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, fields={'_id': get_id})
+def get_raw_variant(db, source, xpos, ref, alt, get_id=False):
+    if source == 'exac':
+        return db.variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, fields={'_id': get_id})
+    if source == 'gnomad':
+        return db.gnomadVariants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, fields={'_id': get_id})
 
 
-def get_variant(db, xpos, ref, alt):
-    variant = get_raw_variant(db, xpos, ref, alt, False)
+def get_variant(db, source, xpos, ref, alt):
+    variant = get_raw_variant(db, source, xpos, ref, alt, False)
     if variant is None or 'rsid' not in variant:
         return variant
     if variant['rsid'] == '.' or variant['rsid'] is None:

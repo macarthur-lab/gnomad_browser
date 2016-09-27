@@ -589,13 +589,13 @@ def awesome():
     else:
         raise Exception
 
-def variant_data(variant_str):
+def variant_data(variant_str, source):
     db = get_db()
     chrom, pos, ref, alt = variant_str.split('-')
     pos = int(pos)
     # pos, ref, alt = get_minimal_representation(pos, ref, alt)
     xpos = get_xpos(chrom, pos)
-    variant = lookups.get_variant(db, xpos, ref, alt)
+    variant = lookups.get_variant(db, source, xpos, ref, alt)
 
     if variant is None:
         variant = {
@@ -695,15 +695,13 @@ def variant_page(variant_str):
 @app.route('/api/variant/<variant_str>')
 def variant_api(variant_str):
     try:
-        data = variant_data(variant_str)
+        exacVariant = variant_data(variant_str, 'exac')
+        gnomadVariant = variant_data(variant_str, 'gnomad')
+
         print 'Sending json for variant: %s' % variant_str
         return jsonify(
-            variant=data['variant'],
-            base_coverage=data['base_coverage'],
-            consequences=data['consequences'],
-            any_covered=data['any_covered'],
-            metrics=data['metrics'],
-            read_viz=data['read_viz'],
+            exacVariant=exacVariant,
+            gnomadVariant=gnomadVariant
         )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
