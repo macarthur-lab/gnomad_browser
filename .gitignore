@@ -12,3 +12,4 @@ exac_env
 *dist
 *node_modules
 *public
+*gnomad.js

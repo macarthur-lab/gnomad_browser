@@ -612,19 +612,27 @@ function update_variants() {
         .attr('id')
         .replace('indel_selection_', '')
         .replace('_button', '');
+    var dataState = $('.dataset_display_buttons.active')
+        .attr('id')
+        .replace('dataset_selection_', '')
+        .replace('_button', '');
+    // console.log(dataState)
     $('[major_consequence]').hide()
+    // console.log(window.uuid_lists[dataState])
     $('[major_consequence]').map(function(row) {
-        if (!filterState && $(this).attr('filter_status') !== 'PASS') {
-            return
-        }
+        // if (!filterState && $(this).attr('filter_status') !== 'PASS') {
+        //     return
+        // }
         if (indelState === 'snp' && $(this).attr('indel') === 'true') {
             return
         }
         if (indelState === 'indel' && $(this).attr('indel') === 'false') {
             return
         }
-        if (_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))
-        ) {
+        // if (_.contains(window.uuid_lists[dataState], $(this).attr('uuid')) === false) {
+        //     return
+        // }
+        if (_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))) {
             $(this).show()
         }
     })

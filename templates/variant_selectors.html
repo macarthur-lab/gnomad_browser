@@ -1,4 +1,19 @@
 <div class="variant_selector_group">
+    <div id="dataset_selectors_container">
+        <label for="dataset_types">
+            <span class="btn-group" data-toggle="buttons" id="dataset_types">
+                <button class="btn btn-primary dataset_display_buttons active" id="dataset_selection_all_button">
+                    <input type="radio">ExAC + gnomAD
+                </button>
+                <button class="btn btn-primary dataset_display_buttons" id="dataset_selection_exac_button">
+                    <input type="radio">ExAC
+                </button>
+                <button class="btn btn-primary dataset_display_buttons" id="dataset_selection_gnomad_button">
+                    <input type="radio">gnomAD
+                </button>
+            </span>
+        </label>
+    </div>
     <div id="variant_selectors_container">
         <label for="variant_consequence_types">
             <span class="btn-group" data-toggle="buttons" id="variant_consequence_types">
@@ -13,7 +28,6 @@
                 </button>
             </span>
         </label>
-
     </div>
     <div id="indel_selectors_container">
         <label for="indel_types">

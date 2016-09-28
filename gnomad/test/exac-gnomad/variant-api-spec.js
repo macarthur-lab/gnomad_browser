@@ -7,14 +7,14 @@ import metricsExample from '../exampleData/metricsExample'
 
 const API_URL = config.get('GNOMAD_API_URL')
 
-describe.only('gnomad/exac variant api', () => {
+describe('gnomad/exac variant api', () => {
   const variantId = "22-46594230-T-A"
   const URL = `${API_URL}/variant/${variantId}`
   it('gets variant object with keys', (done) => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
         expect(Object.keys(data)).toEqual([
           'exacVariant',
           'gnomadVariant',

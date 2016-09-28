@@ -709,7 +709,8 @@ def variant_api(variant_str):
 
 def get_gene_data(db, gene_id, gene,request_type, cache_key):
     try:
-        variants_in_gene = lookups.get_variants_in_gene(db, gene_id)
+        variant_data = lookups.get_variants_in_gene(db, gene_id)
+        variants_in_gene = variant_data['all_variants']
         transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
 
         # Get some canonical transcript and corresponding info
@@ -732,7 +733,8 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
                 coverage_stats=coverage_stats,
                 cnvs = cnvs_in_transcript,
                 cnvgenes = cnvs_per_gene,
-                constraint=constraint_info
+                constraint=constraint_info,
+                uuid_lists=variant_data['uuid_lists']
             )
         if request_type == 'json':
             result = jsonify(
@@ -744,7 +746,8 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
                 coverage_stats=coverage_stats,
                 cnvs = cnvs_in_transcript,
                 cnvgenes = cnvs_per_gene,
-                constraint=constraint_info
+                constraint=constraint_info,
+                uuid_lists=variant_data['uuid_lists']
             )
         cache.set(cache_key, result, timeout=1000*60)
         return result

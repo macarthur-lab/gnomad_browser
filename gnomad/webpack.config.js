@@ -16,7 +16,8 @@ var config = {
   output: {
     path: __dirname + '/dist',
     publicPath: 'http://localhost:8000/dist/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    library: 'gnomad'
   },
   resolve: {
     root: path.resolve(__dirname),

@@ -11,6 +11,17 @@
         window.page_name = window.gene.gene_id;
         window.cnvs = {{ cnvs|tojson|safe }};
         window.cnvgenes = {{ cnvgenes|tojson|safe }};
+        window.uuid_lists = {{ uuid_lists|tojson|safe }};
+        console.log(gnomad.combineDataForTable (
+            'all',
+            window.uuid_lists,
+            window.table_variants
+        ))
+        window.table_variants = gnomad.combineDataForTable (
+            'all',
+            window.uuid_lists,
+            window.table_variants
+        )
     </script>
     <style>
 

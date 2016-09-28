@@ -1,4 +1,4 @@
-test/**/*spec.js
+test/exac-gnomad/**/*spec.js
 --recursive
 --reporter spec
 --compilers js:babel-register

@@ -1,3 +1,7 @@
-import module from './src/module'
+import { combineDataForTable } from './src'
 
-module()
+const gnomad = {
+  combineDataForTable
+}
+
+module.exports = gnomad

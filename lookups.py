@@ -290,18 +290,39 @@ def remove_extraneous_information(variant):
     del variant['site_quality']
     del variant['vep_annotations']
 
-
 def get_variants_in_gene(db, gene_id):
     """
     """
-    variants = []
-    for variant in db.variants.find({'genes': gene_id}, fields={'_id': False}):
+    all_variants = []
+    exac_variant_uuids = []
+    gnomad_variant_uuids = []
+    for variant in db.variants.find({'genes': gene_id}):
+        print variant
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Gene'] == gene_id]
+        variant['uuid'] = str(variant['_id'])
+        variant['dataset'] = 'ExAC'
+        del variant['_id']
         add_consequence_to_variant(variant)
         remove_extraneous_information(variant)
-        variants.append(variant)
-    return variants
-
+        exac_variant_uuids.append(variant['uuid'])
+        all_variants.append(variant)
+    for variant in db.gnomadVariants.find({'genes': gene_id}):
+        variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Gene'] == gene_id]
+        variant['uuid'] = str(variant['_id'])
+        variant['dataset'] = 'gnomAD'
+        del variant['_id']
+        add_consequence_to_variant(variant)
+        remove_extraneous_information(variant)
+        gnomad_variant_uuids.append(variant['uuid'])
+        all_variants.append(variant)
+    return {
+        'all_variants': all_variants,
+        'uuid_lists': {
+            'all': exac_variant_uuids + gnomad_variant_uuids,
+            'exac': exac_variant_uuids,
+            'gnomad': gnomad_variant_uuids
+        }
+    }
 
 def get_transcripts_in_gene(db, gene_id):
     """
