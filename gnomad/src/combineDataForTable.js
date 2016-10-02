@@ -35,13 +35,17 @@ export const sumTableStats = R.reduce((acc, variant) => {
     next[field] = addNested(next, variant, field))
   next['allele_freq'] = next.allele_count / next.allele_num
   if (!next['datasets']) {
-    next['datasets'] = [variant.dataset]
+    next['datasets'] = ['all', variant.dataset]
   } else {
     next['datasets'] = [...next['datasets'], variant.dataset]
   }
   next[variant.dataset] = TABLE_UNIQUE_FIELDS.reduce((acc, field) => ({
     ...acc,
     [field]: variant[field]
+  }), {})
+  next.all = TABLE_UNIQUE_FIELDS.reduce((acc, field) => ({
+    ...acc,
+    [field]: next[field]
   }), {})
   return {
     ...acc,
@@ -79,19 +83,56 @@ let passesCategorySelection = R.curry((
 })
 passesCategorySelection = passesCategorySelection(CATEGORY_DEFINITIONS)
 
-export const combineDataForTable = (
+const filterVariants = R.curry((filters, uuid_lists, variants) =>
+  R.filter(variant =>
+    isInSelectedDataSets(variant.uuid, uuid_lists, filters.dataset) &&
+    passesQualityFilterSelection(variant.filter, filters.filter) &&
+    passesIndelOrSnpSelection(variant.indel, filters.indel) &&
+    passesCategorySelection(variant.major_consequence, filters.consequence)
+  )(variants)
+)
+
+const convertToList = (mergedVariants) => Object.keys(mergedVariants).map(v => mergedVariants[v])
+
+const addQualityResults = R.map(variant => {
+  const results = variant.datasets.slice(1, variant.datasets.length).map(dataset => ({
+    dataset,
+    filter: variant[dataset].filter
+  }))
+  const resultList = R.pluck('filter', results)
+  let pass
+  if (R.all(result => result === 'PASS', resultList)) {
+    pass = 'all'
+  } else if ((R.none(result => result === 'PASS', resultList))) {
+    pass = 'none'
+  } else {
+    pass = results.find(result => result.filter === 'PASS').dataset
+  }
+  return {
+    ...variant,
+    pass,
+  }
+})
+
+export const filterAndCombineData = (
   filters,
   uuid_lists,
   variants
 ) => {
   return R.pipe(
-    R.filter(variant =>
-      isInSelectedDataSets(variant.uuid, uuid_lists, filters.dataset) &&
-      passesQualityFilterSelection(variant.filter, filters.filter) &&
-      passesIndelOrSnpSelection(variant.indel, filters.indel) &&
-      passesCategorySelection(variant.major_consequence, filters.consequence)
-    ),
+    filterVariants(filters, uuid_lists),
     sumTableStats,
-    (mergedVariants) => Object.keys(mergedVariants).map(v => mergedVariants[v]),
+    convertToList,
+    addQualityResults,
+  )(variants)
+}
+
+export const combineDataForTable = (
+  variants
+) => {
+  return R.pipe(
+    sumTableStats,
+    convertToList,
+    addQualityResults,
   )(variants)
 }

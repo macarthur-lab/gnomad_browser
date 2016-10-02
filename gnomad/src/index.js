@@ -1,5 +1,9 @@
-import { combineDataForTable } from './combineDataForTable'
+import {
+  filterAndCombineData,
+  combineDataForTable,
+ } from './combineDataForTable'
 
 export {
+  filterAndCombineData,
   combineDataForTable,
 }

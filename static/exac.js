@@ -554,6 +554,100 @@ function draw_region_coverage(raw_data, metric, ref) {
     }
 }
 
+if (typeof Object.assign != 'function') {
+  (function () {
+    Object.assign = function (target) {
+      'use strict';
+      // We must check against these specific cases.
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var output = Object(target);
+      for (var index = 1; index < arguments.length; index++) {
+        var source = arguments[index];
+        if (source !== undefined && source !== null) {
+          for (var nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
+            }
+          }
+        }
+      }
+      return output;
+    };
+  })();
+}
+
+function update_variant_af_box() {
+    function get_af_category(d) {
+        if (d) {
+            if (!d.allele_freq) {
+                return [0, '0'];
+            } else if (d.allele_count == 1) {
+                return [1, 'a singleton'];
+            } else if (d.allele_freq < 1/10000) {
+                return [2, '<1/10000'];
+            } else if (d.allele_freq < 1/1000) {
+                return [3, '1/10000-0.001'];
+            } else if (d.allele_freq < 1/100) {
+                return [4, '0.001-0.01'];
+            } else if (d.allele_freq < 1/20) {
+                return [5, '0.01-0.05'];
+            } else if (d.allele_freq < 1/2) {
+                return [6, '0.05-0.5'];
+            } else {
+                return [7, '0.5-1'];
+            }
+        } else {
+            return [0, '0']
+        }
+    }
+
+    var data = window.table_variants;
+
+    var width = 50;
+    var height = 15;
+
+    var x_scale = d3.scale.linear()
+        .domain([0, 7])
+        .range([0, width]);
+    var dataSelection = $('.dataset_display_buttons.active')
+        .attr('id')
+        .replace('dataset_selection_', '')
+        .replace('_button', '');
+    var svg;
+    $.each(data, function(i, d) {
+        d3.select('#variant_af_box_' + d.variant_id).attr("data-tooltip", "Shows allele frequency \n on a discrete " +
+                "scale: \n singletons, <1/10,000, \n <1/1000, <1%, <5%, \n <50%, >50%. \n This particular variant is \n " +
+                get_af_category(d)[1] + ".");
+        svg = d3.select('#variant_af_box_' + d.variant_id)
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+
+        for (var j=0; j<8; j++) {
+            svg.append('rect')
+                    .style('stroke', 'steelblue')
+                    .style('fill', 'white')
+                    .attr('x', x_scale(j))
+                    .attr('y', 0)
+                    .attr('height', height)
+                    .attr('width', x_scale(1) - x_scale(0))
+        }
+        svg.append('rect')
+            .style('fill', 'steelblue')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', function() {
+                return x_scale(get_af_category(d[dataSelection])[0]);
+            })
+            .attr('height', height);
+
+    });
+}
+
 var csq_order = [
   'transcript_ablation',
   'splice_acceptor_variant',
@@ -612,30 +706,57 @@ function update_variants() {
         .attr('id')
         .replace('indel_selection_', '')
         .replace('_button', '');
-    var dataState = $('.dataset_display_buttons.active')
+    var dataSelection = $('.dataset_display_buttons.active')
         .attr('id')
         .replace('dataset_selection_', '')
         .replace('_button', '');
-    // console.log(dataState)
-    $('[major_consequence]').hide()
-    // console.log(window.uuid_lists[dataState])
-    $('[major_consequence]').map(function(row) {
-        // if (!filterState && $(this).attr('filter_status') !== 'PASS') {
-        //     return
-        // }
+    $('[variant_id]').hide()
+    if (dataSelection === 'all' && filterState) {
+        $('.data-indicator-child').show()
+    } else if (dataSelection === 'all' && !filterState) {
+        $('.data-indicator-child').hide()
+        $('.data-indicator-child.label-success').show()
+    } else {
+        $('.data-indicator-child').hide()
+        $('.data-indicator-' + dataSelection).show()
+    }
+    $('[variant_id]').map(function(i) {
+        var variant_id = $(this).attr('variant_id')
+        var variant = window.table_variants.find(function(v) { return v.variant_id === variant_id })
         if (indelState === 'snp' && $(this).attr('indel') === 'true') {
             return
         }
         if (indelState === 'indel' && $(this).attr('indel') === 'false') {
             return
         }
-        // if (_.contains(window.uuid_lists[dataState], $(this).attr('uuid')) === false) {
-        //     return
-        // }
-        if (_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))) {
-            $(this).show()
+        if (!_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))) {
+            return
         }
+        if (!variant[dataSelection] ) {
+            return
+        }
+        if (dataSelection !== 'all'
+            && !filterState
+            && variant[dataSelection].filter !== 'PASS') {
+            return
+        }
+        if (dataSelection === 'all'
+            && !filterState
+            && variant.pass !== 'all'
+        ) {
+            if (variant.pass === 'none') {
+                return
+            }
+            variant = Object.assign({}, variant, { all: variant[variant.pass] })
+        }
+        $(this).find('.table-allele-count').html(variant[dataSelection].allele_count)
+        $(this).find('.table-allele-num').html(variant[dataSelection].allele_num)
+        $(this).find('.table-hom-count').html(variant[dataSelection].hom_count)
+        $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
+        $(this).find('.table-allele-freq-box').empty()
+        $(this).show()
     })
+    update_variant_af_box()
     if ($('tr[style!="display: none;"]').length == 1) {
         $('#variants_table_empty').show();
         $('#variants_table_container').hide();
@@ -647,7 +768,6 @@ function update_variants() {
 
 function update_cnvs() {
     var filter = $('#filtered_checkbox').is(":checked") ? '[filter_status]' : '[filter_status="PASS"]';
-    console.log($('#filtered_checkbox').is(":checked"));
 }
 
 function get_af_bounds(data) {

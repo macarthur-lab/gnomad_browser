@@ -1,7 +1,8 @@
-import { combineDataForTable } from './src'
+import { filterAndCombineData, combineDataForTable } from './src'
 
 const gnomad = {
-  combineDataForTable
+  filterAndCombineData,
+  combineDataForTable,
 }
 
 module.exports = gnomad
