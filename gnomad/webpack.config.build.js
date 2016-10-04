@@ -4,7 +4,7 @@ var webpack = require('webpack')
 
 var config = {
   entry: [
-    './index',
+    './src/services/index',
   ],
   module: {
     loaders: [{

@@ -6,7 +6,7 @@ import {
   TABLE_NESTED_CUMULATIVE_FIELDS,
   TABLE_UNIQUE_FIELDS,
   CATEGORY_DEFINITIONS,
-} from './constants'
+} from '../constants'
 
 const add = (next, variant, field) => {
   if (!next[field]) {

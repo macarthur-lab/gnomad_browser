@@ -8,7 +8,7 @@ import {
   sumTableStats,
   filterAndCombineData,
   combineDataForTable,
-} from '../../src/combineDataForTable'
+} from '../../src/services/combineDataForTable'
 
 const API_URL = config.get('GNOMAD_API_URL')
 describe('sumTableStats', () => {

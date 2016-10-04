@@ -15,6 +15,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from flask.ext.compress import Compress
 from flask.ext.runner import Runner
 from flask_errormail import mail_on_500
+from flask_cors import CORS, cross_origin
 
 from flask import Response
 from collections import defaultdict, OrderedDict
@@ -36,6 +37,7 @@ ADMINISTRATORS = (
 app = Flask(__name__)
 mail_on_500(app, ADMINISTRATORS)
 Compress(app)
+CORS(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
