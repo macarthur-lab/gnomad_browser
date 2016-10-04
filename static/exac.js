@@ -612,10 +612,9 @@ function update_variant_af_box() {
     var x_scale = d3.scale.linear()
         .domain([0, 7])
         .range([0, width]);
-    var dataSelection = $('.dataset_display_buttons.active')
-        .attr('id')
-        .replace('dataset_selection_', '')
-        .replace('_button', '');
+    var exomeState = $('#exome_checkbox').is(":checked")
+    var genomeState = $('#genome_checkbox').is(":checked")
+    var dataSelection = getDataSelection(exomeState, genomeState)
     var svg;
     $.each(data, function(i, d) {
         d3.select('#variant_af_box_' + d.variant_id).attr("data-tooltip", "Shows allele frequency \n on a discrete " +
@@ -696,20 +695,29 @@ var categoryDefinitions = {
 categoryDefinitions.missenseAndLof =
     categoryDefinitions.lof.concat(categoryDefinitions.missense)
 
+function getDataSelection(exomeState, genomeState) {
+    if (exomeState && genomeState) {
+      return 'all'
+    }
+    if (exomeState && !genomeState) {
+      return 'ExAC'
+    }
+    if (!exomeState && genomeState) {
+      return 'gnomAD'
+    }
+}
+
 function update_variants() {
     var category = $('.consequence_display_buttons.active')
         .attr('id')
         .replace('consequence_', '')
         .replace('_variant_button', '');
     var filterState = $('#filtered_checkbox').is(":checked")
-    var indelState = $('.indel_display_buttons.active')
-        .attr('id')
-        .replace('indel_selection_', '')
-        .replace('_button', '');
-    var dataSelection = $('.dataset_display_buttons.active')
-        .attr('id')
-        .replace('dataset_selection_', '')
-        .replace('_button', '');
+    var indelState = $('#indel_checkbox').is(":checked")
+    var snpState = $('#snp_checkbox').is(":checked")
+    var exomeState = $('#exome_checkbox').is(":checked")
+    var genomeState = $('#genome_checkbox').is(":checked")
+    var dataSelection = getDataSelection(exomeState, genomeState)
     $('[variant_id]').hide()
     if (dataSelection === 'all' && filterState) {
         $('.data-indicator-child').show()
@@ -723,10 +731,10 @@ function update_variants() {
     $('[variant_id]').map(function(i) {
         var variant_id = $(this).attr('variant_id')
         var variant = window.table_variants.find(function(v) { return v.variant_id === variant_id })
-        if (indelState === 'snp' && $(this).attr('indel') === 'true') {
+        if (!snpState && $(this).attr('indel') === 'false') {
             return
         }
-        if (indelState === 'indel' && $(this).attr('indel') === 'false') {
+        if (!indelState && $(this).attr('indel') === 'true') {
             return
         }
         if (!_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))) {

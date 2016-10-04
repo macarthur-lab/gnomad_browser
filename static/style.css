@@ -191,13 +191,55 @@ TODO: come up with a better way to position tooltip
 .variant_selector_group {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+  height: 80px;
+  /*border: 1px solid green;*/
 }
 
-.varying_selector_checkboxes {
+.variant_selectors_container {
+  width: 30%;
+  /*border: 1px solid blue;*/
+}
+
+.variant_selector_checkbox_container {
+  padding-left: 10px;
+  height: 100%;
+  width: 50%;
+  /*border: 1px solid yellow;*/
+}
+
+.variant_selector_checkbox_title {
+  width: 100%;
+  height: 30%;
+  font-weight: bold;
+  padding-left: 3px;
+  /*border: 1px solid orange;*/
+}
+
+.variant_selector_checkboxes {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-shrink: 1;
+  align-items: flex-start;
+  justify-content: center;
+  height: 70%;
+  width: 100%;
+  padding-left: 12px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+.variant_selector_checkboxes label {
+  font-weight: normal !important;
+  display: flex;
+  margin-bottom: 0;
+}
+
+.checkbox-label {
+  /*margin-left: 10px;*/
+  padding-left: 5px;
 }
 
 .data-indicators {
@@ -234,9 +276,9 @@ TODO: come up with a better way to position tooltip
 }
 .btn-success {
   background-color: grey;
-  border: 1px solid #000;
+  border: none;
 }
 .btn-success:hover {
   background-color: #69584E;
-  border: 1px solid #000;
+  border: none;
 }

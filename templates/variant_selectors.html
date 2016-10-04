@@ -1,19 +1,4 @@
 <div class="variant_selector_group">
-    <div id="dataset_selectors_container">
-        <label for="dataset_types">
-            <span class="btn-group" data-toggle="buttons" id="dataset_types">
-                <button class="btn btn-primary dataset_display_buttons active" id="dataset_selection_all_button">
-                    <input type="radio">ExAC + gnomAD
-                </button>
-                <button class="btn btn-primary dataset_display_buttons" id="dataset_selection_ExAC_button">
-                    <input type="radio">ExAC
-                </button>
-                <button class="btn btn-primary dataset_display_buttons" id="dataset_selection_gnomAD_button">
-                    <input type="radio">gnomAD
-                </button>
-            </span>
-        </label>
-    </div>
     <div id="variant_selectors_container">
         <label for="variant_consequence_types">
             <span class="btn-group" data-toggle="buttons" id="variant_consequence_types">
@@ -29,28 +14,33 @@
             </span>
         </label>
     </div>
-    <div id="indel_selectors_container">
-        <label for="indel_types">
-            <span class="btn-group" data-toggle="buttons" id="indel_types">
-                <button class="btn btn-primary indel_display_buttons active" id="indel_selection_all_button">
-                    <input type="radio">SNP + Indel
-                </button>
-                <button class="btn btn-primary indel_display_buttons" id="indel_selection_snp_button">
-                    <input type="radio">SNP
-                </button>
-                <button class="btn btn-primary indel_display_buttons" id="indel_selection_indel_button">
-                    <input type="radio">Indel
-                </button>
-            </span>
-        </label>
-    </div>
-    <div class="varying_selector_checkboxes">
-        <label class='hidden-xs'>
-            <input type="checkbox" id="inverted_checkbox" value=""> Invert (highlight rare variants)
-        </label>
+    <div class="variant_selector_checkbox_container">
+        <div class="variant_selector_checkbox_title">
+            Include:
+        </div>
+        <div class="variant_selector_checkboxes">
+            <label class='hidden-xs'>
+                <input checked type="checkbox" id="exome_checkbox" value="">
+                <div class="checkbox-label">Exomes</div>
+            </label>
 
-        <label class='hidden-xs'>
-            <input type="checkbox" id="filtered_checkbox" value=""> Include filtered (non-PASS) variants
-        </label>
+            <label class='hidden-xs'>
+                <input checked type="checkbox" id="genome_checkbox" value="">
+                <div class="checkbox-label">Genomes</div>
+            </label>
+            <label class='hidden-xs'>
+                <input checked type="checkbox" id="snp_checkbox" value="">
+                <div class="checkbox-label">SNPs</div>
+            </label>
+            <label class='hidden-xs'>
+                <input checked type="checkbox" id="indel_checkbox" value="">
+                <div class="checkbox-label">Indels</div>
+            </label>
+
+            <label class='hidden-xs'>
+                <input type="checkbox" id="filtered_checkbox" value="">
+                <div class="checkbox-label">Filtered (non-PASS) variants</div>
+            </label>
+        </div>
     </div>
 </div>

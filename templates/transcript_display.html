@@ -738,7 +738,7 @@ $(document).ready(function() {
         }, 10);
     });
 
-    $('.consequence_display_buttons, #filtered_checkbox, .indel_display_buttons, .dataset_display_buttons').change(function () {
+    $('.variant_selector_group').change(function () {
         setTimeout(function() {
             update_variants();
             update_cnvs();
