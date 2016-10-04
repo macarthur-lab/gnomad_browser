@@ -215,13 +215,28 @@ TODO: come up with a better way to position tooltip
   background-color: #4682b4;
   border: 1px solid #000;
 }
+.data-indicator-child.label-success.data-indicator-gnomAD {
+  background-color: rgba(115, 171, 61, 1);
+  border: 1px solid #000;
+}
 .data-indicator-child.label-warning {
   background-color: rgba(70, 130, 180, 0.6);
   border: 1px dashed #000;
 }
-
+.data-indicator-child.label-warning.data-indicator-gnomAD {
+  background-color:rgba(115, 171, 61, 0.5);
+  border: 1px dashed #000;
+}
 .frequency-container  {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.btn-success {
+  background-color: grey;
+  border: 1px solid #000;
+}
+.btn-success:hover {
+  background-color: #69584E;
+  border: 1px solid #000;
 }
