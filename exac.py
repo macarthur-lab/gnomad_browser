@@ -615,7 +615,7 @@ def variant_data(variant_str, source):
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
             consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
-    base_coverage = lookups.get_coverage_for_bases(db, xpos, xpos + len(ref) - 1)
+    base_coverage = lookups.get_coverage_for_bases(db, 'base_coverage', xpos, xpos + len(ref) - 1)
     any_covered = any([x['has_coverage'] for x in base_coverage])
     metrics = lookups.get_metrics(db, variant)
 
@@ -721,7 +721,13 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
         variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
         cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
         cnvs_per_gene = lookups.get_cnvs(db, gene_id)
-        coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        # change base_coverage to e.g. genome_base_coverage when the data gets here
+        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats = {
+            'exomes': coverage_stats_exomes,
+            'genomes': coverage_stats_genomes
+        }
         add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
         constraint_info = lookups.get_constraint_for_transcript(db, transcript_id)
         if request_type == 'template':
@@ -794,7 +800,13 @@ def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
         variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
         cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
         cnvs_per_gene = lookups.get_cnvs(db, transcript['gene_id'])
-        coverage_stats = lookups.get_coverage_for_transcript(db, transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        # change base_coverage to e.g. genome_base_coverage when the data gets here
+        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats = {
+            'exomes': coverage_stats_exomes,
+            'genomes': coverage_stats_genomes
+        }
         add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
         if request_type == 'template':
             result = render_template(
@@ -893,7 +905,7 @@ def region_page(region_id):
             variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
             xstart = get_xpos(chrom, start)
             xstop = get_xpos(chrom, stop)
-            coverage_array = lookups.get_coverage_for_bases(db, xstart, xstop)
+            coverage_array = lookups.get_coverage_for_bases(db, 'base_coverage', xstart, xstop)
             t = render_template(
                 'region.html',
                 genes_in_region=genes_in_region,
@@ -941,7 +953,7 @@ def region_json(region_id):
             variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
             xstart = get_xpos(chrom, start)
             xstop = get_xpos(chrom, stop)
-            coverage_array = lookups.get_coverage_for_bases(db, xstart, xstop)
+            coverage_array = lookups.get_coverage_for_bases(db, 'base_coverage', xstart, xstop)
             t = jsonify(
                 genes_in_region=genes_in_region,
                 variants_in_region=variants_in_region,

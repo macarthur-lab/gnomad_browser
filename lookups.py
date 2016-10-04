@@ -71,7 +71,7 @@ def get_variants_from_dbsnp(db, rsid):
     return []
 
 
-def get_coverage_for_bases(db, xstart, xstop=None):
+def get_coverage_for_bases(db, collection, xstart, xstop=None):
     """
     Get the coverage for the list of bases given by xstart->xstop, inclusive
     Returns list of coverage dicts
@@ -80,7 +80,7 @@ def get_coverage_for_bases(db, xstart, xstop=None):
     if xstop is None:
         xstop = xstart
     coverages = {
-        doc['xpos']: doc for doc in db.base_coverage.find(
+        doc['xpos']: doc for doc in db[collection].find(
             {'xpos': {'$gte': xstart, '$lte': xstop}},
             fields={'_id': False}
         )
@@ -97,7 +97,7 @@ def get_coverage_for_bases(db, xstart, xstop=None):
     return ret
 
 
-def get_coverage_for_transcript(db, xstart, xstop=None):
+def get_coverage_for_transcript(db, collection, xstart, xstop=None):
     """
 
     :param db:
@@ -106,7 +106,7 @@ def get_coverage_for_transcript(db, xstart, xstop=None):
     :param xstop:
     :return:
     """
-    coverage_array = get_coverage_for_bases(db, xstart, xstop)
+    coverage_array = get_coverage_for_bases(db, collection, xstart, xstop)
     # only return coverages that have coverage (if that makes any sense?)
     # return coverage_array
     covered = [c for c in coverage_array if c['has_coverage']]
