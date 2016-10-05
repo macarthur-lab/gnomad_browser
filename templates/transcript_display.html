@@ -264,7 +264,7 @@ function gene_chart(data, new_data, variant_data, _transcript, _cnvs) {
         .attr('id', 'inner_graph')
         .attr("transform", "translate(" + gene_chart_margin.left + "," + gene_chart_margin.top + ")");
 
-    var area = d3.svg.area()
+    var exomeCoverageArea = d3.svg.area()
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y0( function(d) {
@@ -276,23 +276,24 @@ function gene_chart(data, new_data, variant_data, _transcript, _cnvs) {
     svg.append("path")
         .datum(new_data)
         .style("fill", "steelblue")
-        .attr('class', 'area')
-        .attr("d", area);
+        .attr('class', 'exome-coverage-area')
+        .attr("d", exomeCoverageArea);
 
-    var line = d3.svg.line()
+    var genomeCoverageLine = d3.svg.line()
+        .defined(function(d) { return !isNaN(d[metric]) })
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y( function(d) {
-            return (metric in d) ? y(d[metric]) : gene_chart_height;
+            return y(d[metric] - 30); // add fake coverage for prototype!
         });
 
     svg.append("path")
         .datum(new_data)
         .style("fill", "none")
-        .style("stroke", "rgba(115, 171, 61, 1)")
-        .style("stroke-width", "4px")
-        .attr('class', 'line')
-        .attr("d", line);
+        .style("stroke", "lime")
+        .style("stroke-width", "5px")
+        .attr('class', 'genome-converage-line')
+        .attr("d", genomeCoverageLine);
 
     svg.append("g")
         .attr("class", "y axis")
@@ -527,7 +528,7 @@ function change_coverage_chart(data, new_data, variant_data, _transcript, scale_
         .domain([0, max_cov])
         .range([gene_chart_height, 0]);
 
-    var area = d3.svg.area()
+    var exomeCoverageArea = d3.svg.area()
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y0( function(d) {
@@ -537,13 +538,31 @@ function change_coverage_chart(data, new_data, variant_data, _transcript, scale_
         });
 
 {#    var new_data = create_new_data(data);#}
-    var path = svg.selectAll("path")
+    svg.select(".exome-coverage-area")
         .datum(new_data)
         .transition()
         .duration(500)
-        .attr("d", area)
+        .attr("d", exomeCoverageArea)
         .style("fill", "steelblue")
-        .attr('class', 'area');
+        .attr('class', 'exome-coverage-area');
+
+    var genomeCoverageLine = d3.svg.line()
+        .defined(function(d) { return !isNaN(d[metric]) })
+        .x( function(d) {
+            return exon_x_scale(d[coords]);
+        }).y( function(d) {
+            return y(d[metric] - 15);
+        });
+
+    svg.select('.genome-converage-line')
+        .datum(new_data)
+        .transition()
+        .duration(500)
+        .style("fill", "none")
+        .style("stroke", "lime")
+        .style("stroke-width", "5px")
+        .attr('class', 'genome-converage-line')
+        .attr("d", genomeCoverageLine);
 
     svg.selectAll("circle")
         .data(data)
