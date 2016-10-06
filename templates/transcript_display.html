@@ -246,7 +246,7 @@ var make_cnvs_svg = function(_cnvs, _transcript, scale_type, skip_utrs)
 }
 
 
-function gene_chart(data, new_data, variant_data, _transcript, _cnvs) {
+function gene_chart(data, new_data_exomes, new_data_genomes, variant_data, _transcript, _cnvs) {
     var coords = 'pos_coding_noutr';
     var coding_coordinate_params = get_coding_coordinate_params(_transcript, true);
     var chart_width = gene_chart_width;
@@ -284,7 +284,7 @@ function gene_chart(data, new_data, variant_data, _transcript, _cnvs) {
         });
 
     svg.append("path")
-        .datum(new_data)
+        .datum(new_data_exomes)
         .style("fill", "steelblue")
         .attr('class', 'exome-coverage-area')
         .attr("d", exomeCoverageArea);
@@ -294,11 +294,11 @@ function gene_chart(data, new_data, variant_data, _transcript, _cnvs) {
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y( function(d) {
-            return y(d[metric] - 30); // add fake coverage for prototype!
+            return y(d[metric]);
         });
 
     svg.append("path")
-        .datum(new_data)
+        .datum(new_data_genomes)
         .style("fill", "none")
         .style("stroke", "lime")
         .style("stroke-width", "5px")
@@ -514,7 +514,7 @@ function variant_colors(d) {
     }
 }
 
-function change_coverage_chart(data, new_data, variant_data, _transcript, scale_type, metric, skip_utrs, container) {
+function change_coverage_chart(data, new_data_exomes, new_data_genomes, variant_data, _transcript, scale_type, metric, skip_utrs, container) {
     var coords = skip_utrs ? 'pos_coding_noutr' : 'pos_coding';
     var max_cov = (metric == 'mean' || metric == 'median') ? 100 : 1;
     var coding_coordinate_params = get_coding_coordinate_params(_transcript, skip_utrs);
@@ -549,7 +549,7 @@ function change_coverage_chart(data, new_data, variant_data, _transcript, scale_
 
 {#    var new_data = create_new_data(data);#}
     svg.select(".exome-coverage-area")
-        .datum(new_data)
+        .datum(new_data_exomes)
         .transition()
         .duration(500)
         .attr("d", exomeCoverageArea)
@@ -561,11 +561,11 @@ function change_coverage_chart(data, new_data, variant_data, _transcript, scale_
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y( function(d) {
-            return y(d[metric] - 15);
+            return y(d[metric]);
         });
 
     svg.select('.genome-converage-line')
-        .datum(new_data)
+        .datum(new_data_genomes)
         .transition()
         .duration(500)
         .style("fill", "none")
@@ -668,7 +668,6 @@ function create_new_data(data, coords) {
             new_data.push(x);
         }
     }
-    console.log(new_data)
     return new_data;
 }
 
@@ -706,6 +705,7 @@ $(document).ready(function() {
         $('#gene_plot_container').css('width', $(window).width()*10/12 + "px");
     }
     precalc_coding_coordinates(window.transcript, window.coverage_stats.exomes, 'pos');
+    precalc_coding_coordinates(window.transcript, window.coverage_stats.genomes, 'pos');
     precalc_coding_coordinates(window.transcript, window.variants_in_transcript, 'pos');
 
     // only show variants that have a coding coordinate
@@ -717,13 +717,25 @@ $(document).ready(function() {
     window.coverage_stats.exomes = _.filter(window.coverage_stats.exomes, function(d) {
         return d.pos_coding != undefined;
     });
+    window.coverage_stats.genomes = _.filter(window.coverage_stats.genomes, function(d) {
+        return d.pos_coding != undefined;
+    });
     $('#avg_coverage').html(coverage_sum('mean'));
     $('#avg_coverage_x').html(coverage_sum('30')*100 + '%');
 
     var new_data = create_new_data(window.coverage_stats.exomes, 'pos_coding');
     var new_data_skip_utr = create_new_data(window.coverage_stats.exomes, 'pos_coding_noutr');
+    var new_data_genomes = create_new_data(window.coverage_stats.exomes, 'pos_coding');
+    var new_data_skip_utr_genomes = create_new_data(window.coverage_stats.exomes, 'pos_coding_noutr');
     if (window.coverage_stats.exomes != null) {
-        gene_chart(window.coverage_stats.exomes, new_data_skip_utr, window.variants_in_transcript, window.transcript, window.cnvs);
+        gene_chart(
+          window.coverage_stats.exomes,
+          new_data_skip_utr,
+          new_data_skip_utr_genomes,
+          window.variants_in_transcript,
+          window.transcript,
+          window.cnvs
+        );
         if (window.variants_in_transcript.length) {
             update_variants();
         }
@@ -746,23 +758,26 @@ $(document).ready(function() {
         var detail = $('.display_coverage_metric_buttons.active').attr('id').replace('display_coverage_', '').replace('_button', '');
         var include_utrs = $('#include_utrs_checkbox').is(':checked');
         var plot_data = include_utrs ? new_data : new_data_skip_utr;
-        change_coverage_chart(window.coverage_stats.exomes, plot_data, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
+        var plot_data_genomes = include_utrs ? new_data_genomes : new_data_skip_utr_genomes;
+        change_coverage_chart(window.coverage_stats.exomes, plot_data, plot_data_genomes, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
     });
     $('#over_x_select').change(function () {
         var detail = $('.display_coverage_metric_buttons.active').attr('id').replace('display_coverage_', '').replace('_button', '');
         var include_utrs = $('#include_utrs_checkbox').is(':checked');
         var plot_data = include_utrs ? new_data : new_data_skip_utr;
+        var plot_data_genomes = include_utrs ? new_data_genomes : new_data_skip_utr_genomes;
         $('#avg_coverage_type_x').html($(this).val());
         $('#avg_coverage_x').html(coverage_sum($(this).val().replace('X', ''))*100 + '%');
-        change_coverage_chart(window.coverage_stats.exomes, plot_data, window.variants_in_transcript, window.transcript, detail, $(this).val().replace('X', ''), !include_utrs, '#gene_plot_container');
+        change_coverage_chart(window.coverage_stats.exomes, plot_data, plot_data_genomes, window.variants_in_transcript, window.transcript, detail, $(this).val().replace('X', ''), !include_utrs, '#gene_plot_container');
     });
     $('#average_select').change(function () {
         var detail = $('.display_coverage_metric_buttons.active').attr('id').replace('display_coverage_', '').replace('_button', '');
         var include_utrs = $('#include_utrs_checkbox').is(':checked');
         var plot_data = include_utrs ? new_data : new_data_skip_utr;
+        var plot_data_genomes = include_utrs ? new_data_genomes : new_data_skip_utr_genomes;
         $('#avg_coverage_type').html($(this).val());
         $('#avg_coverage').html(coverage_sum($(this).val()));
-        change_coverage_chart(window.coverage_stats.exomes, plot_data, window.variants_in_transcript, window.transcript, detail, $(this).val(), !include_utrs, '#gene_plot_container');
+        change_coverage_chart(window.coverage_stats.exomes, plot_data, plot_data_genomes, window.variants_in_transcript, window.transcript, detail, $(this).val(), !include_utrs, '#gene_plot_container');
     });
     $('#include_utrs_checkbox').change(function () {
         setTimeout(function() {
@@ -771,7 +786,8 @@ $(document).ready(function() {
             v = (v == 'covered') ? $('#over_x_select').val().replace('X', '') : $("#average_select").val();
             var include_utrs = $('#include_utrs_checkbox').is(':checked');
             var plot_data = include_utrs ? new_data : new_data_skip_utr;
-            change_coverage_chart(window.coverage_stats.exomes, plot_data, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
+            var plot_data_genomes = include_utrs ? new_data_genomes : new_data_skip_utr_genomes;
+            change_coverage_chart(window.coverage_stats.exomes, plot_data, plot_data_genomes, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
         }, 10);
     });
 
@@ -793,7 +809,6 @@ $(document).ready(function() {
 
     $('.display_coverage_metric_buttons').change(function () {
         var detail = $(this).attr('id').replace('display_coverage_', '').replace('_button', '');
-        console.log(detail);
         var v = $('.coverage_metric_buttons.active').attr('id').replace('_covmet_button', '');
         if (v == 'covered') {
             $('#over_x_select_container').show();
@@ -804,7 +819,8 @@ $(document).ready(function() {
         }
         var include_utrs = $('#include_utrs_checkbox').is(':checked');
         var plot_data = include_utrs ? new_data : new_data_skip_utr;
-        change_coverage_chart(window.coverage_stats.exomes, plot_data, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
+        var plot_data_genomes = include_utrs ? new_data_genomes : new_data_skip_utr_genomes;
+        change_coverage_chart(window.coverage_stats.exomes, plot_data, plot_data_genomes, window.variants_in_transcript, window.transcript, detail, v, !include_utrs, '#gene_plot_container');
     });
 
 {#    $("#coverage_plot_download").on('click', function() {#}
