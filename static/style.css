@@ -188,6 +188,61 @@ TODO: come up with a better way to position tooltip
     transform:         translate(-5px, 7px);
 }
 
+.coverage-plot-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.coverage-plot-controls-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.coverage-plot-controls-left-selectors {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.coverage-plot-controls-left-selectors {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.coverage-plot-controls-left-legend {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.coverage-plot-label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+#include_utrs_checkbox {
+  margin-left: 5px;
+}
+
+.legend-square-exomes {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  background-color: steelblue;
+  border: 1px solid #000;
+}
+.legend-square-genomes {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+  margin-right: 5px;
+  background-color: lime;
+  border: 1px solid #000;
+}
+
 .variant_selector_group {
   display: flex;
   flex-direction: row;

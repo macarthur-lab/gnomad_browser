@@ -3,26 +3,36 @@
     <dd><span id="avg_coverage"></span></dd>
 </dl>
 <div id="gene_plot">
-    <span class="hidden-xs">
-        <label for="display_coverage_metric_group">
-            Display:
-        </label>
-        <span class="btn-group" data-toggle="buttons" id="display_coverage_metric_group">
-            <button class="btn btn-primary active display_coverage_metric_buttons"
-                    id="display_coverage_overview_button" data-tooltip="Shows all exons">
-                <input type="radio">Overview</input>
-            </button>
-            <button class="btn btn-primary display_coverage_metric_buttons"
-                    id="display_coverage_detail_button" data-tooltip="Zoomed in view (can scroll horizontally if needed)">
-                <input type="radio">Detail</input>
-            </button>
-        </span>
-        <label>
-            <input type="checkbox" id="include_utrs_checkbox" value=""> Include UTRs in plot
-        </label>
-    </span>
-    {% include 'coverage_selectors.html' %}
-    <br/>
+    <div class="coverage-plot-controls">
+      <div class="coverage-plot-controls-left">
+        <div class="coverage-plot-controls-left-selectors">
+          <label class="coverage-plot-label" for="display_coverage_metric_group">
+              Display:
+          </label>
+          <span class="btn-group" data-toggle="buttons" id="display_coverage_metric_group">
+              <button class="btn btn-primary active display_coverage_metric_buttons"
+                      id="display_coverage_overview_button" data-tooltip="Shows all exons">
+                  <input type="radio">Overview</input>
+              </button>
+              <button class="btn btn-primary display_coverage_metric_buttons"
+                      id="display_coverage_detail_button" data-tooltip="Zoomed in view (can scroll horizontally if needed)">
+                  <input type="radio">Detail</input>
+              </button>
+          </span>
+          <label>
+              <input type="checkbox" id="include_utrs_checkbox" value=""> Include UTRs in plot
+          </label>
+        </div>
+        <div class="coverage-plot-controls-left-legend">
+          <span class="coverage-plot-label">Coverage:</span>
+          <span class="legend-square-exomes"></span><span>Exomes</span>
+          <span class="legend-square-genomes"></span><span>Genomes</span>
+        </div>
+      </div>
+      <div class="coverage-plot-controls-right">
+        {% include 'coverage_selectors.html' %}
+      </div>
+    </div>
     <div id="gene_plot_container_container">
         <div id="loading_coverage">
             Loading coverage...
