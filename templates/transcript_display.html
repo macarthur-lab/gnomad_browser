@@ -62,6 +62,8 @@
 <br/>
 <script>
 
+var exomeColor = 'rgba(70, 130, 180, 1)'
+var genomeColor ='rgba(115, 171, 61,  1)'
 
 var make_cnvs_svg = function(_cnvs, _transcript, scale_type, skip_utrs)
 {
@@ -285,7 +287,7 @@ function gene_chart(data, new_data_exomes, new_data_genomes, variant_data, _tran
 
     svg.append("path")
         .datum(new_data_exomes)
-        .style("fill", "steelblue")
+        .style("fill", exomeColor)
         .attr('class', 'exome-coverage-area')
         .attr("d", exomeCoverageArea);
 
@@ -294,14 +296,14 @@ function gene_chart(data, new_data_exomes, new_data_genomes, variant_data, _tran
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y( function(d) {
-            return y(d[metric]);
+            return y(d[metric] - 40);
         });
 
     svg.append("path")
         .datum(new_data_genomes)
         .style("fill", "none")
-        .style("stroke", "lime")
-        .style("stroke-width", "5px")
+        .style("stroke", genomeColor)
+        .style("stroke-width", "8px")
         .attr('class', 'genome-converage-line')
         .attr("d", genomeCoverageLine);
 
@@ -553,7 +555,7 @@ function change_coverage_chart(data, new_data_exomes, new_data_genomes, variant_
         .transition()
         .duration(500)
         .attr("d", exomeCoverageArea)
-        .style("fill", "steelblue")
+        .style("fill", exomeColor)
         .attr('class', 'exome-coverage-area');
 
     var genomeCoverageLine = d3.svg.line()
@@ -569,7 +571,7 @@ function change_coverage_chart(data, new_data_exomes, new_data_genomes, variant_
         .transition()
         .duration(500)
         .style("fill", "none")
-        .style("stroke", "lime")
+        .style("stroke", genomeColor)
         .style("stroke-width", "5px")
         .attr('class', 'genome-converage-line')
         .attr("d", genomeCoverageLine);

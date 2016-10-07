@@ -231,7 +231,7 @@ TODO: come up with a better way to position tooltip
   width: 15px;
   height: 15px;
   margin-right: 5px;
-  background-color: steelblue;
+  background-color: rgba(70, 130, 180, 1);
   border: 1px solid #000;
 }
 .legend-square-genomes {
@@ -239,7 +239,7 @@ TODO: come up with a better way to position tooltip
   height: 15px;
   margin-left: 10px;
   margin-right: 5px;
-  background-color: lime;
+  background-color: rgba(115, 171, 61, 1);
   border: 1px solid #000;
 }
 
