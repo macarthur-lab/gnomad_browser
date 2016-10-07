@@ -8,7 +8,8 @@ import metricsExample from '../exampleData/metricsExample'
 const API_URL = config.get('GNOMAD_API_URL')
 
 describe('gnomad/exac variant api', () => {
-  const variantId = "22-46594230-T-A"
+  // const variantId = "22-46594230-T-A"
+  const variantId = '22-46615880-T-C'
   const URL = `${API_URL}/variant/${variantId}`
   it('gets variant object with keys', (done) => {
     fetch(URL)

@@ -4,14 +4,17 @@ import R from 'ramda'
 import fetch from 'isomorphic-fetch'
 import config from 'config'
 
+import combineVariantData from '../../src/services/combineVariantData'
+
 import {
-  sumTableStats,
   filterAndCombineData,
   combineDataForTable,
 } from '../../src/services/combineDataForTable'
 
+import { VARIANTS_TABLE_FIELDS } from '../../src/constants'
+
 const API_URL = config.get('GNOMAD_API_URL')
-describe('sumTableStats', () => {
+describe('combineVariantData', () => {
   const geneId = 'ENSG00000186951'
   const URL = `${API_URL}/gene/${geneId}`
   it('reduces/sums variant array from multiple data sources', (done) => {
@@ -19,7 +22,10 @@ describe('sumTableStats', () => {
       .then(response => response.json())
       .then(data => {
         const { variants_in_gene } = data
-        const result = sumTableStats(variants_in_gene)
+        const result = combineVariantData(
+          VARIANTS_TABLE_FIELDS,
+          variants_in_gene
+        )
         expect(Object.keys(result).length).toBe(579)
         const variant = result['22-46594241-G-T']
         expect(
@@ -226,7 +232,10 @@ describe('sumTableStats', () => {
       .then(response => response.json())
       .then(data => {
         const { variants_in_transcript } = data
-        const result = sumTableStats(variants_in_transcript)
+        const result = combineVariantData(
+          VARIANTS_TABLE_FIELDS,
+          variants_in_transcript
+        )
         expect(Object.keys(result).length).toBe(579)
         done()
          // eslint-disable-next-line
