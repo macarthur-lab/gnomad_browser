@@ -13,10 +13,19 @@
     <!-- Render context vars in JS here -->
     <script type="text/javascript">
         window.variant = {{ variant|tojson|safe }};
+        window.exac = {{ exac|tojson|safe }};
+        window.gnomAD = {{ gnomad|tojson|safe }};
+        window.variant = gnomad.combineDataForVariantPage(
+            window.exac.variant,
+            window.gnomAD.variant
+        )
         window.base_coverage = {{ base_coverage|tojson|safe }};
         window.any_covered = {{ any_covered|tojson|safe }};
         window.consequence = {{ consequences|tojson|safe }};
         window.metrics = {{ metrics|tojson|safe }};
+        console.log(window.variant)
+        // console.log(window.exac)
+        // console.log(window.gnomad)
 
         $(document).ready(function() {
             draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
@@ -38,6 +47,57 @@
             $('#average_select').change(function () {
                 draw_region_coverage(window.base_coverage, $(this).val(), window.variant.ref);
             });
+
+            function getDataSelection(exomeState, genomeState) {
+                if (exomeState && genomeState) {
+                    $('#genome_checkbox').attr('disabled', false)
+                    $('#exome_checkbox').attr('disabled', false)
+                    return 'all'
+                }
+                if (exomeState && !genomeState) {
+                    $('#exome_checkbox').attr('disabled', true)
+                    return 'exac'
+                }
+                if (!exomeState && genomeState) {
+                    $('#genome_checkbox').attr('disabled', true)
+                    return 'gnomad'
+                }
+            }
+
+            function updateData(variant, selection) {
+                for (var pop in variant[selection].pop_acs) {
+                    ix = pop.substring(0, 3)
+                    $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
+                    $('#table-number-' + ix).html(variant[selection].pop_ans[pop])
+                    if (variant.chrom !== 'Y') {
+                      $('#table-homozygotes' + ix).html(variant[selection].pop_homs[pop])
+                    }
+                    if (variant.chrom === 'X' || variant.chrom === 'Y') {
+                      $('#table-hemizygotes-' + ix).html(variant[selection].pop_hemis[pop])
+                    }
+                    var frequency = (variant[selection].pop_acs[pop] /
+                                   variant[selection].pop_ans[pop]).toPrecision(4)
+                    $('#table-frequency-' + ix).html(frequency)
+                }
+                $('#table-count-sum').html(variant[selection].allele_count)
+                $('#table-number-sum').html(variant[selection].allele_num)
+                if (variant.chrom !== 'Y') {
+                  $('#table-homozygotes-sum').html(variant[selection].hom_count)
+                }
+                if (variant.chrom === 'X' || variant.chrom === 'Y') {
+                  $('#table-hemizygotes-sum').html(variant[selection].hemi_count)
+                }
+                $('#table-frequency').html(variant[selection].allele_freq)
+            }
+
+            updateData(window.variant, 'all')
+
+            $('.population_selector_checkbox_container').change(function() {
+                var exomeState = $('#exome_checkbox').is(":checked")
+                var genomeState = $('#genome_checkbox').is(":checked")
+                var dataSelection = getDataSelection(exomeState, genomeState)
+                updateData(window.variant, dataSelection)
+            })
         });
     </script>
     <style>
@@ -294,8 +354,6 @@
             </div>
             <hr/>
         {% endif %}
-
-{#          Lower display#}
         <div class="row">
             <div class="col-md-6">
                 <div id="annotation_container">
@@ -358,16 +416,16 @@
                                     {% for pop in variant.pop_acs %}
                                         <tr>
                                             <td>{{ pop }}</td>
-                                            <td>{{ variant.pop_acs[pop] }}</td>
-                                            <td>{{ variant.pop_ans[pop] }}</td>
+                                            <td id="table-count-{{ pop[0:3] }}">{{ variant.pop_acs[pop] }}</td>
+                                            <td id="table-number-{{ pop[0:3] }}">{{ variant.pop_ans[pop] }}</td>
                                             {% if chrom != 'Y' %}
-                                                <td>{{ variant.pop_homs[pop] }}</td>
+                                                <td id="table-homozygotes-{{ pop[0:3] }}">{{ variant.pop_homs[pop] }}</td>
                                             {% endif %}
                                             {% if chrom == 'X' or chrom == 'Y' %}
-                                                <td>{{ variant.pop_hemis[pop] }}</td>
+                                                <td id="table-hemizygotes-{{ pop[0:3] }}">{{ variant.pop_hemis[pop] }}</td>
                                             {% endif %}
                                             {% if variant.pop_ans[pop] > 0 %}
-                                                <td>{{ '%0.4g' % (variant.pop_acs[pop]/variant.pop_ans[pop]) }}</td>
+                                                <td id="table-frequency-{{ pop[0:3] }}">{{ '%0.4g' % (variant.pop_acs[pop]/variant.pop_ans[pop]) }}</td>
                                             {% else %}
                                                 <td>NA</td>
                                             {% endif %}
@@ -377,15 +435,15 @@
                                 <tfoot>
                                     <tr>
                                         <td><b>Total</b></td>
-                                        <td><b>{{ variant.pop_acs.values()|sum }}</b></td>
-                                        <td><b>{{ variant.pop_ans.values()|sum }}</b></td>
+                                        <td><b id="table-count-sum">{{ variant.pop_acs.values()|sum }}</b></td>
+                                        <td><b id="table-number-sum">{{ variant.pop_ans.values()|sum }}</b></td>
                                         {% if chrom != 'Y' %}
-                                            <td><b>{{ variant.pop_homs.values()|sum }}</b></td>
+                                            <td><b id="table-homozygotes-sum">{{ variant.pop_homs.values()|sum }}</b></td>
                                         {% endif %}
                                         {% if chrom == 'X' or chrom == 'Y' %}
-                                            <td><b>{{ variant.pop_hemis.values()|sum }}</b></td>
+                                            <td><b id="table-hemizygotes-sum">{{ variant.pop_hemis.values()|sum }}</b></td>
                                         {% endif %}
-                                        <td><b>
+                                        <td><b id="table-total-freq">
                                             {% if variant.allele_freq is not none %}
                                                 {{ '%0.4g' % variant.allele_freq }}
                                             {% else %}
@@ -396,6 +454,22 @@
                                 </tfoot>
                             </table>
                             {% endwith %}
+                        </div>
+                        <div class="population_selector_checkbox_container">
+                            <div class="population_selector_checkbox_title">
+                                Include:
+                            </div>
+                            <div class="population_selector_checkboxes">
+                                <label class='hidden-xs'>
+                                    <input checked type="checkbox" id="exome_checkbox" value="">
+                                    <div class="checkbox-label">Exomes</div>
+                                </label>
+
+                                <label class='hidden-xs'>
+                                    <input checked type="checkbox" id="genome_checkbox" value="">
+                                    <div class="checkbox-label">Genomes</div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 {% else %}

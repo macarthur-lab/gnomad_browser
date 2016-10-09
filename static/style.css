@@ -337,3 +337,36 @@ TODO: come up with a better way to position tooltip
   background-color: #69584E;
   border: none;
 }
+
+.population_selector_checkbox_container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  /*border: 1px solid blue;*/
+}
+
+.population_selector_checkbox_title {
+  font-weight: bold;
+  margin-right: 15px;
+  /*border: 1px solid orange;*/
+}
+
+.population_selector_checkboxes {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /*border: 1px solid #9C27B0;*/
+}
+
+.checkbox-label {
+  /*margin-left: 10px;*/
+  padding-left: 5px;
+  margin-right: 20px;
+}
+
+.population_selector_checkboxes label {
+  font-weight: normal !important;
+  display: flex;
+  margin-bottom: 0;
+}

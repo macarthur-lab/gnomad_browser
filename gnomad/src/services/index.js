@@ -4,11 +4,11 @@ import {
  } from './combineDataForTable'
 
 import {
-  combineForVariantPage,
+  combineDataForVariantPage,
  } from './combineForVariantPage'
 
 export {
   filterAndCombineData,
   combineDataForTable,
-  combineForVariantPage,
+  combineDataForVariantPage,
 }

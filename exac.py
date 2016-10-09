@@ -679,16 +679,19 @@ def variant_data(variant_str, source):
 @app.route('/variant/<variant_str>')
 def variant_page(variant_str):
     try:
-        data = variant_data(variant_str)
+        exac = variant_data(variant_str, 'exac')
+        gnomad = variant_data(variant_str, 'gnomad')
         print 'Rendering variant: %s' % variant_str
         return render_template(
             'variant.html',
-            variant=data['variant'],
-            base_coverage=data['base_coverage'],
-            consequences=data['consequences'],
-            any_covered=data['any_covered'],
-            metrics=data['metrics'],
-            read_viz=data['read_viz'],
+            variant=exac['variant'],
+            exac=exac,
+            gnomad=gnomad,
+            base_coverage=exac['base_coverage'],
+            consequences=exac['consequences'],
+            any_covered=exac['any_covered'],
+            metrics=exac['metrics'],
+            read_viz=exac['read_viz'],
         )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
@@ -702,8 +705,8 @@ def variant_api(variant_str):
 
         print 'Sending json for variant: %s' % variant_str
         return jsonify(
-            exacVariant=exacVariant,
-            gnomadVariant=gnomadVariant
+            exac=exacVariant,
+            gnomad=gnomadVariant
         )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()

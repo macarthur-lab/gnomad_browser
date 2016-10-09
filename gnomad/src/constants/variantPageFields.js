@@ -17,8 +17,8 @@ export default {
     'pos',
     'ref',
     'rsid',
-    // 'orig_alt_alleles',
-    // 'transcripts',
+    'orig_alt_alleles',
+    'transcripts',
     // 'vep_annotations',
     'variant_id',
   ],
@@ -37,6 +37,7 @@ export default {
     'pop_acs',
     'pop_ans',
     'pop_homs',
+    'pop_hemis',
   ],
   uniqueFields: [
     'ac_female',

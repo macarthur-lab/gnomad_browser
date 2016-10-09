@@ -9,7 +9,8 @@ import combineVariantData from '../../src/services/combineVariantData'
 import {
   filterAndCombineData,
   combineDataForTable,
-} from '../../src/services/combineDataForTable'
+  combineDataForVariantPage,
+} from '../../src/services'
 
 import { VARIANTS_TABLE_FIELDS } from '../../src/constants'
 
@@ -387,6 +388,27 @@ describe('combineDataForTable', () => {
         const { variants_in_gene } = data
         const result = combineDataForTable(variants_in_gene)
         expect(result.length).toBe(579)
+        done()
+      }).catch(error => console.log(error))
+  })
+})
+
+describe('combineDataForVariantPage', () => {
+  const variantId = '22-46594241-G-T'
+  const URL = `${API_URL}/variant/${variantId}`
+  it('reduces/sums duplicate variants', (done) => {
+    fetch(URL)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        const variant = combineDataForVariantPage(
+          data.exac.variant,
+          data.gnomad.variant
+        )
+        // console.log(variant.gnomad.genotype_depths)
+        for (let pop in variant.all.pop_acs) {
+          console.log(pop)
+        }
         done()
       }).catch(error => console.log(error))
   })
