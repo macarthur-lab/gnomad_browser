@@ -370,3 +370,32 @@ TODO: come up with a better way to position tooltip
   display: flex;
   margin-bottom: 0;
 }
+
+.quality_display_button_group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.metrics-bottom-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-top: 5px;
+  /*border: 1px solid blue;*/
+}
+
+.metrics-data-selector-form {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  /*border: 1px solid purple;*/
+}
+
+.dataRadio {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  /*border: 1px solid #B71C1C;*/
+}

@@ -405,10 +405,7 @@ describe('combineDataForVariantPage', () => {
           data.exac.variant,
           data.gnomad.variant
         )
-        // console.log(variant.gnomad.genotype_depths)
-        for (let pop in variant.all.pop_acs) {
-          console.log(pop)
-        }
+        console.log(variant.gnomad.genotype_depths)
         done()
       }).catch(error => console.log(error))
   })
