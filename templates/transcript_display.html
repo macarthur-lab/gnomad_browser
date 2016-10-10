@@ -296,7 +296,7 @@ function gene_chart(data, new_data_exomes, new_data_genomes, variant_data, _tran
         .x( function(d) {
             return exon_x_scale(d[coords]);
         }).y( function(d) {
-            return y(d[metric] - 40);
+            return y(d[metric]);
         });
 
     svg.append("path")
@@ -727,8 +727,8 @@ $(document).ready(function() {
 
     var new_data = create_new_data(window.coverage_stats.exomes, 'pos_coding');
     var new_data_skip_utr = create_new_data(window.coverage_stats.exomes, 'pos_coding_noutr');
-    var new_data_genomes = create_new_data(window.coverage_stats.exomes, 'pos_coding');
-    var new_data_skip_utr_genomes = create_new_data(window.coverage_stats.exomes, 'pos_coding_noutr');
+    var new_data_genomes = create_new_data(window.coverage_stats.genomes, 'pos_coding');
+    var new_data_skip_utr_genomes = create_new_data(window.coverage_stats.genomes, 'pos_coding_noutr');
     if (window.coverage_stats.exomes != null) {
         gene_chart(
           window.coverage_stats.exomes,

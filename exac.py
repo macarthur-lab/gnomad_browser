@@ -58,6 +58,7 @@ app.config.update(dict(
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'omim_info.txt.gz'),
     BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'coverage', 'Panel.*.coverage.txt.gz')),
+    WGS_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'wgs_coverage', 'exacv2.*.coverage.txt.gz')),
     DBNSFP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'dbNSFP2.6_gene.gz'),
     CONSTRAINT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'forweb_cleaned_exac_r03_march16_z_data_pLI_CNV-final.txt.gz'),
     MNP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'MNPs_NotFiltered_ForBrowserRelease.txt.gz'),
@@ -120,32 +121,37 @@ def parse_tabix_file_subset(tabix_filenames, subset_i, subset_n, record_parser):
     print("Finished loading subset %(subset_i)s from  %(short_filenames)s (%(counter)s records)" % locals())
 
 
-def load_base_coverage():
-    def load_coverage(coverage_files, i, n, db):
+def load_individual_coverage_files(coverage_files, collection):
+    def load_coverage(coverage_files, collection, i, n, db):
         coverage_generator = parse_tabix_file_subset(coverage_files, i, n, get_base_coverage_from_file)
         try:
-            db.base_coverage.insert(coverage_generator, w=0)
+            db[collection].insert(coverage_generator, w=0)
         except pymongo.errors.InvalidOperation:
             pass  # handle error when coverage_generator is empty
 
     db = get_db()
-    db.base_coverage.drop()
-    print("Dropped db.base_coverage")
+    db[collection].drop()
+    print("Dropped db.%s" % collection)
     # load coverage first; variant info will depend on coverage
-    db.base_coverage.ensure_index('xpos')
+    db[collection].ensure_index('xpos')
 
     procs = []
-    coverage_files = app.config['BASE_COVERAGE_FILES']
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    random.shuffle(app.config['BASE_COVERAGE_FILES'])
+    random.shuffle(coverage_files)
     for i in range(num_procs):
-        p = Process(target=load_coverage, args=(coverage_files, i, num_procs, db))
+        p = Process(target=load_coverage, args=(coverage_files, collection, i, num_procs, db))
         p.start()
         procs.append(p)
     return procs
-
     #print 'Done loading coverage. Took %s seconds' % int(time.time() - start_time)
 
+def load_base_coverage_exomes():
+    coverage_files = app.config['BASE_COVERAGE_FILES']
+    load_individual_coverage_files(coverage_files, 'exome_coverage')
+
+def load_base_coverage_genomes():
+    coverage_files = app.config['WGS_BASE_COVERAGE_FILES']
+    load_individual_coverage_files(coverage_files, 'genome_coverage')
 
 def load_variants_file():
     def load_variants(sites_file, i, n, db):
@@ -428,7 +434,7 @@ def load_db():
         print('Exiting...')
         sys.exit(1)
     all_procs = []
-    for load_function in [load_variants_file, load_dbsnp_file, load_base_coverage, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
+    for load_function in [load_variants_file, load_dbsnp_file, load_base_coverage_exac, load_base_coverage_genomes, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
         procs = load_function()
         all_procs.extend(procs)
         print("Started %s processes to run %s" % (len(procs), load_function.__name__))
@@ -724,9 +730,9 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
         variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
         cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
         cnvs_per_gene = lookups.get_cnvs(db, gene_id)
-        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
-        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'genome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         coverage_stats = {
             'exomes': coverage_stats_exomes,
             'genomes': coverage_stats_genomes

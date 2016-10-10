@@ -13,12 +13,19 @@ def hello():
 @manager.command
 def load_db():
     exac.load_db()
-
+# 
+#
+# @manager.command
+# def load_base_coverage():
+#     exac.load_base_coverage()
 
 @manager.command
-def load_base_coverage():
-    exac.load_base_coverage()
+def load_base_coverage_exomes():
+    exac.load_base_coverage_exomes()
 
+@manager.command
+def load_base_coverage_genomes():
+    exac.load_base_coverage_genomes()
 
 @manager.command
 def load_variants_file():
