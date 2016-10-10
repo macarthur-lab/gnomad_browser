@@ -399,3 +399,21 @@ TODO: come up with a better way to position tooltip
   flex-wrap: nowrap;
   /*border: 1px solid #B71C1C;*/
 }
+
+.upper-display-row {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  border: 1px solid #BF360C;
+}
+
+.upper-display-cell {
+  border: 1px solid #D4E157;
+  overflow: hidden;
+  width: 30%;
+}
+
+.upper-display-cell.bold {
+  font-weight: bold;
+  /*margin-right: 20px;
+}
