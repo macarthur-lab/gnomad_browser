@@ -377,7 +377,7 @@ TODO: come up with a better way to position tooltip
   flex-wrap: nowrap;
 }
 
-.metrics-bottom-group {
+.genotype-quality-bottom-group {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -386,7 +386,15 @@ TODO: come up with a better way to position tooltip
   /*border: 1px solid blue;*/
 }
 
-.metrics-data-selector-form {
+.site-quality-data-selector-form {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+  /*margin-left: 20px;*/
+  /*border: 1px solid purple;*/
+}
+
+.genotype-quality-data-selector-form {
   display: flex;
   flex-direction: column;
   margin-left: 20px;
@@ -397,7 +405,12 @@ TODO: come up with a better way to position tooltip
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  margin-right: 10px;
   /*border: 1px solid #B71C1C;*/
+}
+
+.dataRadio input {
+  margin-right: 3px;
 }
 
 .upper-display-dt {
@@ -419,5 +432,10 @@ TODO: come up with a better way to position tooltip
 
 .upper-display-cell.bold {
   font-weight: bold;
-  /*margin-right: 20px;
+}
+
+#ibd-footer {
+  display: block;
+  font-size: 10px;
+  margin-top: 12px;
 }

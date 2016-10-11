@@ -167,43 +167,43 @@
                 }
             });
 
-            function renderQualityHistogram(dataSelection) {
-                if (window.variant != null && 'genotype_depths' in window.variant[dataSelection]) {
-                    draw_quality_histogram(window.variant[dataSelection].genotype_depths[1], '#quality_display_container', false, 'Depth', 'Variant Carriers');
-                    $('.quality_display_buttons').change(function() {
-                        var v = $(this).attr('id').replace('_button', '');
-                        var f = $('.quality_full_site_buttons.active').attr('id') == 'variant_site_button' ? 0 : 1;
-                        var ylab = f ? 'Variant Carriers' : 'Individuals';
-                        draw_quality_histogram(window.variant[dataSelection][v][f], '#quality_display_container', false, $(this).text(), ylab);
-                    });
-                    $('.quality_full_site_buttons').change(function() {
-                        var v = $('.quality_display_buttons.active').attr('id').replace('_button', '');
-                        var f = $(this).attr('id') == 'variant_site_button' ? 0 : 1;
-                        var ylab = f ? 'Variant Carriers' : 'Individuals';
-                        draw_quality_histogram(window.variant[dataSelection][v][f], '#quality_display_container', false, $('.quality_display_buttons.active').text(), ylab);
+            function renderQualityHistogram() {
+                var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
+                if (window.variant != null && 'genotype_depths' in window.variant[genotypeDataSelection]) {
+                    draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[1], '#quality_display_container', false, 'Depth', 'Variant Carriers');
+                    $('#quality_metrics_container').change(function() {
+                        var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
+                        var depthOrQuality = $('input[name=depth-or-quality]:checked').val()
+                        var carriersOrAll = Number($('input[name=carriers-or-all]:checked').val())
+                        var ylab = carriersOrAll ? 'Variant Carriers' : 'Individuals';
+                        var xlab = $('input[name=depth-or-quality]:checked').text()
+                        console.log(genotypeDataSelection, depthOrQuality, carriersOrAll)
+                        draw_quality_histogram(window.variant[genotypeDataSelection][depthOrQuality][carriersOrAll], '#quality_display_container', false, xlab, ylab);
                     });
 
                     // Quality metric histograms
-                    var data = _.zip(_.map(window.metrics['Site Quality']['mids'], Math.exp), window.metrics['Site Quality']['hist']);
+                    var siteDataSelection = $('input[name=site-source]:checked').val()
+                    var data = _.zip(_.map(window[siteDataSelection].metrics['Site Quality']['mids'], Math.exp), window[siteDataSelection].metrics['Site Quality']['hist']);
                     draw_quality_histogram(data, '#quality_metric_container', true, 'Site Quality', 'Variants');
-                    var bin = window.metrics['Site Quality']['metric'].split('_')[1];
+                    var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                     $('#site_quality_note').html(get_af_bucket_text(bin));
                     var pos = $('#quality_metric_select').val().split(': ')[1];
                     add_line_to_quality_histogram(data, pos, '#quality_metric_container', true);
                     var log_these = ['Site Quality', 'DP'];
-                    $('#quality_metric_select').change(function() {
+                    $('#quality_metric_select quality-selector').change(function() {
+                        var siteDataSelection = $('input[name=site-source]:checked').val()
                         var v = $(this).val().split(': ');
                         var log = false;
                         $('#site_quality_note').html('');
                         var data;
                         if (log_these.indexOf(v[0]) > -1) {
-                            data = _.zip(_.map(window.metrics[v[0]]['mids'], Math.exp), window.metrics[v[0]]['hist']);
+                            data = _.zip(_.map(window[siteDataSelection].metrics[v[0]]['mids'], Math.exp), window[siteDataSelection].metrics[v[0]]['hist']);
                             log = true;
                         } else {
-                            data = _.zip(window.metrics[v[0]]['mids'], window.metrics[v[0]]['hist']);
+                            data = _.zip(window[siteDataSelection].metrics[v[0]]['mids'], window[siteDataSelection].metrics[v[0]]['hist']);
                         }
                         if (v[0] == 'Site Quality') {
-                            var bin = window.metrics['Site Quality']['metric'].split('_')[1];
+                            var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                             $('#site_quality_note').html(get_af_bucket_text(bin));
                         }
                         draw_quality_histogram(data, '#quality_metric_container', log, v[0], 'Variants');
@@ -218,14 +218,7 @@
             // var genomeState = $('#genome_checkbox').is(":checked")
             // var dataSelection = getDataSelection(exomeState, genomeState)
 
-            var dataSelection = 'exac'
-            renderQualityHistogram(dataSelection)
-
-            $('.metrics-data-selector-form').change(function() {
-                var dataSelection = $('input[name=quality-data-source]:checked').val()
-                console.log(dataSelection)
-                renderQualityHistogram(dataSelection)
-            })
+            renderQualityHistogram()
         });
     </script>
     <div class="container">
@@ -273,7 +266,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <dl class="dl-horizontal" style="margin-bottom: 0px;">
-                        <dt  class="upper-display-dt">Data</dt>
+                        <dt  class="upper-display-dt"></dt>
                         <dd class="upper-display-row">
                             <div class="upper-display-cell bold">Exomes</div>
                             <div class="upper-display-cell bold">Genomes</div>
@@ -347,29 +340,30 @@
                                                     <span class="btn-group" data-toggle="buttons" id="quality_full_site_button_group">
                                                         <button class="btn btn-primary btn-sm active quality_full_site_buttons" id="variant_carriers_button"
                                                                 data-tooltip="Show metric for only individuals with this allele.">
-                                                            <input type="radio"> Variant carriers
+                                                            <input type="radio" checked value="0" name="carriers-or-all"> Variant carriers
                                                         </button>
                                                         <button class="btn btn-primary btn-sm quality_full_site_buttons" id="variant_site_button"
                                                                 data-tooltip="Show metric for all individuals (at this site, whether or not they have this allele).">
-                                                            <input type="radio" > All individuals
+                                                            <input type="radio" checked value="1" name="carriers-or-all"> All individuals
                                                         </button>
                                                     </span>
                                                     <div id="quality_display_container" class="d3_graph"></div>
                                                     <small><span class="label label-info">Note:</span> Plot may include low-quality genotypes that were excluded from allele counts in the table above</small>
-                                                    <div class="metrics-bottom-group">
+                                                    <div class="genotype-quality-bottom-group genotype-quality">
                                                         <div class="btn-group quality_display_button_group" data-toggle="buttons">
                                                             <button class="btn btn-primary btn-sm active quality_display_buttons" id="genotype_depths_button"
                                                                     data-tooltip="Per sample depth. Capped at 100X">
-                                                                <input type="radio"> Depth
-                                                            </button>
+                                                                <input type="radio" checked value="genotype_depths" name="depth-or-quality"> Depth</button>
                                                             <button class="btn btn-primary btn-sm quality_display_buttons" id="genotype_qualities_button"
-                                                                    data-tooltip="Per sample genotype quality.">
-                                                                <input type="radio" > Genotype Quality
+                                                            value="genotype_qualities"
+                                                            name="depth-or-quality"
+                                                                    data-tooltip="Per sample genotype qualit.">
+                                                                <input type="radio" value="genotype_qualities" name="depth-or-quality"> Genotype Quality
                                                             </button>
                                                         </div>
-                                                        <form class="metrics-data-selector-form" name="dataSelection">
-                                                          <div class="dataRadio"><input checked type="radio" name="quality-data-source" value="exac">Exomes</div>
-                                                          <div class="dataRadio"><input type="radio" name="quality-data-source" value="gnomad">Genomes</div>
+                                                        <form class="genotype-quality-data-selector-form" name="dataSelection">
+                                                          <div class="dataRadio"><input checked type="radio" name="genotype-source" value="exac">Exomes</div>
+                                                          <div class="dataRadio"><input type="radio" name="genotype-source" value="gnomad">Genomes</div>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -390,6 +384,10 @@
                                         <div class="row">
                                             <div class="col-md-10 col-md-offset-1">
                                                 <div id="quality_metric_container"></div>
+                                                <form class="site-quality-data-selector-form quality-selector" name="dataSelection">
+                                                  <div class="dataRadio"><input checked type="radio" name="site-source" value="exac">Exomes</div>
+                                                  <div class="dataRadio"><input type="radio" name="site-source" value="gnomAD">Genomes</div>
+                                                </form>
                                                 <small><div id="site_quality_note"></div></small>
                                                 <small><span class="label label-info">Note:</span> These are site-level quality metrics: they may be unpredictable for multi-allelic sites.</small>
                                                 <select id="quality_metric_select" class="form-control">
@@ -487,6 +485,13 @@
                                             {% endif %}
                                         </tr>
                                     {% endfor %}
+                                    <tr>
+                                        <td>Ashkenazi Jewish*</td>
+                                        <td>1</td>
+                                        <td>5684</td>
+                                        <td>0</td>
+                                        <td>0.0001759</td>
+                                    </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -527,6 +532,7 @@
                                 </label>
                             </div>
                         </div>
+                        <div id="ibd-footer">* For detailed analysis of Ashkenazi Jewish frequency see the <a href="#">IBD Exomes Browser</a>.</div>
                     </div>
                 {% else %}
                     {% if any_covered %}
