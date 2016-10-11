@@ -36,7 +36,7 @@ describe('gnomad gene api', () => {
     fetch(URL)
       .then(response => response.json())
       .then(data => {
-        const expectedFirstThreePositions = [
+        const expectedFirstThreePositionsExAC = [
           {
             '1': 0.9992,
             '5': 0.9961,
@@ -78,10 +78,52 @@ describe('gnomad gene api', () => {
             pos: 46594232
           }
         ]
+        const expectedFirstThreePositionsGnomad = [
+          {
+            '1': 0.8317,
+            '5': 0.8317,
+            '10': 0.8317,
+            '15': 0.8193,
+            '20': 0.7649,
+            '25': 0.6485,
+            '30': 0.4579,
+            '50': 0.0248,
+            '100': 0,
+            mean: 25.99,
+            median: 28,
+            pos: 46594230
+          }, {
+            '1': 0.8688,
+            '5': 0.8688,
+            '10': 0.8688,
+            '15': 0.849,
+            '20': 0.7822,
+            '25': 0.6658,
+            '30': 0.4455,
+            '50': 0.0198,
+            '100': 0,
+            mean: 26.51,
+            median: 28,
+            pos: 46594231
+          }, {
+            '1': 0.8911,
+            '5': 0.8911,
+            '10': 0.8886,
+            '15': 0.8713,
+            '20': 0.7946,
+            '25': 0.6683,
+            '30': 0.4604,
+            '50': 0.0173,
+            '100': 0,
+            mean: 26.96,
+            median: 28.5,
+            pos: 46594232
+          }
+        ]
         expect(data.coverage_stats.exomes.length).toEqual(2112)
-        expect(data.coverage_stats.genomes.length).toEqual(2112)
-        expect(data.coverage_stats.exomes.slice(0, 3)).toEqual(expectedFirstThreePositions)
-        expect(data.coverage_stats.genomes.slice(0, 3)).toEqual(expectedFirstThreePositions)
+        expect(data.coverage_stats.genomes.length).toEqual(2118)
+        expect(data.coverage_stats.exomes.slice(0, 3)).toEqual(expectedFirstThreePositionsExAC)
+        expect(data.coverage_stats.genomes.slice(0, 3)).toEqual(expectedFirstThreePositionsGnomad)
         expect().toBe()
 
         done()

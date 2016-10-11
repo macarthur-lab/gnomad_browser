@@ -18,7 +18,7 @@ describe('gnomad/exac variant api', () => {
       .then(data => {
         // console.log(Object.keys(data.gnomadVariant.variant))
         // console.log(Object.keys(data.exacVariant.metrics))
-        console.log(data.exac.metrics)
+        // console.log(data.exac.metrics)
         // console.log(Object.keys(data.exacVariant.variant.quality_metrics))
         // console.log(data.exacVariant.variant.quality_metrics)
         expect(Object.keys(data)).toEqual([

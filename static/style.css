@@ -304,10 +304,19 @@ TODO: come up with a better way to position tooltip
   width: 100%;
 }
 
+.label-danger {
+  /*border: 1px solid #000;  */
+}
+
 .data-indicator-ExAC {
   margin-right: auto;
 }
 
+.data-indicator-child {
+  padding: 4px 6px 3px 6px;
+  display: flex;
+  align-items: center;
+}
 .data-indicator-child.label-success {
   background-color: #4682b4;
   border: 1px solid #000;
@@ -317,11 +326,13 @@ TODO: come up with a better way to position tooltip
   border: 1px solid #000;
 }
 .data-indicator-child.label-warning {
-  background-color: rgba(70, 130, 180, 0.6);
+  background-color: rgba(70, 130, 180, 0.4);
+  /*background-color: rgba(255, 0, 0, 0.6);*/
   border: 1px dashed #000;
 }
 .data-indicator-child.label-warning.data-indicator-gnomAD {
-  background-color:rgba(115, 171, 61, 0.5);
+  background-color:rgba(115, 171, 61, 0.4);
+  /*background-color: rgba(255, 0, 0, 0.6);*/
   border: 1px dashed #000;
 }
 .frequency-container  {
@@ -436,6 +447,6 @@ TODO: come up with a better way to position tooltip
 
 #ibd-footer {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 12px;
 }
