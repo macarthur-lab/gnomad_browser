@@ -106,6 +106,15 @@
 
             $('#filter-status-exome').html(addFilterFlag(variant.exac.filter))
             $('#filter-status-genome').html(addFilterFlag(variant.gnomad.filter))
+            $('#ac-exome').html(variant.exac.allele_count)
+            $('#ac-genome').html(variant.gnomad.allele_count)
+            $('#ac-total').html(variant.all.allele_count)
+            $('#an-exome').html(variant.exac.allele_num)
+            $('#an-genome').html(variant.gnomad.allele_num)
+            $('#an-total').html(variant.all.allele_num)
+            $('#af-exome').html(variant.exac.allele_freq.toPrecision(4))
+            $('#af-genome').html(variant.gnomad.allele_freq.toPrecision(4))
+            $('#af-total').html(variant.all.allele_freq.toPrecision(4))
 
             updatePopulationTable(window.variant, 'all')
         });
@@ -264,16 +273,34 @@
             <div class="row">
                 <div class="col-md-6">
                     <dl class="dl-horizontal" style="margin-bottom: 0px;">
-                        <dt>Dataset</dt>
+                        <dt  class="upper-display-dt">Data</dt>
                         <dd class="upper-display-row">
                             <div class="upper-display-cell bold">Exomes</div>
                             <div class="upper-display-cell bold">Genomes</div>
                             <div class="upper-display-cell bold">Total</div>
                         </dd>
-                        <dt>Filter</dt>
+                        <dt class="upper-display-dt">Filter</dt>
                         <dd class="upper-display-row">
-                            <div class="upper-display-cell" id="filter-status-exome">test</div>
-                            <div class="upper-display-cell" id="filter-status-genome">test</div>
+                            <div class="upper-display-cell" id="filter-status-exome"></div>
+                            <div class="upper-display-cell" id="filter-status-genome"></div>
+                        </dd>
+                        <dt class="upper-display-dt">Allele Count</dt>
+                        <dd class="upper-display-row">
+                            <div class="upper-display-cell" id="ac-exome"></div>
+                            <div class="upper-display-cell" id="ac-genome"></div>
+                            <div class="upper-display-cell" id="ac-total"></div>
+                        </dd>
+                        <dt class="upper-display-dt">Allele Number</dt>
+                        <dd class="upper-display-row">
+                            <div class="upper-display-cell" id="an-exome"></div>
+                            <div class="upper-display-cell" id="an-genome"></div>
+                            <div class="upper-display-cell" id="an-total"></div>
+                        </dd>
+                        <dt class="upper-display-dt">Allele Frequency</dt>
+                        <dd class="upper-display-row">
+                            <div class="upper-display-cell" id="af-exome"></div>
+                            <div class="upper-display-cell" id="af-genome"></div>
+                            <div class="upper-display-cell" id="af-total"></div>
                         </dd>
                         <dt>dbSNP</dt>
                         {% if variant.rsid and variant.rsid != "." %}
@@ -281,10 +308,6 @@
                         {% else %}
                             <dd>Not found in dbSNP</dd>
                         {% endif %}
-                        <dt>Allele Frequency</dt>
-                        <dd>{% if variant.allele_freq %}{{ '%0.4g' % variant.allele_freq }}{% else %}NA (Allele Number = 0){% endif %}</dd>
-                        <dt>Allele Count</dt>
-                        <dd>{{ variant.allele_count }} / {{ variant.allele_num }}</dd>
                         <dt>UCSC</dt>
                         <dd>
                             <a href="http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&highlight=hg19.chr{{ variant.chrom }}%3A{{ variant.pos }}-{{ variant.pos + variant.ref|length - 1 }}&position=chr{{ variant.chrom }}%3A{{ variant.pos - 25 }}-{{ variant.pos + variant.ref|length - 1 + 25 }}" target="_blank">
