@@ -176,8 +176,8 @@
                         var depthOrQuality = $('input[name=depth-or-quality]:checked').val()
                         var carriersOrAll = Number($('input[name=carriers-or-all]:checked').val())
                         var ylab = carriersOrAll ? 'Variant Carriers' : 'Individuals';
-                        var xlab = $('input[name=depth-or-quality]:checked').text()
-                        console.log(genotypeDataSelection, depthOrQuality, carriersOrAll)
+                        var xlab = depthOrQuality === 'genotype_depths' ? 'Depth' : 'Genotype Quality'
+                        // console.log(genotypeDataSelection, depthOrQuality, carriersOrAll)
                         draw_quality_histogram(window.variant[genotypeDataSelection][depthOrQuality][carriersOrAll], '#quality_display_container', false, xlab, ylab);
                     });
 
@@ -190,9 +190,11 @@
                     var pos = $('#quality_metric_select').val().split(': ')[1];
                     add_line_to_quality_histogram(data, pos, '#quality_metric_container', true);
                     var log_these = ['Site Quality', 'DP'];
-                    $('#quality_metric_select quality-selector').change(function() {
+                    $('.site-quality').change(function() {
                         var siteDataSelection = $('input[name=site-source]:checked').val()
-                        var v = $(this).val().split(': ');
+                        console.log($('#quality_metric_select').val())
+                        var v = $('#quality_metric_select').val().split(': ');
+                        console.log(v)
                         var log = false;
                         $('#site_quality_note').html('');
                         var data;
@@ -382,7 +384,7 @@
                                     </div>
                                     <div id="quality_collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="quality_collapse_heading">
                                         <div class="row">
-                                            <div class="col-md-10 col-md-offset-1">
+                                            <div class="col-md-10 col-md-offset-1 site-quality">
                                                 <div id="quality_metric_container"></div>
                                                 <form class="site-quality-data-selector-form quality-selector" name="dataSelection">
                                                   <div class="dataRadio"><input checked type="radio" name="site-source" value="exac">Exomes</div>
