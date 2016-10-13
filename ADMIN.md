@@ -17,4 +17,21 @@ sudo mkdir /local
 sudo mount --bind /mnt/disks/google-exac-gnomad-large-disk /local  
 ```
 
+--------
+Installing mongodb:
+
+Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
+
+```
+sudo emacs /etc/yum.repos.d/mongodb-org-3.2.repo
+and paste in:
+  [mongodb-org-3.2]
+  name=MongoDB Repository
+  baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64/
+  gpgcheck=1
+  enabled=1
+  gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc
+
+sudo service mongod start
+```
 
