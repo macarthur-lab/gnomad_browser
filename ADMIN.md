@@ -17,4 +17,53 @@ sudo mkdir /local
 sudo mount --bind /mnt/disks/google-exac-gnomad-large-disk /local  
 ```
 
+--------
+Installing mongodb:
+
+Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
+
+```
+sudo emacs /etc/yum.repos.d/mongodb-org-3.2.repo
+and paste in:
+  [mongodb-org-3.2]
+  name=MongoDB Repository
+  baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64/
+  gpgcheck=1
+  enabled=1
+  gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc
+
+sudo yum install -y mongodb-org --nogpgcheck  # not sure why gpg check fails, but data isn't sensitive so ¯\_(ツ)_/¯
+
+# edit mongod.conf: 
+  sudo emacs /etc/mongod.conf  
+       # modify 
+       dbPath: /local/gnomad/database
+
+# disable SELinux:
+    # CentOS has SELinux security enabled by default, and it prevents mongod from starting using `sudo service mongod start`
+    # official SELinux intro starts here: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security-Enhanced_Linux/chap-Security-Enhanced_Linux-Introduction.html
+    sudo emacs  /etc/selinux/config  
+       # modify
+       SELINUX=permissive
+
+sudo chkconfig mongod on   # make sure mongod will start automatically when booting linux
+
+# set ulimits as described in https://docs.mongodb.com/manual/reference/ulimit/
+sudo emacs /etc/security/limits.d/99-mongodb-nproc.conf   
+  
+       # add these lines:
+       mongod       hard    nproc     64000
+       mongod       soft    nproc     64000
+
+# disable hugepages by following the steps here: https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
+
+sudo emacs /etc/init.d/disable-transparent-hugepages   # see webpage above for contents
+sudo chmod 755 /etc/init.d/disable-transparent-hugepages
+sudo chkconfig --add disable-transparent-hugepages
+
+# reboot the VM 
+reboot
+
+
+```
 
