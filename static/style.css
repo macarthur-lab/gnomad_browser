@@ -252,6 +252,16 @@ TODO: come up with a better way to position tooltip
   /*border: 1px solid green;*/
 }
 
+@media (max-width: 600px) {
+  .variant_selector_group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /*border: 1px solid green;*/
+    height: 100%;
+  }
+}
+
 .variant_selectors_container {
   width: 30%;
   /*border: 1px solid blue;*/
@@ -285,7 +295,12 @@ TODO: come up with a better way to position tooltip
   border: 1px solid lightgrey;
   border-radius: 5px;
 }
-
+@media (max-width: 600px) {
+  .variant_selector_checkboxes {
+    padding-left: 0;
+    border: 0;
+  }
+}
 .variant_selector_checkboxes label {
   font-weight: normal !important;
   display: flex;
@@ -449,4 +464,32 @@ TODO: come up with a better way to position tooltip
   display: block;
   font-size: 12px;
   margin-top: 12px;
+}
+
+.table-variant-id {
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.table-annotation {
+  width: 200px
+}
+
+.table-consequence {
+  width: 150px;
+}
+
+.table-hom-count {
+  width: 50px;
+}
+
+.hom-title {
+  width: 50px;
+}
+
+@media (max-width: 600px) {
+  .table-variant-id {
+    min-width: 120px;
+    max-width: 120px;
+  }
 }
