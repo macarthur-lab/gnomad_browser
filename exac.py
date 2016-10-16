@@ -41,41 +41,47 @@ CORS(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
-EXAC_FILES_DIRECTORY = '../exac_data/'
+SHARED_FILES_DIRECTORY = '../exac_data/'
+EXOME_FILES_DIRECTORY = '../data/exomes'
+GENOME_FILES_DIRECTORY = '../data/genomes'
+
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DB_HOST='localhost',
-    DB_PORT=27017,
+    DB_PORT=27018,
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
-    LOAD_DB_PARALLEL_PROCESSES = 4,  # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXAC_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'ExAC*.vcf.gz')),
-    GNOMAD_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'new_data.vep.vcf.gz')),
-    GENCODE_GTF=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'gencode.gtf.gz'),
-    CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
-    OMIM_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'omim_info.txt.gz'),
-    BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'coverage', 'Panel.*.coverage.txt.gz')),
-    WGS_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'wgs_coverage', 'exacv2.*.coverage.txt.gz')),
-    DBNSFP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'dbNSFP2.6_gene.gz'),
-    CONSTRAINT_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'forweb_cleaned_exac_r03_march16_z_data_pLI_CNV-final.txt.gz'),
-    MNP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'MNPs_NotFiltered_ForBrowserRelease.txt.gz'),
-    CNV_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'exac-gencode-exon.cnt.final.pop3'),
-    CNV_GENE_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'exac-final-cnvs.gene.rank'),
+    LOAD_DB_PARALLEL_PROCESSES = os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 4),
+    # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, '*.vcf.gz')),
+    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, '*.vcf.gz')),
+    GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
+    CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
+    OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
+    EXOME_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'coverage', 'exacv2.*.cov.txt.gz')),
+    GENOME_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'coverage', 'gnomad.*.cov.txt.gz')),
+    DBNSFP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbNSFP2.6_gene.gz'),
+    CONSTRAINT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'forweb_cleaned_exac_r03_march16_z_data_pLI_CNV-final.txt.gz'),
+    MNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'MNPs_NotFiltered_ForBrowserRelease.txt.gz'),
+    CNV_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'exac-gencode-exon.cnt.final.pop3'),
+    CNV_GENE_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'exac-final-cnvs.gene.rank'),
 
     # How to get a dbsnp142.txt.bgz file:
     #   wget ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b142_GRCh37p13/database/organism_data/b142_SNPChrPosOnRef_105.bcp.gz
     #   zcat b142_SNPChrPosOnRef_105.bcp.gz | awk '$3 != ""' | perl -pi -e 's/ +/\t/g' | sort -k2,2 -k3,3n | bgzip -c > dbsnp142.txt.bgz
     #   tabix -s 2 -b 3 -e 3 dbsnp142.txt.bgz
-    DBSNP_FILE=os.path.join(os.path.dirname(__file__), EXAC_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
+    DBSNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
 
     READ_VIZ_DIR="/mongo/readviz"
 ))
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
+
+print app.config['DB_NAME']
 
 def connect_db():
     """
@@ -146,12 +152,12 @@ def load_individual_coverage_files(coverage_files, collection):
     #print 'Done loading coverage. Took %s seconds' % int(time.time() - start_time)
 
 def load_base_coverage_exomes():
-    coverage_files = app.config['BASE_COVERAGE_FILES']
-    load_individual_coverage_files(coverage_files, 'exome_coverage')
+    coverage_files = app.config['EXOME_BASE_COVERAGE_FILES']
+    return load_individual_coverage_files(coverage_files, 'exome_coverage')
 
 def load_base_coverage_genomes():
-    coverage_files = app.config['WGS_BASE_COVERAGE_FILES']
-    load_individual_coverage_files(coverage_files, 'genome_coverage')
+    coverage_files = app.config['GENOME_BASE_COVERAGE_FILES']
+    return load_individual_coverage_files(coverage_files, 'genome_coverage')
 
 def load_variants_file():
     def load_variants(sites_file, i, n, db):
@@ -173,7 +179,7 @@ def load_variants_file():
     db.variants.ensure_index('genes')
     db.variants.ensure_index('transcripts')
 
-    sites_vcfs = app.config['SITES_VCFS']
+    sites_vcfs = app.config['EXOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
     elif len(sites_vcfs) > 1:
@@ -209,7 +215,7 @@ def load_gnomad_vcf():
     db.gnomadVariants.ensure_index('genes')
     db.gnomadVariants.ensure_index('transcripts')
 
-    sites_vcfs = app.config['GNOMAD_SITES_VCFS']
+    sites_vcfs = app.config['GENOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
     elif len(sites_vcfs) > 1:
@@ -434,7 +440,7 @@ def load_db():
         print('Exiting...')
         sys.exit(1)
     all_procs = []
-    for load_function in [load_variants_file, load_dbsnp_file, load_base_coverage_exac, load_base_coverage_genomes, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
+    for load_function in [load_variants_file, load_dbsnp_file, load_base_coverage_exomes, load_base_coverage_genomes, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
         procs = load_function()
         all_procs.extend(procs)
         print("Started %s processes to run %s" % (len(procs), load_function.__name__))
