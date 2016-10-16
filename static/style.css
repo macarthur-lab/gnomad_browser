@@ -466,30 +466,109 @@ TODO: come up with a better way to position tooltip
   margin-top: 12px;
 }
 
-.table-variant-id {
-  min-width: 200px;
-  max-width: 200px;
+#variant_table {
+  table-layout: fixed;
 }
 
-.table-annotation {
-  width: 200px
-}
-
-.table-consequence {
+#th-variantid, #td-variantid {
   width: 150px;
 }
+#th-data, #td-data {
+  width: 60px;
+}
+#th-hgvs, #td-hgvs {
+  width: 100px;
+}
+#th-vep, #td-vep {
+  width: 100px;
+}
+#th-flags, #td-flags {
+  width: 55px;
+}
+#th-ac, #td-ac {
+  width: 65px;
+}
+#th-an, #td-an {
+  width: 65px;
+}
+#th-hom, #th-hem, #td-hom, #td-hem {
+  width: 80px;
+}
+#th-af, #td-af {
+  width: 100px;
+}
 
-.table-hom-count {
+@media (max-width: 768px) {
+  #th-variantid, #td-variantid {
+    width: 110px;
+    overflow: hidden;
+  }
+  #th-data, #th-data {
+    width: 55px;
+  }
+  #th-hgvs, #th-hgvs {
+    width: 90px;
+    overflow: hidden;
+  }
+  #th-vep, #th-vep {
+    width: 80px;
+  }
+  #th-flags, #th-flags {
+    width: 55px;
+  }
+  #th-ac, #th-ac {
+    width: 60px;
+  }
+  #th-an, #td-an {
+    width: 65px;
+  }
+  #th-hom, #th-hem, #td-hom, #td-hem {
+    width: 65px;
+  }
+  #th-af, #td-af {
+    width: 100px;
+  }
+}
+
+/*#td-hgvs {
+  width: 100px
+}
+#td-hgvs {
+  width: 100px
+}
+
+#td-vep {
+  width: 100px;
+}
+
+#td-hom {
   width: 50px;
 }
 
 .hom-title {
   width: 50px;
-}
+}*/
 
-@media (max-width: 600px) {
+/*@media (max-width: 600px) {
   .table-variant-id {
     min-width: 120px;
     max-width: 120px;
+    overflow: hidden;
   }
-}
+  .table-hgvs {
+    width: 30px;
+    overflow: hidden;
+    background: blue;
+  }
+
+  .table-maj-conseq {
+    width: 30px;
+    overflow: hidden;
+  }
+  #table-freq {
+    width: 200px;
+  }
+  #table-allele-freq {
+    width: 200px;
+  }
+}*/

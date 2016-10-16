@@ -757,13 +757,27 @@ function update_variants() {
             }
             variant = Object.assign({}, variant, { all: variant[variant.pass] })
         }
+        // console.log(window.width())
         $(this).find('.table-allele-count').html(variant[dataSelection].allele_count)
         $(this).find('.table-allele-num').html(variant[dataSelection].allele_num)
         $(this).find('.table-hom-count').html(variant[dataSelection].hom_count)
-        $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
+        // $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
+        $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(2)).toExponential())
         $(this).find('.table-allele-freq-box').empty()
         $(this).show()
     })
+    if ($(window).width() < 768) {
+        cnv_chart_margin.left = 10;
+        // $(this).find('table-head-variant').text('')
+        $('#th-hgvs').html('Conseq.')
+        $('#th-vep').html('Annot.')
+        $('#th-ac').html('Count')
+        // $('#table-head-an').html('AN')
+        $('#th-af').html('Freq.')
+        // $('#table-head-hom').html('HOM')
+        // $('#table-head-hem').html('HEMI')
+        console.log($(window).width())
+    }
     update_variant_af_box()
     if ($('tr[style!="display: none;"]').length == 1) {
         $('#variants_table_empty').show();
@@ -805,10 +819,6 @@ lower_gene_chart_height = 50 - gene_chart_margin_lower.top - gene_chart_margin_l
     gene_chart_height = 300 - gene_chart_margin.top - gene_chart_margin.bottom - lower_gene_chart_height - gene_chart_margin_lower.top - gene_chart_margin_lower.bottom;
 
 cnv_chart_margin = {top: 30, right: gene_chart_margin.right, bottom: gene_chart_margin.bottom, left: gene_chart_margin.left};
-if ($(window).width() < 768) {
-    cnv_chart_margin.left = 10;
-
-}
 
 
 function change_track_chart_variant_size(variant_data, change_to, container) {
