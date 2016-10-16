@@ -474,7 +474,7 @@ TODO: come up with a better way to position tooltip
   width: 150px;
 }
 #th-data, #td-data {
-  width: 50px;
+  width: 40px;
 }
 #th-hgvs, #td-hgvs {
   width: 100px;
@@ -504,7 +504,7 @@ TODO: come up with a better way to position tooltip
     overflow: hidden;
   }
   #th-data, #td-data {
-    /*width: 50px;*/
+    width: 50px;
   }
   #th-hgvs, #td-hgvs {
     width: 90px;
