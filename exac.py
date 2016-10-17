@@ -689,7 +689,7 @@ def variant_data(variant_str, source):
         'consequences': consequences,
         'any_covered': any_covered,
         'metrics': metrics,
-        'read_viz': read_viz_dict,
+        'read_viz_dict': read_viz_dict,
     }
 
 @app.route('/variant/<variant_str>')

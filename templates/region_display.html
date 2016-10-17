@@ -157,6 +157,9 @@ function region_chart(data, variant_data) {
         .attr('indel', function(d) {
             return d.indel;
         })
+        .attr('variant_id', function(d) {
+            return d.variant_id;
+        })
         .on('mouseover', function(d) {
             $('#variant_' + d.variant_id).find('td').addClass('table_hover');
             tip.show(d);

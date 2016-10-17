@@ -112,9 +112,9 @@
             $('#an-exome').html(variant.exac.allele_num)
             $('#an-genome').html(variant.gnomad.allele_num)
             $('#an-total').html(variant.all.allele_num)
-            $('#af-exome').html(variant.exac.allele_freq.toPrecision(4))
-            $('#af-genome').html(variant.gnomad.allele_freq.toPrecision(4))
-            $('#af-total').html(variant.all.allele_freq.toPrecision(4))
+            $('#af-exome').html(Number(variant.exac.allele_freq.toPrecision(4)).toExponential())
+            $('#af-genome').html(Number(variant.gnomad.allele_freq.toPrecision(4)).toExponential())
+            $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
 
             updatePopulationTable(window.variant, 'all')
         });
