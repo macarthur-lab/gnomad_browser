@@ -661,21 +661,20 @@ def variant_data(variant_str, source):
         total_available += read_viz_dict[het_or_hom_or_hemi]['n_available']
         total_expected += read_viz_dict[het_or_hom_or_hemi]['n_expected']
 
-        read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
-            '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
-                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+    read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
+        '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
+            for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
 
-        ]   #eg. '1-157768000-G-C_hom1',
+    ]   #eg. '1-157768000-G-C_hom1',
 
-        read_viz_dict[het_or_hom_or_hemi]['urls'] = [
-            #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-            os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-        ]
+    read_viz_dict[het_or_hom_or_hemi]['urls'] = [
+        #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+        os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+            for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+    ]
 
     read_viz_dict['total_available'] = total_available
     read_viz_dict['total_expected'] = total_expected
-
 
     print 'Rendering variant: %s' % variant_str
     return {
@@ -702,7 +701,7 @@ def variant_page(variant_str):
             consequences=exac['consequences'],
             any_covered=exac['any_covered'],
             metrics=exac['metrics'],
-            read_viz=exac['read_viz'],
+            read_viz=exac['read_viz_dict'],
         )
     except Exception:
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
@@ -1105,8 +1104,6 @@ def read_viz_files(path):
     if not full_path.startswith(app.config["READ_VIZ_DIR"]):
         return "Invalid path: %s" % path
 
-    logging.info("path: " + full_path)
-
     # handle igv.js Range header which it uses to request a subset of a .bam
     range_header = request.headers.get('Range', None)
     if not range_header:
@@ -1130,7 +1127,7 @@ def read_viz_files(path):
     rv = Response(data, 206, mimetype="application/octet-stream", direct_passthrough=True)
     rv.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(offset, offset + length - 1, size))
 
-    logging.info("GET range request: %s-%s %s" % (m.group(1), m.group(2), full_path))
+    logging.info("readviz: range request: %s-%s %s" % (m.group(1), m.group(2), full_path))
     return rv
 
 
