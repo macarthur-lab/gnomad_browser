@@ -16,11 +16,15 @@ echo UUID=`sudo blkid -s UUID -o value /dev/disk/by-id/google-exac-gnomad-large-
 sudo mkdir /local
 sudo mount --bind /mnt/disks/google-exac-gnomad-large-disk /local  
 ```
+Also, added /local/ as a 2nd mount point for the large disk: 
+
+```
+sudo emacs /etc/fstab   # add the line below
+/mnt/disks/google-exac-gnomad-large-disk  /local                                   none bind
+```
 
 --------
-Installing mongodb:
-
-Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat
+Installing mongodb (based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat)
 
 ```
 sudo emacs /etc/yum.repos.d/mongodb-org-3.2.repo
@@ -66,7 +70,7 @@ sudo chkconfig --add disable-transparent-hugepages
 
 # reboot the VM 
 sudo reboot
-
-
 ```
+
+
 
