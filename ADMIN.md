@@ -80,4 +80,5 @@ sudo yum install httpd
 ```
 
 
-
+--------
+Setting up email sending  (based on: https://cloud.google.com/compute/docs/tutorials/sending-mail/)
