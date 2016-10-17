@@ -1,144 +1,256 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="container">
-        <h1>About ExAC</h1>
+        <h1>About gnomAD</h1>
         <div class="row" style="font-size: 16px;">
             <div>
                 <p>
-                    The Exome Aggregation Consortium (ExAC) is a coalition of investigators seeking to aggregate and harmonize exome sequencing data from a variety of large-scale sequencing projects, and to make summary data available for the wider scientific community.
+                    The Genome Aggregation Database (gnomAD), is a coalition of investigators seeking to aggregate and harmonize exome and genome sequencing data from a variety of large-scale sequencing projects, and to make summary data available for the wider scientific community. In its first release, which contained exclusively exome data,  it was known as the Exome Aggregation Consortium (ExAC).
                 </p>
                 <p>
-                    The data set provided on this website spans <span class="number_samples">61,486</span> unrelated individuals sequenced as part of various disease-specific and population genetic studies. We have removed individuals affected by severe pediatric disease, so this data set should serve as a useful reference set of allele frequencies for severe disease studies. All of the raw data from these projects have been reprocessed through the same pipeline, and jointly variant-called to increase consistency across projects.
+                    The data set provided on this website spans XXXX exomes and XXXX genomes from unrelated individuals sequenced as part of various disease-specific and population genetic studies. We have removed individuals known to be affected by severe pediatric disease, as well as their first-degree relatives, so this data set should serve as a useful reference set of allele frequencies for severe disease studies - however, note that some individuals with severe disease may still be included in the data set, albeit likely at a frequency equivalent to or lower than that seen in the general population.
+
                 </p>
                 <p>
-                    A list of ExAC Principal Investigators and groups that have contributed data to the current release is available below.
+                    All of the raw data from these projects have been reprocessed through the same pipeline, and jointly variant-called to increase consistency across projects. However, the gnomAD data set contains individuals sequenced using multiple exome capture methods and sequencing chemistries, so coverage varies between individuals and across sites. This variation in coverage is incorporated into the variant frequency calculations for each variant.
                 </p>
                 <p>
-                    All data here are released publicly for the benefit of the wider biomedical community. Now that the ExAC flagship paper <a href="http://www.nature.com/nature/journal/v536/n7616/full/nature19057.html">has been published</a>, there are no publication restrictions on these data. Please cite the ExAC paper for any use of these data.
+                    A list of gnomAD Principal Investigators and groups that have contributed data and analysis to the current release is available below.
                 </p>
                 <p>
-                    The data are available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">ODC Open Database License (ODbL)</a> (summary available <a href="http://www.opendatacommons.org/licenses/odbl/1-0/summary/">here</a>): you are free to share and modify the ExAC data so long as you attribute any public use of the database, or works produced from the database; keep the resulting data-sets open; and offer your shared or adapted version of the dataset under the same ODbL license.
+                    The generation of this call set was funded primarily by the Broad Institute, and the data here are released publicly for the benefit of the wider biomedical community. There are no publication restrictions or embargoes on these data. Please cite the <a href="http://www.nature.com/nature/journal/v536/n7616/full/nature19057.html">ExAC paper</a> for any use of these data.
                 </p>
                 <p>
-                    The aggregation and release of summary data from the exomes collected by the Exome Aggregation Consortium has been approved by the Partners IRB (protocol 2013P001339, “Large-scale aggregation of human genomic data”).
+                    The data are available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">ODC Open Database License (ODbL)</a> (summary available <a href="http://www.opendatacommons.org/licenses/odbl/1-0/summary/">here</a>): you are free to share and modify the gnomAD data so long as you attribute any public use of the database, or works produced from the database; keep the resulting data-sets open; and offer your shared or adapted version of the dataset under the same ODbL license.
+                </p>
+                <p>
+                    The aggregation and release of summary data from the exomes collected by the Genome Aggregation Database has been approved by the Partners IRB (protocol 2013P001339, “Large-scale aggregation of human genomic data”).
                 </p>
             </div>
             <p>
                 For bug reports, please file an issue on <a href="https://github.com/konradjk/exac_browser/issues">Github</a>.
             </p>
         </div>
-        <div class="row">
+        <div class="row credits">
             <div class="col-md-3">
-                <h4>ExAC Principal Investigators</h4>
+                <h4>gnomAD Principal Investigators</h4>
                 <ul>
                     <li>Daniel MacArthur</li>
-                    <li>David Altshuler</li>
-                    <li>Diego Ardissino</li>
-                    <li>Michael Boehnke</li>
-                    <li>Mark Daly</li>
-                    <li>John Danesh</li>
-                    <li>Roberto Elosua </li>
-                    <li>Jose Florez</li>
-                    <li>Gad Getz</li>
-                    <li>Christina Hultman</li>
-                    <li>Sekar Kathiresan</li>
-                    <li>Markku Laakso</li>
-                    <li>Steven McCarroll</li>
-                    <li>Mark McCarthy</li>
-                    <li>Dermot McGovern</li>
-                    <li>Ruth McPherson</li>
-                    <li>Benjamin Neale</li>
                     <li>Aarno Palotie</li>
-                    <li>Shaun Purcell</li>
+                    <li>Andres Metspalu</li>
+                    <li>Anne Remes</li>
+                    <li>Adolfo Correa</li>
+                    <li>Andre Franke</li>
+                    <li>Ann Pulver</li>
+                    <li>Ben Glaser</li>
+                    <li>Ben Neale</li>
+                    <li>Bong-Jo Kim</li>
+                    <li>Carlos Pato</li>
+                    <li>Carlos A Aguilar Salinas</li>
+                    <li>Christina Hultman</li>
+                    <li>Christine M. Albert</li>
+                    <li>Christopher Haiman</li>
+                    <li>Clicerio Gonzalez</li>
+                    <li>Colin Palmer</li>
+                    <li>Craig Hanis</li>
+                    <li>Dan Roden</li>
+                    <li>Dan Turner</li>
+                    <li>Dana Dabelea</li>
+                    <li>Daniel Chasman</li>
                     <li>Danish Saleheen</li>
-                    <li>Jeremiah Scharf</li>
-                    <li>Pamela Sklar</li>
-                    <li>Patrick Sullivan</li>
-                    <li>Jaakko Tuomilehto</li>
+                    <li>David Altshuler</li>
+                    <li>David Goldstein</li>
+                    <li>Dawood Darbar</li>
+                    <li>Dermot McGovern</li>
+                    <li>Diego Ardissino</li>
+                    <li>Donald Bowden</li>
+                    <li>Emelia J. Benjamin</li>
+                    <li>Erkki Vartiainen</li>
+                    <li>Erwin Bottinger</li>
+                    <li>Gad Getz</li>
+                    <li>George Kirov</li>
+                    <li>Gil Atzmon</li>
+                    <li>Harlan M. Krumholz</li>
+                    <li>Harry Sokol</li>
+                    <li>Heribert Schunkert</li>
+                    <li>Hilkka Soininen</li>
                     <li>Hugh Watkins</li>
+                    <li>Jaakko Kaprio</li>
+                    <li>Jaana Suvisaari</li>
+                    <li>James Meigs</li>
                     <li>James Wilson</li>
+                    <li>Jaspal Kooner</li>
+                    <li>Jaume Marrugat</li>
+                    <li>Jeanette Erdmann</li>
+                    <li>Jeremiah Scharf</li>
+                    <li>John Barnard</li>
+                    <li>John Chambers</li>
+                    <li>John Rioux</li>
+                    <li>Jose Florez</li>
+                    <li>Josée Dupuis</li>
+                    <li>Judy Cho</li>
+                    <li>Juliana Chan</li>
+                    <li>Kyong Soo Park</li>
+                    <li>Leif Groop</li>
+                    <li>Lorena Orozco</li>
+                    <li>Lori Bonnycastle</li>
+                    <li>Maija Wessman</li>
+                    <li>Mark Daly</li>
+                    <li>Mark McCarthy</li>
+                    <li>Markku Laakso</li>
+                    <li>Martti Färkkilä</li>
+                    <li>Matthew Bown</li>
+                    <li>Matthew Harms</li>
+                    <li>Matti Holi</li>
+                    <li>Michael Boehnke</li>
+                    <li>Michael O'Donovan</li>
+                    <li>Michael Owen</li>
+                    <li>Mikko Hiltunen</li>
+                    <li>Mikko Kallela</li>
+                    <li>Mina Chung</li>
+                    <li>Ming Tsuang</li>
+                    <li>Moore Shoemaker</li>
+                    <li>Nazneen Rahman</li>
+                    <li>Nilesh Samani</li>
+                    <li>Olle Melander</li>
+                    <li>Pamela Sklar</li>
+                    <li>Patrick T. Ellinor</li>
+                    <li>Patrick Sullivan</li>
+                    <li>Peter Nilsson</li>
+                    <li>Phil Zeitler</li>
+                    <li>Ramnik Xavier</li>
+                    <li>Ravindranath Duggirala</li>
+                    <li>Rinse Weersma</li>
+                    <li>Roberto Elosua</li>
+                    <li>Ronald Ma</li>
+                    <li>Ruth Loos</li>
+                    <li>Ruth McPherson</li>
+                    <li>Samuli Ripatti</li>
+                    <li>Sekar Kathiresan</li>
+                    <li>Seppo Koskinen</li>
+                    <li>Soo Heon Kwak</li>
+                    <li>Stephen Glatt</li>
+                    <li>Steve McCarroll</li>
+                    <li>Steven A. Lubitz</li>
+                    <li>Subra Kugathasan</li>
+                    <li>Tai Shyong</li>
+                    <li>Tariq Ahmad</li>
+                    <li>Teresa Tusie Luna</li>
+                    <li>Terho Lehtimäki</li>
+                    <li>Tim Spector</li>
+                    <li>Tõnu Esko</li>
+                    <li>Tuomi Tiinamaija</li>
+                    <li>Veikko Salomaa</li>
+                    <li>Yik Ying Teo</li>
+                    <li>Young Jin Kim</li>
                 </ul>
             </div>
             <div class="col-md-4">
                 <h4>Contributing projects</h4>
                 <ul>
                     <li>1000 Genomes</li>
+                    <li>1958 Birth Cohort</li>
+                    <li>ALSGEN</li>
+                    <li>Alzheimer's Disease Sequencing Project (ADSP)</li>
+                    <li>Atrial Fibrillation Genetics Consortium (AFGen)</li>
+                    <li>Estonian Genome Center, University of Tartu (EGCUT)</li>
                     <li>Bulgarian Trios</li>
                     <li>Finland-United States Investigation of NIDDM Genetics (FUSION)</li>
+                    <li>Finnish Twin Cohort Study</li>
+                    <li>FINN-ADGEN</li>
+                    <li>FINRISK</li>
+                    <li>Framingham Heart Study</li>
+                    <li>Genomic Psychiatry Cohort</li>
                     <li>GoT2D</li>
-                    <li>Inflammatory Bowel Disease</li>
-                    <li>METabolic Syndrome In Men (METSIM)</li>
+                    <li>Genotype-Tissue Expression Project (GTEx)</li>
+                    <li>Health2000</li>
+                    <li>Inflammatory Bowel Disease, Helsinki University Hospital Finland </li>
                     <li>Jackson Heart Study</li>
-                    <li>Myocardial Infarction Genetics Consortium:</li>
+                    <li>Kuopio Alzheimer Study</li>
+                    <li>LifeLines Cohort</li>
+                    <li>MESTA</li>
+                    <li>METabolic Syndrome In Men (METSIM)</li>
+                    <li>Finnish Migraine Study</li>
+                    <li>Myocardial Infarction Genetics Exome Sequencing Consortium (MIGenExS):</li>
                     <ul>
-                        <li>Italian Atherosclerosis, Thrombosis, and Vascular Biology Working Group</li>
+                        <li>Leicester Exome Seq</li>
                         <li>Ottawa Genomics Heart Study</li>
                         <li>Pakistan Risk of Myocardial Infarction Study (PROMIS)</li>
                         <li>Precocious Coronary Artery Disease Study (PROCARDIS)</li>
                         <li>Registre Gironi del COR (REGICOR)</li>
                     </ul>
-                    <li>NHLBI-GO Exome Sequencing Project (ESP)</li>
                     <li>National Institute of Mental Health (NIMH) Controls</li>
+                    <li>NHLBI-GO Exome Sequencing Project (ESP)</li>
+                    <li>NHLBI TOPMed</li>
+                    <li>North GerMIF Exomes</li>
+                    <li>Schizophrenia Trios from Taiwan</li>
+                    <li>Sequencing Initiative Suomi (SiSu)</li>
                     <li>SIGMA-T2D</li>
-                    <li>Sequencing in Suomi (SISu)</li>
+                    <li>South GerMIF Exomes</li>
                     <li>Swedish Schizophrenia & Bipolar Studies</li>
                     <li>T2D-GENES</li>
-                    <li>Schizophrenia Trios from Taiwan</li>
-                    <li>The Cancer Genome Atlas (TCGA)</li>
-                    <li>Tourette Syndrome Association International Consortium for Genomics (TSAICG)</li>
+                    <li>T2D-SEARCH</li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <h4>Production team</h4>
                 <ul>
-                    <li>Monkol Lek</li>
-                    <li>Fengmei Zhao</li>
-                    <li>Ryan Poplin</li>
                     <li>Eric Banks</li>
-                    <li>Timothy Fennell</li>
+                    <li>Charlotte Tolonen</li>
+                    <li>Dave Shiga</li>
+                    <li>Fengmei Zhao</li>
+                    <li>Jose Soto</li>
+                    <li>Kathleen Tibbetts</li>
+                    <li>Laura Gauthier</li>
+                    <li>Monkol Lek</li>
+                    <li>Ryan Poplin</li>
+                    <li>Sam Novod</li>
+                    <li>Valentin Ruano-Rubio</li>
+                    <li>Yossi Farjoun</li>
                 </ul>
                 <h4>Analysis team</h4>
                 <ul>
-                    <li>Monkol Lek</li>
-                    <li>Kaitlin Samocha</li>
                     <li>Konrad Karczewski</li>
-                    <li>Eric Minikel</li>
-                    <li>James Ware</li>
-                    <li>Anne O'Donnell Luria</li>
+                    <li>Laurent Francioli</li>
+                    <li>Adam Kiezun</li>
                     <li>Andrew Hill</li>
+                    <li>Anne O'Donnell Luria</li>
                     <li>Beryl Cummings</li>
                     <li>Daniel Birnbaum</li>
-                    <li>Taru Tukiainen</li>
-                    <li>Laramie Duncan</li>
+                    <li>Eric Minikel</li>
+                    <li>James Ware</li>
+                    <li>Kaitlin Samocha</li>
                     <li>Karol Estrada</li>
+                    <li>Kristen Laricchia</li>
+                    <li>Laramie Duncan</li>
                     <li>Menachem Fromer</li>
-                    <li>Adam Kiezun</li>
-                    <li>Mitja Kurki</li>
-                    <li>Ron Do</li>
-                    <li>Pradeep Natarajan</li>
-                    <li>Gina Peloso</li>
-                    <li>Hong-Hee Won</li>
+                    <li>Monkol Lek</li>
+                    <li>Taru Tukiainen</li>
                 </ul>
             </div>
             <div class="col-md-2">
                 <h4>Website team</h4>
                 <ul>
-                    <li>Konrad Karczewski</li>
-                    <li>Brett Thomas</li>
-                    <li>Daniel Birnbaum</li>
                     <li>Ben Weisburd</li>
+                    <li>Konrad Karczewski</li>
+                    <li>Matthew Solomonson</li>
+                    <li>Daniel Birnbaum</li>
                 </ul>
                 <h4>Ethics team</h4>
                 <ul>
-                    <li>Stacey Donnelly</li>
+                    <li>Jessica Alföldi</li>
                     <li>Andrea Saltzman</li>
+                    <li>Molly Schleicher</li>
                     <li>Namrata Gupta</li>
+                    <li>Stacey Donnelly</li>
                 </ul>
                 <h4>Broad Genomics Platform</h4>
                 <ul>
                     <li>Stacey Gabriel</li>
+                    <li>Steven Ferriera</li>
+                    <li>Susanna Hamilton</li>
                 </ul>
-                Many thanks to the Genomics Platform both for generating much of the exome data displayed here and for providing the computing resources required for this analysis.
+                Most of the data storage and computing resources used to generate this call set were donated by the Broad Institute; we are extremely grateful to the Institute for its support of this project.
                 <br>
                 <h4>Funding</h4>
                 <ul>
