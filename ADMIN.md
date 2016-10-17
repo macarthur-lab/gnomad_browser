@@ -6,9 +6,7 @@ n1-standard-2 (2 vCPUs, 7.5 GB memory) with CentOS 7 on a 70Gb boot disk
 standard (non-SSD) large disk (0.5 Tb)
 ```
 
-* Format and mount the large disk:
-
-Based on: https://cloud.google.com/compute/docs/disks/add-persistent-disk
+* Format and mount the large disk  (based on: https://cloud.google.com/compute/docs/disks/add-persistent-disk)
 ```
 sudo mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/disk/by-id/google-exac-gnomad-large-disk
 sudo mkdir -p /mnt/disks/google-exac-gnomad-large-disk
