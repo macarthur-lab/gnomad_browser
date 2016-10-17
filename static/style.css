@@ -531,5 +531,27 @@ TODO: come up with a better way to position tooltip
 }
 
 .credits {
-  
+  font-size: 13px;
+}
+@media (max-width: 993px) {
+  .credits {
+    font-size: 16px;
+  }
+}
+.credit-section {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.credits ul {
+  list-style: none;
+  padding-left: 0px;
+}
+.credits li {
+  padding-left: 0px;
+}
+.credit-pi-first {
+  margin-bottom: 0px;
+}
+.credit-subset li {
+  padding-left: 25px;
 }

@@ -2,7 +2,7 @@
 {% block body %}
     <div class="container">
         <h1>About gnomAD</h1>
-        <div class="row" style="font-size: 16px;">
+        <div style="font-size: 16px;">
             <div>
                 <p>
                     The Genome Aggregation Database (gnomAD), is a coalition of investigators seeking to aggregate and harmonize exome and genome sequencing data from a variety of large-scale sequencing projects, and to make summary data available for the wider scientific community. In its first release, which contained exclusively exome data,  it was known as the Exome Aggregation Consortium (ExAC).
@@ -31,10 +31,10 @@
                 For bug reports, please file an issue on <a href="https://github.com/konradjk/exac_browser/issues">Github</a>.
             </p>
         </div>
-        <div class="row credits">
-            <div class="col-md-3">
-                <h4>gnomAD Principal Investigators</h4>
-                <ul>
+        <div class="credits">
+            <div class="col-md-2 credit-section">
+                <h4>Principal Investigators</h4>
+                <ul class="credit-pi-first">
                     <li>Daniel MacArthur</li>
                     <li>Aarno Palotie</li>
                     <li>Andres Metspalu</li>
@@ -88,6 +88,12 @@
                     <li>John Rioux</li>
                     <li>Jose Florez</li>
                     <li>Josée Dupuis</li>
+                </ul>
+            </div>
+            <div class="col-md-2 credit-section">
+                <ul class="credit-pi-second">
+                    <li class="hidden-xs">&nbsp;</li>
+                    <li class="hidden-xs">&nbsp;</li>
                     <li>Judy Cho</li>
                     <li>Juliana Chan</li>
                     <li>Kyong Soo Park</li>
@@ -145,7 +151,7 @@
                     <li>Young Jin Kim</li>
                 </ul>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 credit-section clearfix">
                 <h4>Contributing projects</h4>
                 <ul>
                     <li>1000 Genomes</li>
@@ -172,7 +178,7 @@
                     <li>METabolic Syndrome In Men (METSIM)</li>
                     <li>Finnish Migraine Study</li>
                     <li>Myocardial Infarction Genetics Exome Sequencing Consortium (MIGenExS):</li>
-                    <ul>
+                    <ul class="credit-subset">
                         <li>Leicester Exome Seq</li>
                         <li>Ottawa Genomics Heart Study</li>
                         <li>Pakistan Risk of Myocardial Infarction Study (PROMIS)</li>
@@ -191,8 +197,9 @@
                     <li>T2D-GENES</li>
                     <li>T2D-SEARCH</li>
                 </ul>
+
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2 credit-section">
                 <h4>Production team</h4>
                 <ul>
                     <li>Eric Banks</li>
@@ -228,7 +235,7 @@
                     <li>Taru Tukiainen</li>
                 </ul>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 credit-section">
                 <h4>Website team</h4>
                 <ul>
                     <li>Ben Weisburd</li>
@@ -253,12 +260,9 @@
                 Most of the data storage and computing resources used to generate this call set were donated by the Broad Institute; we are extremely grateful to the Institute for its support of this project.
                 <br>
                 <h4>Funding</h4>
-                <ul>
-                    <li>NIGMS R01 GM104371 (PI: MacArthur)</li>
-                    <li>NIDDK U54 DK105566 (PIs: MacArthur and Neale)</li>
-                </ul>
+                <p>NIGMS R01 GM104371<br> (PI: MacArthur)</p>
+                <p>NIDDK U54 DK105566<br> (PIs: MacArthur and Neale)</p>
             </div>
-
         </div>
     </div>
 
