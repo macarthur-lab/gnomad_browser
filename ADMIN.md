@@ -72,5 +72,13 @@ sudo chkconfig --add disable-transparent-hugepages
 sudo reboot
 ```
 
+--------
+Installing httpd+mod_wsgi
+
+```
+sudo yum install httpd
+```
 
 
+--------
+Setting up email sending  (based on: https://cloud.google.com/compute/docs/tutorials/sending-mail/)
