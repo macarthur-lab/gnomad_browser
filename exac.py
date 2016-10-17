@@ -54,7 +54,7 @@ app.config.update(dict(
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
-    LOAD_DB_PARALLEL_PROCESSES = os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 4),
+    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 4)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
     EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, '*.vcf.gz')),
     GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, '*.vcf.gz')),
@@ -924,7 +924,12 @@ def region_page(region_id):
             variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
             xstart = get_xpos(chrom, start)
             xstop = get_xpos(chrom, stop)
-            coverage_array = lookups.get_coverage_for_bases(db, 'base_coverage', xstart, xstop)
+            coverage_stats_exomes = lookups.get_coverage_for_bases(db, 'exome_coverage', xstart, xstop)
+            coverage_stats_genomes = lookups.get_coverage_for_bases(db, 'genome_coverage', xstart, xstop)
+            coverage_stats = {
+                "exomes": coverage_stats_exomes,
+                "genomes": coverage_stats_genomes
+            }
             t = render_template(
                 'region.html',
                 genes_in_region=genes_in_region,
@@ -932,7 +937,7 @@ def region_page(region_id):
                 chrom=chrom,
                 start=start,
                 stop=stop,
-                coverage=coverage_array
+                coverage=coverage_stats
             )
         print 'Rendering region: %s' % region_id
         return t

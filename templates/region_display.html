@@ -1,5 +1,12 @@
 <div id="region_plot">
+<div class="coverage-plot-controls">
+    <div class="coverage-plot-controls-left-legend">
+      <span class="coverage-plot-label">Coverage:</span>
+      <span class="legend-square-exomes"></span><span>Exomes</span>
+      <span class="legend-square-genomes"></span><span>Genomes</span>
+    </div>
     {% include 'coverage_selectors.html' %}
+    </div>
     <br/>
     <div id="region_plot_container"></div>
 </div>
@@ -15,11 +22,14 @@ gene_chart_margin = {top: 10, right: 30, bottom: 30, left: 80},
 lower_gene_chart_height = 50 - gene_chart_margin_lower.top - gene_chart_margin_lower.bottom,
     gene_chart_height = 300 - gene_chart_margin.top - gene_chart_margin.bottom - lower_gene_chart_height - gene_chart_margin_lower.top - gene_chart_margin_lower.bottom;
 
+var exomeColor = 'rgba(70, 130, 180, 1)'
+var genomeColor ='rgba(115, 171, 61,  1)'
+
 function region_chart(data, variant_data) {
     var metric = 'mean';
 
     var x = d3.scale.linear()
-        .domain([d3.min(data, function(d) { return d.pos; }), d3.max(data, function(d) { return d.pos; })])
+        .domain([d3.min(data.exomes, function(d) { return d.pos; }), d3.max(data.exomes, function(d) { return d.pos; })])
         .range([0, gene_chart_width]);
 
     var max_cov = (metric == 'mean' || metric == 'median') ? 100 : 1;
@@ -43,17 +53,17 @@ function region_chart(data, variant_data) {
         .attr("transform", "translate(" + gene_chart_margin.left + "," + gene_chart_margin.top + ")");
 
     svg.selectAll("bar")
-        .data(data)
+        .data(data.exomes)
         .enter()
         .append("rect")
         .attr('class', 'main_plot_bars')
-        .style("fill", "steelblue")
+        .style("fill", exomeColor)
         .attr("x", function(d, i) {
             if (d.has_coverage) {
                 return x(d.pos);
             }
         })
-        .attr("width", gene_chart_width/data.length)
+        .attr("width", gene_chart_width/data.exomes.length)
         .attr("y", function(d) {
             if (d['has_coverage']) {
                 return y(d[metric]);
@@ -68,6 +78,20 @@ function region_chart(data, variant_data) {
                 return 0;
             }
         });
+    var genomeCoverageLine = d3.svg.line()
+        .defined(function(d) { return !isNaN(d[metric]) })
+        .x( function(d) {
+            return x(d.pos);
+        }).y( function(d) {
+            return y(d[metric]);
+        });
+    svg.append("path")
+        .datum(data.genomes)
+        .style("fill", "none")
+        .style("stroke", genomeColor)
+        .style("stroke-width", "8px")
+        .attr('class', 'genome-coverage-line')
+        .attr("d", genomeCoverageLine);
 
     svg.append("g")
         .attr("class", "x axis")
@@ -90,7 +114,7 @@ function region_chart(data, variant_data) {
         .attr("y1", lower_gene_chart_height/2)
         .attr("y2", lower_gene_chart_height/2)
         .attr("x1", 0)
-        .attr("x2", x(d3.max(data, function(d) { return d.pos; })))
+        .attr("x2", x(d3.max(data.exomes, function(d) { return d.pos; })))
         .attr("stroke-width", 1)
         .attr("stroke", exon_color);
 
@@ -190,15 +214,35 @@ function change_region_chart_metric(data, metric, container) {
     var y = d3.scale.linear()
         .domain([0, max_cov])
         .range([gene_chart_height, 0]);
+    var x = d3.scale.linear()
+        .domain([d3.min(data.exomes, function(d) { return d.pos; }), d3.max(data.exomes, function(d) { return d.pos; })])
+        .range([0, gene_chart_width]);
 
     var svg = d3.select(container).select('#inner_graph');
 
     svg.selectAll("rect")
-        .data(data)
+        .data(data.exomes)
         .transition()
         .duration(500)
         .attr("y", function(d) { return y(d[metric]); })
         .attr("height", function(d) { return gene_chart_height - y(d[metric]); });
+
+    var genomeCoverageLine = d3.svg.line()
+        .defined(function(d) { return !isNaN(d[metric]) })
+        .x( function(d) {
+            return x(d.pos);
+        }).y( function(d) {
+            return y(d[metric]);
+        });
+    svg.select('.genome-coverage-line')
+        .datum(data.genomes)
+        .transition()
+        .duration(500)
+        .style("fill", "none")
+        .style("stroke", genomeColor)
+        .style("stroke-width", "8px")
+        .attr('class', 'genome-coverage-line')
+        .attr("d", genomeCoverageLine);
 
     var yAxis = d3.svg.axis()
         .scale(y)

@@ -4,10 +4,9 @@
         window.coverage_stats = {{ coverage|tojson|safe }};
         window.genes = {{ genes_in_region|tojson|safe }};
         window.variants = {{ variants_in_region|tojson|safe }};
-        window.table_variants = variants;
         window.start = {{ start|tojson|safe }};
         window.stop = {{ stop|tojson|safe }};
-
+        window.table_variants = gnomad.combineDataForTable(window.variants)
         $(document).ready(function() {
             if (window.coverage_stats != null) {
                 region_chart(window.coverage_stats, window.variants);

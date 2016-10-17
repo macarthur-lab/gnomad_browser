@@ -247,12 +247,22 @@ def get_variants_in_region(db, chrom, start, stop):
     """
     xstart = get_xpos(chrom, start)
     xstop = get_xpos(chrom, stop)
-    variants = list(db.variants.find({
+
+    exomeVariants = list(db.variants.find({
         'xpos': {'$lte': xstop, '$gte': xstart}
     }, fields={'_id': False}, limit=SEARCH_LIMIT))
+    for variant in exomeVariants:
+        variant['dataset'] = 'ExAC'
+    genomeVariants = list(db.gnomadVariants.find({
+        'xpos': {'$lte': xstop, '$gte': xstart}
+    }, fields={'_id': False}, limit=SEARCH_LIMIT))
+    for variant in genomeVariants:
+        variant['dataset'] = 'gnomAD'
+    variants = exomeVariants + genomeVariants
     add_consequence_to_variants(variants)
     for variant in variants:
         remove_extraneous_information(variant)
+
     return list(variants)
 
 
