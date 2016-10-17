@@ -72,5 +72,12 @@ sudo chkconfig --add disable-transparent-hugepages
 sudo reboot
 ```
 
+--------
+Installing httpd+mod_wsgi
+
+```
+sudo yum install httpd
+```
+
 
 
