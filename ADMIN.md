@@ -7,12 +7,14 @@ standard (non-SSD) large disk (0.5 Tb)
 ```
 
 * Format and mount the large disk:
+
+Based on: https://cloud.google.com/compute/docs/disks/add-persistent-disk
 ```
 sudo mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/disk/by-id/google-exac-gnomad-large-disk
 sudo mkdir -p /mnt/disks/google-exac-gnomad-large-disk
 sudo mount -o discard,defaults /dev/disk/by-id/google-exac-gnomad-large-disk /mnt/disks/google-exac-gnomad-large-disk
 sudo chmod a+w /mnt/disks/google-exac-gnomad-large-disk/
-echo UUID=`sudo blkid -s UUID -o value /dev/disk/by-id/google-exac-gnomad-large-disk` /mnt/disks/google-exac-gnomad-large-disk ext4 discard,defaults 1 1 | sudo tee -a /etc/fstab
+echo UUID=`sudo blkid -s UUID -o value /dev/disk/by-id/google-exac-gnomad-large-disk` /mnt/disks/google-exac-gnomad-large-disk ext4 discard,defaults,nofail 0 2 | sudo tee -a /etc/fstab
 sudo mkdir /local
 sudo mount --bind /mnt/disks/google-exac-gnomad-large-disk /local  
 ```
@@ -20,7 +22,7 @@ sudo mount --bind /mnt/disks/google-exac-gnomad-large-disk /local
 --------
 Installing mongodb:
 
-Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
+Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat
 
 ```
 sudo emacs /etc/yum.repos.d/mongodb-org-3.2.repo
