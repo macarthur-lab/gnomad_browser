@@ -54,6 +54,9 @@ sudo emacs /etc/security/limits.d/99-mongodb-nproc.conf
        # add these lines:
        mongod       hard    nproc     64000
        mongod       soft    nproc     64000
+       
+sudo emacs 
+
 
 # disable hugepages by following the steps here: https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
 
@@ -62,7 +65,7 @@ sudo chmod 755 /etc/init.d/disable-transparent-hugepages
 sudo chkconfig --add disable-transparent-hugepages
 
 # reboot the VM 
-reboot
+sudo reboot
 
 
 ```
