@@ -118,12 +118,12 @@
             }
             $('#filter-status-exome').html(addFilterFlag(variant.exac.filter))
             $('#filter-status-genome').html(addFilterFlag(variant.gnomad.filter))
-            if (variant.exac.variant_id) {
+            if (variant.exac.allele_num) {
                 $('#ac-exome').html(variant.exac.allele_count)
                 $('#an-exome').html(variant.exac.allele_num)
                 $('#af-exome').html(Number(variant.exac.allele_freq.toPrecision(4)).toExponential())
             }
-            if (variant.gnomad.variant_id) {
+            if (variant.gnomad.allele_num) {
                 $('#ac-genome').html(variant.gnomad.allele_count)
                 $('#an-genome').html(variant.gnomad.allele_num)
                 $('#af-genome').html(Number(variant.gnomad.allele_freq.toPrecision(4)).toExponential())
