@@ -6,84 +6,28 @@
         <ul class="media-list">
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">How should I cite discoveries made using ExAC data?</h4>
+                    <h4 class="media-heading">How should I cite discoveries made using gnomAD data?</h4>
                     Please cite the ExAC flagship paper available <a href="http://www.nature.com/nature/journal/v536/n7616/full/nature19057.html">here</a>.
                 </div>
             </li>
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">I have identified a rare variant in ExAC that I believe is associated with a specific clinical phenotype. What phenotype data are available for these individuals?</h4>
-                    Many of the individuals who have contributed data to ExAC were not fully consented for phenotype data sharing, and unfortunately at this time we are typically unable to provide any information about the clinical status of variant carriers. We have made every effort to exclude individuals with severe pediatric diseases from the ExAC data set, and certainly do not expect our data set to be <i>enriched</i> for such individuals, but we typically cannot rule out the possibility that some of our participants do actually suffer from your disease of interest.
+                    <h4 class="media-heading">I have identified a rare variant in gnomAD that I believe is associated with a specific clinical phenotype. What phenotype data are available for these individuals?</h4>
+                    Most of the individuals who have contributed data to gnomAD were not fully consented for phenotype data sharing, and unfortunately at this time we are typically unable to provide any information about the clinical status of variant carriers. We have made every effort to exclude individuals with severe pediatric diseases from the gnomAD data set, and certainly do not expect our data set to be <i>enriched</i> for such individuals, but we typically cannot rule out the possibility that some of our participants do actually suffer from your disease of interest.
                     <br><br>
                     In the future it may be possible to obtain phenotype data for a subset of ExAC samples. If you are interested in using such data in your studies, please <a href="mailto:exomeconsortium@gmail.com">email us</a>.
                 </div>
             </li>
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">Can I get access to individual-level genotype data from ExAC?</h4>
-                    Many of the samples in ExAC have individual-level sequencing data deposited in <a href="http://www.ncbi.nlm.nih.gov/gap">dbGaP</a>, and these can be accessed by <a href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?page=login">applying through that repository</a>. However, many other samples come from unpublished cohorts or from samples not in dbGaP. There is not currently any mechanism to systematically obtain individual-level genotype data from the database as a whole.
+                    <h4 class="media-heading">Can I get access to individual-level genotype data from gnomAD?</h4>
+                    Many of the samples in gnomAD have individual-level sequencing data deposited in <a href="http://www.ncbi.nlm.nih.gov/gap">dbGaP</a>, and these can be accessed by <a href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?page=login">applying through that repository</a>. However, many other samples come from unpublished cohorts or from samples not in dbGaP. There is not currently any mechanism to systematically obtain individual-level genotype data from the database as a whole. Making this possible would require a truly staggering amount of paperwork, and we'd rather spend that time generating larger data sets for the community to use.
                 </div>
             </li>
             <li class="media">
                 <div class="media-body">
                     <h4 class="media-heading">What are the restrictions on data usage?</h4>
-                    All data here are released under a <a href="http://www.wellcome.ac.uk/stellent/groups/corporatesite/@policy_communications/documents/web_document/wtd003207.pdf">Fort Lauderdale Agreement</a> for the benefit of the wider biomedical community. You can freely download and search the data, and use it for publications focused on specific sets of variants (for instance, assessing the frequency of a set of candidate causal variants observed in a collection of rare disease patients). However, we ask that you not publish global (genome-wide) analyses of these data until after the ExAC flagship paper has been published, estimated to be in early 2015. If you’re uncertain which category your analyses fall into, please <a href="mailto:exomeconsortium@gmail.com">email us</a>. The data are available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">ODC Open Database License (ODbL)</a> (summary available <a href="http://www.opendatacommons.org/licenses/odbl/1-0/summary/">here</a>): you are free to share and modify the ExAC data so long as you attribute any public use of the database, or works produced from the database; keep the resulting data-sets open; and offer your shared or adapted version of the dataset under the same ODbL license.
-                </div>
-            </li>
-        </ul>
-        <h2>Constraint</h2>
-        <ul class="media-list">
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">How was the expected number of variants determined?</h4>
-                    We used a depth corrected probability of mutation for each gene to predict the expected variant counts. More details can be found in section 4.1 of the supplement in <a href="http://www.nature.com/nature/journal/v536/n7616/full/nature19057.html">Lek et al</a>. Note that the expected variant counts for exons with a median depth < 1 were removed from the totals.
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">Which variants are included in the observed counts?</h4>
-                    We included single nucleotide changes that occurred in the canonical transcript and had 123 or fewer alternative alleles and a VQSLOD >= -2.632. The counts represent the number of unique variants and not the allele count of said variants. Observed variant counts in exons with a median depth < 1 were removed from the totals.
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">Why are there fewer variants in the constraint table than depicted on the gene page?</h4>
-                    We only included variants that were found in the canonical transcript of the gene. On the gene page, variants found in all transcripts are depicted. Additionally, both observed and expected variant counts were removed for exons with a median depth < 1.
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">What is included in LoF?</h4>
-                    Nonsense, splice acceptor, and splice donor variants caused by single nucleotide changes.
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">What are the constraint metrics?</h4>
-                    <p>For synonymous and missense, we created a signed Z score for the deviation of observed counts from the expected number. Positive Z scores indicate increased constraint (intolerance to variation) and therefore that the gene had fewer variants than expected. Negative Z scores are given to genes that had a more variants than expected.</p>
-                    <p>For LoF, we assume that there are three classes of genes with respect to tolerance to LoF variation: null (where LoF variation is completely tolerated), recessive (where heterozygous LoFs are tolerated), and haploinsufficient (where heterozygous LoFs are not tolerated). We used the observed and expected variants counts to determine the probability that a given gene is extremely intolerant of loss-of-function variation (falls into the third category). The closer pLI is to one, the more LoF intolerant the gene appears to be. We consider pLI >= 0.9 as an extremely LoF intolerant set of genes.</p>
-                    <p>More details can be found in the supplement of <a href="http://biorxiv.org/content/early/2015/10/30/030338">Lek et al</a>.</p>
-                </div>
-            </li>
-        </ul>
-        <h2>Copy Number Variation (CNV)</h2>
-        <ul class="media-list">
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">How were CNVs discovered?</h4>
-                    Deletions and duplications were called based on read depth using XHMM (<a href="http://www.sciencedirect.com/science/article/pii/S000292971200417X">Fromer et al.</a>). Explicit methodological details are provided in <a href="http://www.nature.com/ng/journal/vaop/ncurrent/full/ng.3638.html">Ruderfer et al</a>.
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">How were CNV intolerance scores calculated?</h4>
-                    It is not straightforward to model genic CNV rates expected under neutrality in a direct manner, as can be done for SNVs using trinucleotide mutation rates and the s known sequence. To derive expected values, we therefore fit a linear regression model for the observed CNV rate per gene based on gene length, coding sequence length, number of targets, GC content, sequence complexity, genomic localization within pairs of segmental duplications, and sequencing read depth. Intolerances scores were calculated as the normalized and winsorized model residuals, negated such that higher positive values indicate greater intolerance (a lower than expected rate of CNVs for that gene).
-                </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">What are the limitations of these data?</h4>
-                    We note several limitations of these data: 1) Making accurate CNV calls from read depth data, in particular from targeted short read sequencing, is difficult and combined with the rarity of these events will add noise to estimates of frequencies and intolerance scores. 2) Complex CNVs such as multi-allelic events or common CNVs have been removed due to methodological limitations. 3) Mutation rates for CNVs are not well quantified making particular regions of known recurrence, such as those within pairs of tandem segmental duplications, more difficult to accurately assess intolerance. 4) Since CNVs often span multiple genes intolerance scores will be correlated over genes nearby.
+                    There are no restrictions or embargoes on the publication of results derived from the gnomAD database. However, we encourage people to <a href="mailto:exomeconsortium@gmail.com">check with the consortium</a> before embarking on large-scale analyses, to see if we already have something currently underway that overlaps with your plans; generally, we prefer to collaborate with users rather than compete with them. The data are available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">ODC Open Database License (ODbL)</a> (summary available <a href="http://www.opendatacommons.org/licenses/odbl/1-0/summary/">here</a>): you are free to share and modify the ExAC data so long as you attribute any public use of the database, or works produced from the database; keep the resulting data-sets open; and offer your shared or adapted version of the dataset under the same ODbL license.
                 </div>
             </li>
         </ul>
@@ -91,7 +35,7 @@
         <ul class="media-list">
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">What genome build is the ExAC data based on?</h4>
+                    <h4 class="media-heading">What genome build is the gnomAD data based on?</h4>
                     All data are based on <a href="ftp://ftp.broadinstitute.org/pub/seq/references/Homo_sapiens_assembly19.fasta">GRCh37/hg19</a>
                 </div>
             </li>
@@ -109,7 +53,7 @@
             </li>
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">Why does the browser seem to disagree with the ExAC VCF at this multiallelic site?</h4>
+                    <h4 class="media-heading">Why does the browser seem to disagree with the gnomAD VCF at this multiallelic site?</h4>
                     Due to the limitations of the VCF format, multi-allelic variants are put together on one VCF line.
                     This inevitably adds complexity to otherwise simple variants,
                     and thus when parsing onto the browser, we apply a <a href="http://www.cureffi.org/2014/04/24/converting-genetic-variants-to-their-minimal-representation/">minimal representation</a> script.
@@ -118,14 +62,14 @@
             </li>
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">Why does the allele frequency (AF) found in the ExAC VCF differ from the AF shown on the browser?</h4>
+                    <h4 class="media-heading">Why does the allele frequency (AF) found in the gnomAD VCF differ from the AF shown on the browser?</h4>
                     The AF shown in the VCF is AC/AN.  The browser however shows the adjusted allele frequency (AC_adj/AN_adj). The raw counts (AC and AN) refer to the total number of chromosomes with this allele, and total that were able to be called (whether reference or alternate), respectively. Thus, the allele frequency is AC/AN. However, for more stringent applications, we adjusted the allele count to only include individuals with genotype quality (GQ) >= 20 and depth (DP) >= 10, which we term AC_adj (and correspondingly, AN_adj for total number of chromosomes from individuals with those criteria regardless of genotype call).
                 </div>
             </li>
             <li class="media">
                 <div class="media-body">
                     <h4 class="media-heading">Are all the individuals in the <a href="http://evs.gs.washington.edu/EVS/">Exome Variant Server</a> included?</h4>
-                    No. We were not given permission from dbGaP to include individuals from several of the cohorts included in the NHLBI's Exome Sequencing Project. As a result, genuine rare variants that are present in the EVS may not be observed in ExAC.
+                    No. We were not given permission from dbGaP to include individuals from several of the cohorts included in the NHLBI's Exome Sequencing Project. As a result, genuine rare variants that are present in the EVS may not be observed in gnomAD.
                 </div>
             </li>
             <li class="media">
@@ -344,12 +288,12 @@
             <li class="media">
                 <div class="media-body">
                     <h4 class="media-heading">What ethnicities are represented in the "other" population?</h4>
-                   Individuals were classified as "other" if they did not unambiguously cluster with the major populations (i.e. EUR, NFE, AFR, SAS, EAS and AMR) in a principal component analysis (PCA).
+                   Individuals were classified as "other" if they did not unambiguously cluster with the major populations (i.e. NFE, FIN, AFR, SAS, EAS, ASJ or AMR) in a principal component analysis (PCA).
                 </div>
             </li>
             <li class="media">
                 <div class="media-body">
-                    <h4 class="media-heading">What cohorts are represented in the ExAC data?</h4>
+                    <h4 class="media-heading">What cohorts are represented in the gnomAD data?</h4>
                     <table border="1" cellspacing="0" cellpadding="0">
                         <tbody align="center">
                             <tr>
