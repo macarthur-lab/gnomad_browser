@@ -819,9 +819,9 @@ def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
         variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
         cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
         cnvs_per_gene = lookups.get_cnvs(db, transcript['gene_id'])
-        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
-        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'base_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
+        coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'genome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         coverage_stats = {
             'exomes': coverage_stats_exomes,
             'genomes': coverage_stats_genomes

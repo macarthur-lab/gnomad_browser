@@ -50,7 +50,13 @@ def get_variants_by_rsid(db, rsid):
         int(rsid.lstrip('rs'))
     except Exception, e:
         return None
-    variants = list(db.variants.find({'rsid': rsid}, fields={'_id': False}))
+    exomeVariants = list(db.variants.find({'rsid': rsid}, fields={'_id': False}))
+    for variant in exomeVariants:
+            variant['dataset'] = 'ExAC'
+    genomeVariants = list(db.gnomadVariants.find({'rsid': rsid}, fields={'_id': False}))
+    for variant in genomeVariants:
+            variant['dataset'] = 'gnomAD'
+    variants = exomeVariants + genomeVariants
     add_consequence_to_variants(variants)
     return variants
 
@@ -64,8 +70,14 @@ def get_variants_from_dbsnp(db, rsid):
         return None
     position = db.dbsnp.find_one({'rsid': rsid})
     if position:
-        variants = list(db.variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, fields={'_id': False}))
+        exomeVariants = list(db.variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, fields={'_id': False}))
+        for variant in exomeVariants:
+                variant['dataset'] = 'ExAC'
+        genomeVariants = list(db.variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, fields={'_id': False}))
+        for variant in genomeVariants:
+                variant['dataset'] = 'gnomAD'
         if variants:
+            variants = exomeVariants + genomeVariants
             add_consequence_to_variants(variants)
             return variants
     return []
@@ -346,6 +358,13 @@ def get_variants_in_transcript(db, transcript_id):
     variants = []
     for variant in db.variants.find({'transcripts': transcript_id}, fields={'_id': False}):
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Feature'] == transcript_id]
+        variant['dataset'] = 'ExAC'
+        add_consequence_to_variant(variant)
+        remove_extraneous_information(variant)
+        variants.append(variant)
+    for variant in db.gnomadVariants.find({'transcripts': transcript_id}, fields={'_id': False}):
+        variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Feature'] == transcript_id]
+        variant['dataset'] = 'gnomAD'
         add_consequence_to_variant(variant)
         remove_extraneous_information(variant)
         variants.append(variant)

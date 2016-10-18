@@ -3,11 +3,14 @@
     <!-- Render context vars in JS here -->
     <script type="text/javascript">
         window.transcript = {{ transcript_json|safe }};
-        window.table_variants = {{ variants_in_transcript_json|safe }};
-        window.variants_in_transcript = window.table_variants;
+        window.variants_in_transcript = {{ variants_in_transcript_json|safe }};
+        // console.log(window.table_variants)
+        window.table_variants = gnomad.combineDataForTable(
+            window.variants_in_transcript
+        )
         window.coverage_stats = {{ coverage_stats_json|safe }};
         window.gene = {{ gene_json|safe }};
-	window.cnvs = {{ cnvs|tojson|safe }};
+	    window.cnvs = {{ cnvs|tojson|safe }};
         window.cnvgenes = {{ cnvgenes|tojson|safe }};
         $(document).ready(function() {
             $("#variant_table_annotation_header").attr("data-tooltip",
@@ -44,18 +47,13 @@
         </div>
         <div class="row">
             <div class="row">
-                {% with plot_id = transcript.transcript_id %}
                     {% include 'transcript_display.html' %}
-                {% endwith %}
+
             </div>
             <div class="row">
-                {% if variants_in_transcript %}
-                    {% with chrom = variants_in_transcript[0].chrom %}
-                        {% include 'variant_table.html' %}
-                    {% endwith %}
-                {% else %}
-                    No variants in this gene.
-                {% endif %}
+
+                {% include 'variant_table.html' %}
+
             </div>
         </div>
     </div>
