@@ -559,4 +559,16 @@ TODO: come up with a better way to position tooltip
   }
   .credit-pi-second {
     margin-top:  0px;
+  }
+}
+
+.disclaimer {
+  background-color: #B71C1C;
+  color: #FFFFFF;
+  width: 100%;
+}
+
+.disclaimer p {
+  text-align: center;
+  margin-bottom: 0px;
 }
