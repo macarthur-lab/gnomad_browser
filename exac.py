@@ -1148,6 +1148,32 @@ def apply_caching(response):
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     return response
 
+@app.route('/report/<dataset>/<variant_id>')
+def report_variant(variant_id, dataset):
+    db = get_db()
+    chrom, pos, ref, alt = variant_id.split('-')
+    pos = int(pos)
+    # pos, ref, alt = get_minimal_representation(pos, ref, alt)
+    xpos = get_xpos(chrom, pos)
+    variant = lookups.get_variant(db, dataset, xpos, ref, alt)
+
+    if variant is None:
+        variant = {
+            'chrom': chrom,
+            'pos': pos,
+            'xpos': xpos,
+            'ref': ref,
+            'alt': alt
+        }
+    try:
+        print 'Rendering variant_id: %s' % variant_id
+        return render_template(
+            'report_variant.html',
+            variant=variant,
+        )
+    except Exception, e:
+        print 'Failed on variant_id:', variant_id, ';Error=', traceback.format_exc()
+        abort(404)
 
 if __name__ == "__main__":
     runner = Runner(app)  # adds Flask command line options for setting host, port, etc.

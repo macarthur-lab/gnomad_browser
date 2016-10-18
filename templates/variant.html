@@ -312,6 +312,12 @@
                             <div class="upper-display-cell" id="af-genome"></div>
                             <div class="upper-display-cell" id="af-total"></div>
                         </dd>
+                        <dt>Actions</dt>
+                        <dd class="upper-display-row">
+                            <div class="upper-display-cell" id="an-exome"><a href="/report/exac/{{ variant.variant_id }}">Report</a></div>
+                            <div class="upper-display-cell" id="an-genome"><a href="/report/gnomad/{{ variant.variant_id }}">Report</a></div>
+                            <div class="upper-display-cell" id="an-total"></div>
+                        </dd>
                         <dt>dbSNP</dt>
                         {% if variant.rsid and variant.rsid != "." %}
                             <dd><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs={{ variant.rsid }}" target="_blank">{{ variant.rsid }}</a></dd>
