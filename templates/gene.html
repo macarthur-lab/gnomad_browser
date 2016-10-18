@@ -13,20 +13,21 @@
         window.cnvgenes = {{ cnvgenes|tojson|safe }};
         window.uuid_lists = {{ uuid_lists|tojson|safe }};
 
-        window.variants_in_gene.find(v =>
-             v.variant_id === '22-46594290-A-G' && v.dataset === 'gnomAD'
-         ).filter = 'Set to fake fail for testing'
-        window.variants_in_gene.find(v =>
-             v.variant_id === '22-46594285-T-A' && v.dataset === 'ExAC'
-         ).filter = 'Set to fake fail for testing'
-        window.variants_in_gene.find(v =>
-             v.variant_id === '22-46594249-C-T' && v.dataset === 'ExAC'
-         ).allele_count = 100000
+        // For testing only
+        // window.variants_in_gene.find(v =>
+        //      v.variant_id === '22-46594290-A-G' && v.dataset === 'gnomAD'
+        //  ).filter = 'Set to fake fail for testing'
+        // window.variants_in_gene.find(v =>
+        //      v.variant_id === '22-46594285-T-A' && v.dataset === 'ExAC'
+        //  ).filter = 'Set to fake fail for testing'
+        // window.variants_in_gene.find(v =>
+        //      v.variant_id === '22-46594249-C-T' && v.dataset === 'ExAC'
+        //  ).allele_count = 100000
 
         window.table_variants = gnomad.combineDataForTable (
             window.variants_in_gene
         )
-        // additional test cases
+        console.log(containsGenomeVariants(table_variants))
     </script>
     <style>
 

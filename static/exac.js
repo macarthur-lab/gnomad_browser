@@ -707,6 +707,13 @@ function getDataSelection(exomeState, genomeState) {
     }
 }
 
+function containsGenomeVariants(combined_variants_in_gene) {
+    for (var i = 0; i < combined_variants_in_gene.length; i++) {
+        if (combined_variants_in_gene[i].gnomAD) return true
+    }
+    return false
+}
+
 function update_variants() {
     var category = $('.consequence_display_buttons.active')
         .attr('id')

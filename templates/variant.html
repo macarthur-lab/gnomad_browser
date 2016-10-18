@@ -15,6 +15,9 @@
         window.variant = {{ variant|tojson|safe }};
         window.exac = {{ exac|tojson|safe }};
         window.gnomAD = {{ gnomad|tojson|safe }};
+        console.log(window.exac.variant)
+        console.log(window.gnomAD.variant)
+
         window.variant = gnomad.combineDataForVariantPage(
             window.exac.variant,
             window.gnomAD.variant
@@ -26,6 +29,13 @@
         console.log(window.variant)
         // console.log(window.exac)
         // console.log(window.gnomad)
+
+        function hasData(rawVariant) {
+            if (rawVariant.variant_id) {
+                return true
+            }
+            return false
+        }
 
         $(document).ready(function() {
             draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
@@ -98,24 +108,29 @@
             })
 
             function addFilterFlag(filter) {
+                if (filter === 'No variant') {
+                    return '<span class="label label-danger">No variant</span>'
+                }
                 if (filter !== 'PASS') {
-                    return '<span class="label label-danger">Filtered</span>'
+                    return '<span class="label label-warning">Filtered</span>'
                 }
                 return '<span class="label label-success">Pass</span>'
             }
-
             $('#filter-status-exome').html(addFilterFlag(variant.exac.filter))
             $('#filter-status-genome').html(addFilterFlag(variant.gnomad.filter))
-            $('#ac-exome').html(variant.exac.allele_count)
-            $('#ac-genome').html(variant.gnomad.allele_count)
+            if (variant.exac.variant_id) {
+                $('#ac-exome').html(variant.exac.allele_count)
+                $('#an-exome').html(variant.exac.allele_num)
+                $('#af-exome').html(Number(variant.exac.allele_freq.toPrecision(4)).toExponential())
+            }
+            if (variant.gnomad.variant_id) {
+                $('#ac-genome').html(variant.gnomad.allele_count)
+                $('#an-genome').html(variant.gnomad.allele_num)
+                $('#af-genome').html(Number(variant.gnomad.allele_freq.toPrecision(4)).toExponential())
+            }
             $('#ac-total').html(variant.all.allele_count)
-            $('#an-exome').html(variant.exac.allele_num)
-            $('#an-genome').html(variant.gnomad.allele_num)
             $('#an-total').html(variant.all.allele_num)
-            $('#af-exome').html(Number(variant.exac.allele_freq.toPrecision(4)).toExponential())
-            $('#af-genome').html(Number(variant.gnomad.allele_freq.toPrecision(4)).toExponential())
             $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
-
             updatePopulationTable(window.variant, 'all')
         });
     </script>
