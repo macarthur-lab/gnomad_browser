@@ -1175,6 +1175,24 @@ def report_variant(variant_id, dataset):
         print 'Failed on variant_id:', variant_id, ';Error=', traceback.format_exc()
         abort(404)
 
+@app.route('/report/exac/submit_variant_report', methods=['POST'])
+def submit_variant_report():
+    data = {
+        'name': request.form['name'],
+        # 'institution': request.form['institution'],
+        # 'city': request.form['city'],
+        # 'email': request.form['email'],
+        # 'variant_issue': request.form['variants-issue'],
+        # 'concern': request.form['concern'],
+        # 'expected_phenotype': request.form['expected-phenotype'],
+        # 'additional_info': request.form['additional-info']
+    }
+    print(data)
+    return render_template(
+        'thank_you.html',
+        name=request.form['name'],
+    )
+
 if __name__ == "__main__":
     runner = Runner(app)  # adds Flask command line options for setting host, port, etc.
     runner.run()
