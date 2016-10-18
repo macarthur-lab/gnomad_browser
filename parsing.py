@@ -1,14 +1,16 @@
 """
 Utils for reading flat files that are loaded into database
 """
+import copy
 import re
 import traceback
+from tqdm import tqdm
 from utils import *
-import copy
 
 POPS = {
     'AFR': 'African',
     'AMR': 'Latino',
+    'ASJ': 'Ashkenazi Jewish',
     'EAS': 'East Asian',
     'FIN': 'European (Finnish)',
     'NFE': 'European (Non-Finnish)',
@@ -37,7 +39,7 @@ def get_base_coverage_from_file(base_coverage_file):
     """
 
     float_header_fields = ['mean', 'median', '1', '5', '10', '15', '20', '25', '30', '50', '100']
-    for line in base_coverage_file:
+    for line in tqdm(base_coverage_file, unit=" coverage"):
         if line.startswith('#'):
             continue
         fields = line.strip('\n').split('\t')
@@ -56,21 +58,25 @@ def get_variants_from_sites_vcf(sites_vcf):
     sites_vcf is a file (gzipped), not file path
     """
     vep_field_names = None
+
+    # hard-code some VCF header fields until vcf gets updated.
+    line = '##INFO=<ID=DP_HIST,Number=R,Type=String,Description="Histogram for DP; Mids: 2.5|7.5|12.5|17.5|22.5|27.5|32.5|37.5|42.5|47.5|52.5|57.5|62.5|67.5|72.5|77.5|82.5|87.5|92.5|97.5">'
+    dp_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
+    line = '##INFO=<ID=GQ_HIST,Number=R,Type=String,Description="Histogram for GQ; Mids: 2.5|7.5|12.5|17.5|22.5|27.5|32.5|37.5|42.5|47.5|52.5|57.5|62.5|67.5|72.5|77.5|82.5|87.5|92.5|97.5">'
+    gq_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
+    line = '##INFO=<ID=CSQ,Number=.,Type=String,Description="Consequence annotations from Ensembl VEP. Format: Allele|Consequence|IMPACT|SYMBOL|Gene|Feature_type|Feature|BIOTYPE|EXON|INTRON|HGVSc|HGVSp|cDNA_position|CDS_position|Protein_position|Amino_acids|Codons|Existing_variation|ALLELE_NUM|DISTANCE|STRAND|VARIANT_CLASS|MINIMISED|SYMBOL_SOURCE|HGNC_ID|CANONICAL|TSL|CCDS|ENSP|SWISSPROT|TREMBL|UNIPARC|SIFT|PolyPhen|DOMAINS|HGVS_OFFSET|GMAF|AFR_MAF|AMR_MAF|ASN_MAF|EAS_MAF|EUR_MAF|SAS_MAF|AA_MAF|EA_MAF|CLIN_SIG|SOMATIC|PHENO|PUBMED|MOTIF_NAME|MOTIF_POS|HIGH_INF_POS|MOTIF_SCORE_CHANGE|LoF_info|LoF_flags|LoF_filter|LoF|context|ancestral">'
+    vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
+
     for line in sites_vcf:
         try:
             line = line.strip('\n')
-            if line.startswith('##INFO=<ID=CSQ'):
-                vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
-            if line.startswith('##INFO=<ID=DP_HIST'):
-                dp_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
-            if line.startswith('##INFO=<ID=GQ_HIST'):
-                gq_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
             if line.startswith('#'):
                 continue
 
             # If we get here, it's a variant line
             if vep_field_names is None:
                 raise Exception("VEP_field_names is None. Make sure VCF header is present.")
+
             # This elegant parsing code below is copied from https://github.com/konradjk/loftee
             fields = line.split('\t')
             info_field = dict([(x.split('=', 1)) if '=' in x else (x, x) for x in re.split(';(?=\w)', fields[7])])
@@ -120,10 +126,10 @@ def get_variants_from_sites_vcf(sites_vcf):
                 variant['pop_acs'] = dict([(POPS[x], int(info_field['AC_%s' % x].split(',')[i])) for x in POPS])
                 variant['pop_ans'] = dict([(POPS[x], int(info_field['AN_%s' % x])) for x in POPS])
                 variant['pop_homs'] = dict([(POPS[x], int(info_field['Hom_%s' % x].split(',')[i])) for x in POPS])
-                variant['ac_male'] = info_field['AC_MALE']
-                variant['ac_female'] = info_field['AC_FEMALE']
-                variant['an_male'] = info_field['AN_MALE']
-                variant['an_female'] = info_field['AN_FEMALE']
+                variant['ac_male'] = info_field['AC_Male']
+                variant['ac_female'] = info_field['AC_Female']
+                variant['an_male'] = info_field['AN_Male']
+                variant['an_female'] = info_field['AN_Female']
                 variant['hom_count'] = sum(variant['pop_homs'].values())
                 if variant['chrom'] in ('X', 'Y'):
                     variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i])) for x in POPS])
@@ -149,7 +155,7 @@ def get_variants_from_sites_vcf(sites_vcf):
 
 def get_mnp_data(mnp_file):
     header = mnp_file.readline().strip().split('\t')
-    for line in mnp_file:
+    for line in tqdm(mnp_file, unit=" mnps"):
         data = dict(zip(header, line.split('\t')))
         if any(map(lambda x: x == 'True', data['QUESTIONABLE_PHASING'])): continue
         chroms = data['CHROM'].split(',')
@@ -203,7 +209,7 @@ def get_genes_from_gencode_gtf(gtf_file):
     Parse gencode GTF file;
     Returns iter of gene dicts
     """
-    for line in gtf_file:
+    for line in tqdm(gtf_file, unit=" genes"):
         if line.startswith('#'):
             continue
         fields = line.strip('\n').split('\t')
@@ -237,7 +243,7 @@ def get_transcripts_from_gencode_gtf(gtf_file):
     Parse gencode GTF file;
     Returns iter of transcript dicts
     """
-    for line in gtf_file:
+    for line in tqdm(gtf_file, unit=" transcripts"):
         if line.startswith('#'):
             continue
         fields = line.strip('\n').split('\t')
@@ -271,7 +277,7 @@ def get_exons_from_gencode_gtf(gtf_file):
     Parse gencode GTF file;
     Returns iter of transcript dicts
     """
-    for line in gtf_file:
+    for line in tqdm(gtf_file, unit=" exons"):
         if line.startswith('#'):
             continue
         fields = line.strip('\n').split('\t')
@@ -383,8 +389,6 @@ def get_cnvs_per_gene(cnv_gene_file):
             'rank': rank,
             }
         yield cnv_gene
-
-
 
 
 def get_dbnsfp_info(dbnsfp_file):
