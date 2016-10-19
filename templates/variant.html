@@ -423,13 +423,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <div class="panel-title">
-                                            <small><a style="color: black;" href="/report/exac/{{ variant.variant_id }}">Report this variant</a></small>
-                                        </div>
-                                    </div>
-                                </div>
+                                <a class="btn btn-success report" href="/report/exac/{{ variant.variant_id }}">Report this variant</a>
                             </div>
                         </div>
                     </div>
@@ -498,7 +492,6 @@
                                 <tbody>
                                     {% for pop in variant.pop_acs %}
                                         <tr>
-                                            <td>{{ pop }}</td>
                                             {% if pop == 'Ashkenazi Jewish' %}
                                                 <td>{{ pop }}*</td>
                                             {% else %}

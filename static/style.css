@@ -585,3 +585,14 @@ TODO: come up with a better way to position tooltip
   text-align: center;
   margin-bottom: 0px;
 }
+
+.btn.btn-success.report {
+  margin-top: 5px;
+  background-color: #F5F5F5;
+  color: #000000;
+  /*border: none;*/
+}
+.btn.btn-success.report:hover {
+  background-color: #E0E0E0;
+  /*border: none;*/
+}
