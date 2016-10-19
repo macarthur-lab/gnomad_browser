@@ -24,6 +24,7 @@ lower_gene_chart_height = 50 - gene_chart_margin_lower.top - gene_chart_margin_l
 
 var exomeColor = 'rgba(70, 130, 180, 1)'
 var genomeColor ='rgba(115, 171, 61,  1)'
+var genomeLineWidth = '6px'
 
 function region_chart(data, variant_data) {
     var metric = 'mean';
@@ -89,7 +90,7 @@ function region_chart(data, variant_data) {
         .datum(data.genomes)
         .style("fill", "none")
         .style("stroke", genomeColor)
-        .style("stroke-width", "8px")
+        .style("stroke-width", genomeLineWidth)
         .attr('class', 'genome-coverage-line')
         .attr("d", genomeCoverageLine);
 
@@ -243,7 +244,7 @@ function change_region_chart_metric(data, metric, container) {
         .duration(500)
         .style("fill", "none")
         .style("stroke", genomeColor)
-        .style("stroke-width", "8px")
+        .style("stroke-width", genomeLineWidth)
         .attr('class', 'genome-coverage-line')
         .attr("d", genomeCoverageLine);
 

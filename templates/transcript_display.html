@@ -64,6 +64,7 @@
 
 var exomeColor = 'rgba(70, 130, 180, 1)'
 var genomeColor ='rgba(115, 171, 61,  1)'
+var genomeLineWidth = '6px'
 
 var make_cnvs_svg = function(_cnvs, _transcript, scale_type, skip_utrs)
 {
@@ -303,7 +304,7 @@ function gene_chart(data, new_data_exomes, new_data_genomes, variant_data, _tran
         .datum(new_data_genomes)
         .style("fill", "none")
         .style("stroke", genomeColor)
-        .style("stroke-width", "8px")
+        .style("stroke-width", genomeLineWidth)
         .attr('class', 'genome-converage-line')
         .attr("d", genomeCoverageLine);
 
@@ -572,7 +573,7 @@ function change_coverage_chart(data, new_data_exomes, new_data_genomes, variant_
         .duration(500)
         .style("fill", "none")
         .style("stroke", genomeColor)
-        .style("stroke-width", "8px")
+        .style("stroke-width", genomeLineWidth)
         .attr('class', 'genome-converage-line')
         .attr("d", genomeCoverageLine);
 
