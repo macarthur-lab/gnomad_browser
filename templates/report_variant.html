@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<script type="text/javascript">
+    function sendEmail(event) {
+      console.log(event)
+      event.preventDefault()
+    }
+</script>
+
+<div class="container">
+  <h1>Report variant {{ variant.chrom }}:{{ variant.pos }} {{ variant.ref }} / {{ variant.alt }}</h1>
+  <form action="submit_variant_report" method="Post">
+    Name<br>
+    <input type="text" name="name"><br>
+
+    Institution<br>
+    <input type="text" name="institution"><br>
+
+    City<br>
+    <input type="text" name="city"><br>
+
+    State or Country<br>
+    <input type="text" name="state"><br>
+
+    Email<br>
+    <input type="text" name="email"><br>
+
+    <h2>Variant issue</h2>
+    <div class="report-checkboxes">
+      <div class="dataRadio"><input checked type="radio" name="variant-issue" value="clinically-implausible">Clinically implausible</div>
+      <div class="dataRadio"><input type="radio" name="variant-issue" value="read-support-poor">Read support poor</div>
+      <div class="dataRadio"><input type="radio" name="variant-issue" value="other-artifact">Other artifact</div>
+    </div>
+
+    Please explain your concern about this variant<br>
+    <textarea name="concern" cols="40" rows="5"></textarea><br>
+
+    <h2>Request for additional information on variant carriers</h2>
+
+    Expected phenotype<br>
+    <input type="text" name="expected-phenotype"><br>
+
+    Additional information that may be helpful for our understanding of the request<br>
+    <textarea name="additional-info" cols="40" rows="5"></textarea><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <em>Generally phenotype data is not available for samples in ExAC. Many of the individuals who have contributed data to ExAC were not fully consented for phenotype data sharing. In the future, it may become available for a small subset of samples with appropriate consents.</em>
+</div>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}

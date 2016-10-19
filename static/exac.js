@@ -617,6 +617,17 @@ function update_variant_af_box() {
     var dataSelection = getDataSelection(exomeState, genomeState)
     var svg;
     $.each(data, function(i, d) {
+        // testing
+        // if (d.variant_id === '22-46594241-G-T') {
+        //     console.log(d.allele_freq)
+        //     console.log(get_af_category(d)[0])
+        //     console.log(d.all.allele_freq)
+        //     console.log(get_af_category(d.all)[0])
+        //     console.log(d.ExAC.allele_freq)
+        //     console.log(get_af_category(d.ExAC)[0])
+        //     console.log(d.gnomAD.allele_freq)
+        //     console.log(get_af_category(d.gnomAD)[0])
+        // }
         d3.select('#variant_af_box_' + d.variant_id).attr("data-tooltip", "Shows allele frequency \n on a discrete " +
                 "scale: \n singletons, <1/10,000, \n <1/1000, <1%, <5%, \n <50%, >50%. \n This particular variant is \n " +
                 get_af_category(d)[1] + ".");
