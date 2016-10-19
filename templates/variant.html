@@ -101,7 +101,9 @@
                 if (!variant.all.pop_acs['Ashkenazi Jewish']
                      || variant.all.pop_acs['Ashkenazi Jewish']  === 0) {
                     $('#ibd-footer').hide()
+                    $('#asj').html('Ashkenazi Jewish')
                 }
+
             }
 
             $('.population_selector_checkbox_container').change(function() {
@@ -493,7 +495,7 @@
                                     {% for pop in variant.pop_acs %}
                                         <tr>
                                             {% if pop == 'Ashkenazi Jewish' %}
-                                                <td>{{ pop }}*</td>
+                                                <td id="asj">{{ pop }}*</td>
                                             {% else %}
                                                 <td>{{ pop }}</td>
                                             {% endif %}
