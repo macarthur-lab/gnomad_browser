@@ -780,7 +780,7 @@ function update_variants() {
         $(this).find('.table-allele-num').html(variant[dataSelection].allele_num)
         $(this).find('.table-hom-count').html(variant[dataSelection].hom_count)
         // $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
-        $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(2)).toExponential())
+        $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(3)).toExponential())
         $(this).find('.table-allele-freq-box').empty()
         $(this).show()
     })
