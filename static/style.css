@@ -477,6 +477,7 @@ TODO: come up with a better way to position tooltip
   width: 50px;
 }
 #th-hgvs, #td-hgvs {
+  padding-left: 5px;
   width: 100px;
 }
 #th-vep, #td-vep {
@@ -507,6 +508,7 @@ TODO: come up with a better way to position tooltip
     width: 50px;
   }
   #th-hgvs, #td-hgvs {
+    padding-left: 5px;
     width: 90px;
     overflow: hidden;
   }
