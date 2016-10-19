@@ -1179,13 +1179,14 @@ def report_variant(variant_id, dataset):
 def submit_variant_report():
     data = {
         'name': request.form['name'],
-        # 'institution': request.form['institution'],
-        # 'city': request.form['city'],
-        # 'email': request.form['email'],
-        # 'variant_issue': request.form['variants-issue'],
-        # 'concern': request.form['concern'],
-        # 'expected_phenotype': request.form['expected-phenotype'],
-        # 'additional_info': request.form['additional-info']
+        'institution': request.form['institution'],
+        'city': request.form['city'],
+        'state': request.form['state'],
+        'email': request.form['email'],
+        'variant_issue': request.form['variant-issue'],
+        'concern': request.form['concern'],
+        'expected_phenotype': request.form['expected-phenotype'],
+        'additional_info': request.form['additional-info']
     }
     print(data)
     return render_template(
