@@ -98,6 +98,10 @@
                   $('#table-hemizygotes-sum').html(variant[selection].hemi_count)
                 }
                 $('#table-frequency').html(variant[selection].allele_freq)
+                if (!variant.all.pop_acs['Ashkenazi Jewish']
+                     || variant.all.pop_acs['Ashkenazi Jewish']  === 0) {
+                    $('#ibd-footer').hide()
+                }
             }
 
             $('.population_selector_checkbox_container').change(function() {
@@ -131,6 +135,7 @@
             $('#ac-total').html(variant.all.allele_count)
             $('#an-total').html(variant.all.allele_num)
             $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
+
             updatePopulationTable(window.variant, 'all')
         });
     </script>
@@ -185,7 +190,7 @@
             function renderQualityHistogram() {
                 var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
                 if (window.variant != null && 'genotype_depths' in window.variant[genotypeDataSelection]) {
-                    draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[1], '#quality_display_container', false, 'Depth', 'Variant Carriers');
+                    draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[0], '#quality_display_container', false, 'Depth', 'Variant Carriers');
                     $('#quality_metrics_container').change(function() {
                         var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
                         var depthOrQuality = $('input[name=depth-or-quality]:checked').val()
@@ -312,12 +317,6 @@
                             <div class="upper-display-cell" id="af-genome"></div>
                             <div class="upper-display-cell" id="af-total"></div>
                         </dd>
-                        <dt>Actions</dt>
-                        <dd class="upper-display-row">
-                            <div class="upper-display-cell" id="an-exome"><a href="/report/exac/{{ variant.variant_id }}">Report</a></div>
-                            <div class="upper-display-cell" id="an-genome"><a href="/report/gnomad/{{ variant.variant_id }}">Report</a></div>
-                            <div class="upper-display-cell" id="an-total"></div>
-                        </dd>
                         <dt>dbSNP</dt>
                         {% if variant.rsid and variant.rsid != "." %}
                             <dd><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs={{ variant.rsid }}" target="_blank">{{ variant.rsid }}</a></dd>
@@ -424,6 +423,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="panel-title">
+                                            <small><a style="color: black;" href="/report/exac/{{ variant.variant_id }}">Report this variant</a></small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -493,6 +499,11 @@
                                     {% for pop in variant.pop_acs %}
                                         <tr>
                                             <td>{{ pop }}</td>
+                                            {% if pop == 'Ashkenazi Jewish' %}
+                                                <td>{{ pop }}*</td>
+                                            {% else %}
+                                                <td>{{ pop }}</td>
+                                            {% endif %}
                                             <td id="table-count-{{ pop[0:3] }}">{{ variant.pop_acs[pop] }}</td>
                                             <td id="table-number-{{ pop[0:3] }}">{{ variant.pop_ans[pop] }}</td>
                                             {% if chrom != 'Y' %}
@@ -508,13 +519,6 @@
                                             {% endif %}
                                         </tr>
                                     {% endfor %}
-                                    <tr>
-                                        <td>Ashkenazi Jewish*</td>
-                                        <td>1</td>
-                                        <td>5684</td>
-                                        <td>0</td>
-                                        <td>0.0001759</td>
-                                    </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -555,7 +559,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div id="ibd-footer">* For detailed analysis of Ashkenazi Jewish frequency see the <a href="#">IBD Exomes Browser</a>.</div>
+                        <div id="ibd-footer">* For detailed analysis of Ashkenazi Jewish frequency see the <a href="https://ibd.broadinstitute.org/variant/{{ variant.variant_id }}">IBD Exomes Browser</a>.</div>
                     </div>
                 {% else %}
                     {% if any_covered %}

@@ -257,14 +257,16 @@ TODO: come up with a better way to position tooltip
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     /*border: 1px solid green;*/
-    height: 100%;
+    height: 160px;
+    margin-bottom: 20px;
   }
 }
 
 .variant_selectors_container {
   width: 30%;
-  /*border: 1px solid blue;*/
+  border: 1px solid blue;
 }
 
 .variant_selector_checkbox_container {
@@ -299,6 +301,15 @@ TODO: come up with a better way to position tooltip
   .variant_selector_checkboxes {
     padding-left: 0;
     border: 0;
+    height: 85%;
+    justify-content: flex-start;
+  }
+  .variant_selector_checkbox_title {
+    width: 100%;
+    height: 15%;
+    font-weight: bold;
+    padding-left: 3px;
+    /*border: 1px solid orange;*/
   }
 }
 .variant_selector_checkboxes label {
