@@ -76,7 +76,8 @@
 
             function updatePopulationTable(variant, selection) {
                 for (var pop in variant[selection].pop_acs) {
-                    ix = pop.substring(0, 3)
+                    ix = pop.replace(" ", "").replace("(", "").replace(")", "") //pop.substring(0, 3)
+    
                     $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
                     $('#table-number-' + ix).html(variant[selection].pop_ans[pop])
                     if (variant.chrom !== 'Y') {
@@ -493,26 +494,28 @@
                                 </thead>
                                 <tbody>
                                     {% for pop in variant.pop_acs %}
+				       {% if (pop != "Other") %} 
                                         <tr>
                                             {% if pop == 'Ashkenazi Jewish' %}
                                                 <td id="asj">{{ pop }}*</td>
                                             {% else %}
                                                 <td>{{ pop }}</td>
                                             {% endif %}
-                                            <td id="table-count-{{ pop[0:3] }}">{{ variant.pop_acs[pop] }}</td>
-                                            <td id="table-number-{{ pop[0:3] }}">{{ variant.pop_ans[pop] }}</td>
+                                            <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_acs[pop] }}</td>
+                                            <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_ans[pop] }}</td>
                                             {% if chrom != 'Y' %}
-                                                <td id="table-homozygotes-{{ pop[0:3] }}">{{ variant.pop_homs[pop] }}</td>
+                                                <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_homs[pop] }}</td>
                                             {% endif %}
                                             {% if chrom == 'X' or chrom == 'Y' %}
-                                                <td id="table-hemizygotes-{{ pop[0:3] }}">{{ variant.pop_hemis[pop] }}</td>
+                                                <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_hemis[pop] }}</td>
                                             {% endif %}
                                             {% if variant.pop_ans[pop] > 0 %}
-                                                <td id="table-frequency-{{ pop[0:3] }}">{{ '%0.4g' % (variant.pop_acs[pop]/variant.pop_ans[pop]) }}</td>
+                                                <td id="table-frequency-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ '%0.4g' % (variant.pop_acs[pop]/variant.pop_ans[pop]) }}</td>
                                             {% else %}
                                                 <td>NA</td>
                                             {% endif %}
                                         </tr>
+					{% endif %}
                                     {% endfor %}
                                 </tbody>
                                 <tfoot>
