@@ -319,7 +319,6 @@ def get_variants_in_gene(db, gene_id):
     exac_variant_uuids = []
     gnomad_variant_uuids = []
     for variant in db.variants.find({'genes': gene_id}):
-        print variant
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Gene'] == gene_id]
         variant['uuid'] = str(variant['_id'])
         variant['dataset'] = 'ExAC'
