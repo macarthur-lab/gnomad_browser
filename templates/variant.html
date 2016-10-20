@@ -75,6 +75,8 @@
             }
 
             function updatePopulationTable(variant, selection) {
+	        //console.log(variant[selection]);
+	        
                 for (var pop in variant[selection].pop_acs) {
                     ix = pop.replace(" ", "").replace("(", "").replace(")", "")
                     $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
@@ -92,7 +94,11 @@
                 $('#table-count-sum').html(variant[selection].allele_count)
                 $('#table-number-sum').html(variant[selection].allele_num)
                 if (variant.chrom !== 'Y') {
-                  $('#table-homozygotes-sum').html(variant[selection].hom_count)
+	          var hom_count = 0;
+                  for(k in variant[selection].pop_homs) {
+                     hom_count += variant[selection].pop_homs[k];
+                  }
+                  $('#table-homozygotes-sum').html(hom_count)
                 }
                 if (variant.chrom === 'X' || variant.chrom === 'Y') {
                   $('#table-hemizygotes-sum').html(variant[selection].hemi_count)
