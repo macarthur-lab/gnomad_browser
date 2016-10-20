@@ -27,11 +27,14 @@ def get_transcript(db, transcript_id):
 
 def get_raw_variant(db, source, xpos, ref, alt, get_id=False):
     if source == 'exac':
-        return db.variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
+        exac_variant = db.variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
+        return exac_variant
     if source == 'gnomad':
         gnomad_variant = db.gnomadVariants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
         if gnomad_variant and 'pop_acs' in gnomad_variant:
             gnomad_variant['pop_acs']['South Asian'] = 0
+            gnomad_variant['pop_ans']['South Asian'] = 0
+            gnomad_variant['pop_homs']['South Asian'] = 0
         return gnomad_variant
 
 
