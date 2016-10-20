@@ -76,12 +76,11 @@
 
             function updatePopulationTable(variant, selection) {
                 for (var pop in variant[selection].pop_acs) {
-                    ix = pop.replace(" ", "").replace("(", "").replace(")", "") //pop.substring(0, 3)
-    
+                    ix = pop.replace(" ", "").replace("(", "").replace(")", "")
                     $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
                     $('#table-number-' + ix).html(variant[selection].pop_ans[pop])
                     if (variant.chrom !== 'Y') {
-                      $('#table-homozygotes' + ix).html(variant[selection].pop_homs[pop])
+                      $('#table-homozygotes-' + ix).html(variant[selection].pop_homs[pop])
                     }
                     if (variant.chrom === 'X' || variant.chrom === 'Y') {
                       $('#table-hemizygotes-' + ix).html(variant[selection].pop_hemis[pop])
