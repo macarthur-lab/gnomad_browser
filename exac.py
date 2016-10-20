@@ -76,8 +76,9 @@ app.config.update(dict(
     #   tabix -s 2 -b 3 -e 3 dbsnp142.txt.bgz
     DBSNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
 
-    READ_VIZ_DIR=os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz")
+    READ_VIZ_DIR=os.path.abspath(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz"))
 ))
+
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
@@ -684,7 +685,6 @@ def variant_data(variant_str, source):
         ]   #eg. '1-157768000-G-C_hom1',
         
         read_viz_dict[het_or_hom_or_hemi]['urls'] = [
-            #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
             os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
             for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
         ]
@@ -1072,7 +1072,7 @@ def page_not_found(error):
     return render_template(
         'error.html',
         query=""
-    ), 404
+    ), 400
 
 
 @app.route('/downloads')
@@ -1129,6 +1129,7 @@ http://omim.org/entry/%(omim_accession)s''' % gene
 @app.route('/read_viz/<path:path>')
 def read_viz_files(path):
     full_path = os.path.abspath(os.path.join(app.config["READ_VIZ_DIR"], path))
+    #logging.info("readviz path: " + full_path)
 
     # security check - only files under READ_VIZ_DIR should be accsessible
     if not full_path.startswith(app.config["READ_VIZ_DIR"]):
