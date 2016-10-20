@@ -10,7 +10,8 @@
 
 <div class="container">
   <h1>Report variant {{ variant.chrom }}:{{ variant.pos }} {{ variant.ref }} / {{ variant.alt }}</h1>
-  <form action="submit_variant_report" method="Post">
+  <form action="/report/submit_variant_report" method="POST">
+    <input type="hidden" name="variant-id" value="{{ variant.chrom }}-{{ variant.pos }}-{{ variant.ref }}-{{ variant.alt }}">
     Name<br>
     <input type="text" name="name"><br>
 
