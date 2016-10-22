@@ -76,7 +76,7 @@
 
             function updatePopulationTable(variant, selection) {
 	        //console.log(variant[selection]);
-	        
+
                 for (var pop in variant[selection].pop_acs) {
                     ix = pop.replace(" ", "").replace("(", "").replace(")", "")
                     $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
@@ -89,7 +89,11 @@
                     }
                     var frequency = (variant[selection].pop_acs[pop] /
                                    variant[selection].pop_ans[pop]).toPrecision(4)
-                    $('#table-frequency-' + ix).html(frequency)
+                    if (pop === 'South Asian') {
+                        $('#table-frequency-' + ix).html(0.000)
+                    } else {
+                        $('#table-frequency-' + ix).html(frequency)
+                    }
                 }
                 $('#table-count-sum').html(variant[selection].allele_count)
                 $('#table-number-sum').html(variant[selection].allele_num)
@@ -499,7 +503,7 @@
                                 </thead>
                                 <tbody>
                                     {% for pop in variant.pop_acs %}
-				       {% if (pop != "Other") %} 
+				       {% if (pop != "Other") %}
                                         <tr>
                                             {% if pop == 'Ashkenazi Jewish' %}
                                                 <td id="asj">{{ pop }}*</td>
@@ -551,7 +555,7 @@
                                 Include:
                             </div>
                             <div class="population_selector_checkboxes">
-                                <label class='hidden-xs'>
+                                <label>
                                     <input checked type="checkbox" id="exome_checkbox" value="">
                                     <div class="checkbox-label">Exomes</div>
                                 </label>
