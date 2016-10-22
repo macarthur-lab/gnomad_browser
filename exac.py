@@ -9,6 +9,7 @@ import logging
 import lookups
 import random
 import sys
+from tqdm import tqdm
 from utils import *
 
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify, send_from_directory
@@ -56,7 +57,7 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 4)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'exac_pilot.sorted.vep.vcf.gz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, '*.vcf.gz')),
     GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, '*.vcf.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
@@ -75,7 +76,7 @@ app.config.update(dict(
     #   tabix -s 2 -b 3 -e 3 dbsnp142.txt.bgz
     DBSNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
 
-    READ_VIZ_DIR="/mongo/readviz"
+    READ_VIZ_DIR=os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz")
 ))
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
@@ -196,12 +197,13 @@ def load_variants_file():
     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 
 def load_gnomad_vcf():
-    def load_variants(sites_file, i, n, db):
-        variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
-        try:
-            db.gnomadVariants.insert(variants_generator, w=0)
-        except pymongo.errors.InvalidOperation:
-            pass  # handle error when variant_generator is empty
+    def load_all_variants_in_file(sites_file, db):
+        with gzip.open(sites_file) as f:
+            variants_generator = get_variants_from_sites_vcf(f)
+            try:
+                db.gnomadVariants.insert(variants_generator, w=0)
+            except pymongo.errors.InvalidOperation:
+                pass  # handle error when variant_generator is empty
 
     db = get_db()
     db.gnomadVariants.drop()
@@ -218,15 +220,21 @@ def load_gnomad_vcf():
     sites_vcfs = app.config['GENOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
-    elif len(sites_vcfs) > 1:
-        raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+    #elif len(sites_vcfs) > 1:
+    #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
 
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    for i in range(num_procs):
-        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs, db))
+    for sites_vcf in sites_vcfs:
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db))
         p.start()
         procs.append(p)
+        if len(procs) > num_procs:
+            print("Waiting for: " + str(p))
+            procs[0].join()
+            del procs[0]
+            print("Done waiting for: " + str(p))
+
     return procs
 
 def load_constraint_information():
@@ -486,7 +494,7 @@ def create_cache():
         f.close()
 
 
-def precalculate_metrics():
+def precalculate_metrics(chrom=None):
     import numpy
     db = get_db()
     print 'Reading %s variants...' % db.variants.count()
@@ -494,7 +502,9 @@ def precalculate_metrics():
     binned_metrics = defaultdict(list)
     progress = 0
     start_time = time.time()
-    for variant in db.variants.find(projection=['quality_metrics', 'site_quality', 'allele_num', 'allele_count']):
+    for variant in tqdm(db.variants.find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db.variants.count()):
+        if chrom is not None and variant["chrom"] != chrom:
+            continue
         for metric, value in variant['quality_metrics'].iteritems():
             metrics[metric].append(float(value))
         qual = float(variant['site_quality'])
@@ -667,17 +677,17 @@ def variant_data(variant_str, source):
         total_available += read_viz_dict[het_or_hom_or_hemi]['n_available']
         total_expected += read_viz_dict[het_or_hom_or_hemi]['n_expected']
 
-    read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
-        '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
+        read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
+            '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
             for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
 
-    ]   #eg. '1-157768000-G-C_hom1',
-
-    read_viz_dict[het_or_hom_or_hemi]['urls'] = [
-        #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-        os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+        ]   #eg. '1-157768000-G-C_hom1',
+        
+        read_viz_dict[het_or_hom_or_hemi]['urls'] = [
+            #os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+            os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
             for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-    ]
+        ]
 
     read_viz_dict['total_available'] = total_available
     read_viz_dict['total_expected'] = total_expected
@@ -1056,6 +1066,15 @@ def error_page(query):
     ), 404
 
 
+@app.errorhandler(400)
+def page_not_found(error):
+    logging.error('400 error: %s', error)
+    return render_template(
+        'error.html',
+        query=""
+    ), 404
+
+
 @app.route('/downloads')
 def downloads_page():
     return render_template('downloads.html')
@@ -1175,23 +1194,25 @@ def report_variant(variant_id, dataset):
         print 'Failed on variant_id:', variant_id, ';Error=', traceback.format_exc()
         abort(404)
 
-@app.route('/report/exac/submit_variant_report', methods=['POST'])
+@app.route('/report/submit_variant_report', methods=['POST'])
 def submit_variant_report():
     data = {
-        'name': request.form['name'],
-        'institution': request.form['institution'],
-        'city': request.form['city'],
-        'state': request.form['state'],
-        'email': request.form['email'],
-        'variant_issue': request.form['variant-issue'],
-        'concern': request.form['concern'],
-        'expected_phenotype': request.form['expected-phenotype'],
-        'additional_info': request.form['additional-info']
+        'name': request.form.get('name'),
+        'institution': request.form.get('institution'),
+        'city': request.form.get('city'),
+        'state': request.form.get('state'),
+        'email': request.form.get('email'),
+        'variant_issue': request.form.get('variant-issue'),
+        'concern': request.form.get('concern'),
+        'expected_phenotype': request.form.get('expected-phenotype'),
+        'additional_info': request.form.get('additional-info'),
+        'variant_id': request.form.get('variant-id')        
     }
-    print(data)
+    logging.info("Variant report: ")
+    logging.info(data)
     return render_template(
         'thank_you.html',
-        name=request.form['name'],
+        name=request.form.get('name'),
     )
 
 if __name__ == "__main__":
