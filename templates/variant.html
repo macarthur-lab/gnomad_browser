@@ -22,10 +22,10 @@
             window.exac.variant,
             window.gnomAD.variant
         )
-        window.base_coverage = {{ base_coverage|tojson|safe }};
+        window.base_coverage = {{ exac_base_coverage|tojson|safe }};
         window.any_covered = {{ any_covered|tojson|safe }};
         window.consequence = {{ consequences|tojson|safe }};
-        window.metrics = {{ metrics|tojson|safe }};
+        window.metrics = {{ exac_metrics|tojson|safe }};
         console.log(window.variant)
         // console.log(window.exac)
         // console.log(window.gnomad)
@@ -77,39 +77,47 @@
             function updatePopulationTable(variant, selection) {
 	        //console.log(variant[selection]);
 	        
+	        var ac_total = 0 
+	        var an_total = 0 
+	        var hom_total = 0 
+	        var hemi_total = 0
                 for (var pop in variant[selection].pop_acs) {
                     ix = pop.replace(" ", "").replace("(", "").replace(")", "")
-                    $('#table-count-' + ix).html(variant[selection].pop_acs[pop])
-                    $('#table-number-' + ix).html(variant[selection].pop_ans[pop])
+	            var pop_ac = variant[selection].pop_acs[pop]
+                    $('#table-count-' + ix).html(pop_ac)
+	            ac_total += pop_ac
+
+	            var pop_an = variant[selection].pop_ans[pop]
+                    $('#table-number-' + ix).html(pop_an)
+	            an_total += pop_an
+
                     if (variant.chrom !== 'Y') {
-                      $('#table-homozygotes-' + ix).html(variant[selection].pop_homs[pop])
+	              var pop_hom = variant[selection].pop_homs[pop]
+                      $('#table-homozygotes-' + ix).html(pop_hom)
+	              hom_total += pop_hom;
                     }
                     if (variant.chrom === 'X' || variant.chrom === 'Y') {
-                      $('#table-hemizygotes-' + ix).html(variant[selection].pop_hemis[pop])
+	              var pop_hemi = variant[selection].pop_hemis[pop]
+                      $('#table-hemizygotes-' + ix).html(pop_hemi)
+	              hemi_total += pop_hemi;
                     }
-                    var frequency = (variant[selection].pop_acs[pop] /
-                                   variant[selection].pop_ans[pop]).toPrecision(4)
+                    var frequency = pop_an > 0 ? (pop_ac / pop_an).toPrecision(4) : 'NA'
                     $('#table-frequency-' + ix).html(frequency)
                 }
-                $('#table-count-sum').html(variant[selection].allele_count)
-                $('#table-number-sum').html(variant[selection].allele_num)
+                $('#table-count-sum').html(ac_total)
+                $('#table-number-sum').html(an_total)
                 if (variant.chrom !== 'Y') {
-	          var hom_count = 0;
-                  for(k in variant[selection].pop_homs) {
-                     hom_count += variant[selection].pop_homs[k];
-                  }
-                  $('#table-homozygotes-sum').html(hom_count)
+                  $('#table-homozygotes-sum').html(hom_total)
                 }
                 if (variant.chrom === 'X' || variant.chrom === 'Y') {
-                  $('#table-hemizygotes-sum').html(variant[selection].hemi_count)
+                  $('#table-hemizygotes-sum').html(hemi_total)
                 }
-                $('#table-frequency').html(variant[selection].allele_freq)
+                $('#table-total-freq').html( an_total > 0 ? (ac_total / an_total).toPrecision(4) : 'NA' )
                 if (!variant.all.pop_acs['Ashkenazi Jewish']
                      || variant.all.pop_acs['Ashkenazi Jewish']  === 0) {
                     $('#ibd-footer').hide()
                     $('#asj').html('Ashkenazi Jewish')
                 }
-
             }
 
             $('.population_selector_checkbox_container').change(function() {
@@ -499,48 +507,36 @@
                                 </thead>
                                 <tbody>
                                     {% for pop in variant.pop_acs %}
-				       {% if (pop != "Other") %} 
                                         <tr>
                                             {% if pop == 'Ashkenazi Jewish' %}
                                                 <td id="asj">{{ pop }}*</td>
                                             {% else %}
                                                 <td>{{ pop }}</td>
                                             {% endif %}
-                                            <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_acs[pop] }}</td>
-                                            <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_ans[pop] }}</td>
+                                            <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                            <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% if chrom != 'Y' %}
-                                                <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_homs[pop] }}</td>
+                                                <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% endif %}
                                             {% if chrom == 'X' or chrom == 'Y' %}
-                                                <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ variant.pop_hemis[pop] }}</td>
+                                                <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% endif %}
-                                            {% if variant.pop_ans[pop] > 0 %}
-                                                <td id="table-frequency-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}">{{ '%0.4g' % (variant.pop_acs[pop]/variant.pop_ans[pop]) }}</td>
-                                            {% else %}
-                                                <td>NA</td>
-                                            {% endif %}
+                                            <td id="table-frequency-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                         </tr>
-					{% endif %}
                                     {% endfor %}
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td><b>Total</b></td>
-                                        <td><b id="table-count-sum">{{ variant.pop_acs.values()|sum }}</b></td>
-                                        <td><b id="table-number-sum">{{ variant.pop_ans.values()|sum }}</b></td>
+                                        <td><b id="table-count-sum"></b></td>
+                                        <td><b id="table-number-sum"></b></td>
                                         {% if chrom != 'Y' %}
-                                            <td><b id="table-homozygotes-sum">{{ variant.pop_homs.values()|sum }}</b></td>
+                                            <td><b id="table-homozygotes-sum"></b></td>
                                         {% endif %}
                                         {% if chrom == 'X' or chrom == 'Y' %}
-                                            <td><b id="table-hemizygotes-sum">{{ variant.pop_hemis.values()|sum }}</b></td>
+                                            <td><b id="table-hemizygotes-sum"></b></td>
                                         {% endif %}
-                                        <td><b id="table-total-freq">
-                                            {% if variant.allele_freq is not none %}
-                                                {{ '%0.4g' % variant.allele_freq }}
-                                            {% else %}
-                                                NA
-                                            {% endif %}
-                                        </b></td>
+                                        <td><b id="table-total-freq"></b></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -574,7 +570,7 @@
                         </div>
                         <div id="region_coverage"></div>
                     {% else %}
-                        <h3>This region is not covered in the ExAC dataset.</h3>
+                        <h3>This region is not covered.</h3>
                     {% endif %}
                 {% endif %}
             </div>
