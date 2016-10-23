@@ -12,6 +12,10 @@ import sys
 from tqdm import tqdm
 from utils import *
 
+import warnings
+from flask.exthook import ExtDeprecationWarning
+warnings.simplefilter('ignore', ExtDeprecationWarning)
+
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify, send_from_directory
 from flask_compress import Compress
 from flask_runner import Runner
@@ -81,8 +85,6 @@ app.config.update(dict(
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
-
-print app.config['DB_NAME']
 
 def connect_db():
     """
@@ -632,7 +634,7 @@ def variant_data(variant_str, source):
     consequences = OrderedDict()
     if 'vep_annotations' in variant:
         add_consequence_to_variant(variant)
-        variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
+        #variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
         variant['vep_annotations'] = order_vep_by_csq(variant['vep_annotations'])  # Adds major_consequence
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
