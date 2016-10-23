@@ -628,10 +628,10 @@ function update_variant_af_box() {
         //     console.log(d.gnomAD.allele_freq)
         //     console.log(get_af_category(d.gnomAD)[0])
         // }
-        d3.select('#variant_af_box_' + d.variant_id).attr("data-tooltip", "Shows allele frequency \n on a discrete " +
+        d3.select('#variant_af_box_' + d.variant_id.replace('*', 'star')).attr("data-tooltip", "Shows allele frequency \n on a discrete " +
                 "scale: \n singletons, <1/10,000, \n <1/1000, <1%, <5%, \n <50%, >50%. \n This particular variant is \n " +
                 get_af_category(d)[1] + ".");
-        svg = d3.select('#variant_af_box_' + d.variant_id)
+        svg = d3.select('#variant_af_box_' + d.variant_id.replace('*', 'star'))
             .append("svg")
             .attr("width", width)
             .attr("height", height)
