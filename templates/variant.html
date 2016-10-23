@@ -76,7 +76,6 @@
 
             function updatePopulationTable(variant, selection) {
 	        //console.log(variant[selection]);
-	        
 	        var ac_total = 0 
 	        var an_total = 0 
 	        var hom_total = 0 
@@ -101,6 +100,7 @@
                       $('#table-hemizygotes-' + ix).html(pop_hemi)
 	              hemi_total += pop_hemi;
                     }
+
                     var frequency = pop_an > 0 ? (pop_ac / pop_an).toPrecision(4) : 'NA'
                     $('#table-frequency-' + ix).html(frequency)
                 }
@@ -547,7 +547,7 @@
                                 Include:
                             </div>
                             <div class="population_selector_checkboxes">
-                                <label class='hidden-xs'>
+                                <label>
                                     <input checked type="checkbox" id="exome_checkbox" value="">
                                     <div class="checkbox-label">Exomes</div>
                                 </label>
