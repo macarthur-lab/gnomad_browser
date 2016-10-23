@@ -782,6 +782,11 @@ function update_variants() {
         // $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
         $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(3)).toExponential())
         $(this).find('.table-allele-freq-box').empty()
+        Object.keys(variant[dataSelection].pop_acs).map(function(pop) {
+            $('#td-pop-acs-' + pop.replace(/[\s()]/g, '') + variant.variant_id).html(variant[dataSelection].pop_acs[pop])
+            $('#td-pop-ans-' + pop.replace(/[\s()]/g, '') + variant.variant_id).html(variant[dataSelection].pop_ans[pop])
+            $('#td-pop-homs-' + pop.replace(/[\s()]/g, '') + variant.variant_id).html(variant[dataSelection].pop_homs[pop])
+        })
         $(this).show()
     })
     if ($(window).width() < 768) {
