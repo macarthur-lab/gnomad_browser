@@ -41,27 +41,6 @@
                 <th class="hidden">Allele Number <%= pop %></th>
                 <th class="hidden">Homozygote Count <%= pop %></th>
             <% }); %>
-            <!-- <th class="hidden">Allele Count African</th>
-            <th class="hidden">Allele Number African</th>
-            <th class="hidden">Homozygote Count African</th>
-            <th class="hidden">Allele Count East Asian</th>
-            <th class="hidden">Allele Number East Asian</th>
-            <th class="hidden">Homozygote Count East Asian</th>
-            <th class="hidden">Allele Count European (Non-Finnish)</th>
-            <th class="hidden">Allele Number European (Non-Finnish)</th>
-            <th class="hidden">Homozygote Count European (Non-Finnish)</th>
-            <th class="hidden">Allele Count Finnish</th>
-            <th class="hidden">Allele Number Finnish</th>
-            <th class="hidden">Homozygote Count Finnish</th>
-            <th class="hidden">Allele Count Latino</th>
-            <th class="hidden">Allele Number Latino</th>
-            <th class="hidden">Homozygote Count Latino</th>
-            <th class="hidden">Allele Count Other</th>
-            <th class="hidden">Allele Number Other</th>
-            <th class="hidden">Homozygote Count Other</th>
-            <th class="hidden">Allele Count South Asian</th>
-            <th class="hidden">Allele Number South Asian</th>
-            <th class="hidden">Homozygote Count South Asian</th> -->
         </tr>
     </thead>
     <tbody>
@@ -78,7 +57,7 @@
             <td id="td-variantid" class="omit_csv table-variant-id">
                 <a href="/variant/<%= variant.chrom %>-<%= variant.pos %>-<%= variant.ref %>-<%= variant.alt %>" target="_blank">
                 <%= variant.chrom %>:<%= variant.pos %>
-                <% if (variant.ref.length > 20) { %>3
+                <% if (variant.ref.length > 20) { %>
                     <%= variant.ref.slice(0,20) %>...
                 <% } else { %>
                     <%= variant.ref %>
@@ -167,31 +146,6 @@
                 <td id="td-pop-ans-<%= pop.replace(/[\s()]/g, '') %><%= variant.variant_id %>"class="hidden">0</td>
                 <td id="td-pop-homs-<%= pop.replace(/[\s()]/g, '') %><%= variant.variant_id %>" class="hidden">0</td>
             <% }); %>
-            <!-- <td id="" class="hidden"> <%= variant.pop_acs["African"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["African"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["African"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["African"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["Ashekenazy Jewish"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["Ashekenazy Jewish"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["Ashekenazy Jewish"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["East Asian"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["East Asian"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["East Asian"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["European (Non-Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["European (Non-Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["European (Non-Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["European (Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["European (Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["European (Finnish)"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["Latino"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["Latino"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["Latino"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["Other"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["Other"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["Other"] %></td>
-            <td class="hidden"> <%= variant.pop_acs["South Asian"] %></td>
-            <td class="hidden"> <%= variant.pop_ans["South Asian"] %></td>
-            <td class="hidden"> <%= variant.pop_homs["South Asian"] %></td> -->
         </tr>
     <% }); %>
     </tbody>
