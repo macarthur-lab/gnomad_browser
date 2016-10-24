@@ -635,7 +635,7 @@ def variant_data(variant_str, source):
     consequences = OrderedDict()
     if 'vep_annotations' in variant:
         add_consequence_to_variant(variant)
-        #variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
+        variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
         variant['vep_annotations'] = order_vep_by_csq(variant['vep_annotations'])  # Adds major_consequence
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
