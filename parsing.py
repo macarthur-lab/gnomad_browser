@@ -64,12 +64,21 @@ def get_variants_from_sites_vcf(sites_vcf):
     dp_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
     line = '##INFO=<ID=GQ_HIST,Number=R,Type=String,Description="Histogram for GQ; Mids: 2.5|7.5|12.5|17.5|22.5|27.5|32.5|37.5|42.5|47.5|52.5|57.5|62.5|67.5|72.5|77.5|82.5|87.5|92.5|97.5">'
     gq_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
-    line = '##INFO=<ID=CSQ,Number=.,Type=String,Description="Consequence annotations from Ensembl VEP. Format: Allele|Consequence|IMPACT|SYMBOL|Gene|Feature_type|Feature|BIOTYPE|EXON|INTRON|HGVSc|HGVSp|cDNA_position|CDS_position|Protein_position|Amino_acids|Codons|Existing_variation|ALLELE_NUM|DISTANCE|STRAND|VARIANT_CLASS|MINIMISED|SYMBOL_SOURCE|HGNC_ID|CANONICAL|TSL|CCDS|ENSP|SWISSPROT|TREMBL|UNIPARC|SIFT|PolyPhen|DOMAINS|HGVS_OFFSET|GMAF|AFR_MAF|AMR_MAF|ASN_MAF|EAS_MAF|EUR_MAF|SAS_MAF|AA_MAF|EA_MAF|CLIN_SIG|SOMATIC|PHENO|PUBMED|MOTIF_NAME|MOTIF_POS|HIGH_INF_POS|MOTIF_SCORE_CHANGE|LoF_info|LoF_flags|LoF_filter|LoF|context|ancestral">'
-    vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
+    #line = '##INFO=<ID=CSQ,Number=.,Type=String,Description="Consequence annotations from Ensembl VEP. Format: Allele|Consequence|IMPACT|SYMBOL|Gene|Feature_type|Feature|BIOTYPE|EXON|INTRON|HGVSc|HGVSp|cDNA_position|CDS_position|Protein_position|Amino_acids|Codons|Existing_variation|ALLELE_NUM|DISTANCE|STRAND|VARIANT_CLASS|MINIMISED|SYMBOL_SOURCE|HGNC_ID|CANONICAL|TSL|CCDS|ENSP|SWISSPROT|TREMBL|UNIPARC|SIFT|PolyPhen|DOMAINS|HGVS_OFFSET|GMAF|AFR_MAF|AMR_MAF|ASN_MAF|EAS_MAF|EUR_MAF|SAS_MAF|AA_MAF|EA_MAF|CLIN_SIG|SOMATIC|PHENO|PUBMED|MOTIF_NAME|MOTIF_POS|HIGH_INF_POS|MOTIF_SCORE_CHANGE|LoF_info|LoF_flags|LoF_filter|LoF|context|ancestral">'
+
+    #vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
 
     for line in sites_vcf:
         try:
             line = line.strip('\n')
+            if line.startswith('##INFO=<ID=CSQ'):
+                vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
+                #print(vep_field_names)
+
+            #if line.startswith('##INFO=<ID=DP_HIST'):
+            #dp_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
+            #if line.startswith('##INFO=<ID=GQ_HIST'):
+            #    gq_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
             if line.startswith('#'):
                 continue
 
@@ -83,6 +92,9 @@ def get_variants_from_sites_vcf(sites_vcf):
             consequence_array = info_field['CSQ'].split(',') if 'CSQ' in info_field else []
             annotations = [dict(zip(vep_field_names, x.split('|'))) for x in consequence_array if len(vep_field_names) == len(x.split('|'))]
             coding_annotations = [ann for ann in annotations if ann['Feature'].startswith('ENST')]
+
+            #if not coding_annotations:
+            #    continue
 
             alt_alleles = fields[4].split(',')
 
@@ -123,16 +135,16 @@ def get_variants_from_sites_vcf(sites_vcf):
                 else:
                     variant['allele_freq'] = None
 
-                variant['pop_acs'] = dict([(POPS[x], int(info_field['AC_%s' % x].split(',')[i])) for x in POPS])
-                variant['pop_ans'] = dict([(POPS[x], int(info_field['AN_%s' % x])) for x in POPS])
-                variant['pop_homs'] = dict([(POPS[x], int(info_field['Hom_%s' % x].split(',')[i])) for x in POPS])
+                variant['pop_acs'] = dict([(POPS[x], int(info_field['AC_%s' % x].split(',')[i]) if ('AC_%s' % x) in info_field else 0) for x in POPS])
+                variant['pop_ans'] = dict([(POPS[x], int(info_field.get('AN_%s' % x, 0))) for x in POPS])
+                variant['pop_homs'] = dict([(POPS[x], int(info_field['Hom_%s' % x].split(',')[i] if ('Hom_%s' % x) in info_field else 0)) for x in POPS])
                 variant['ac_male'] = info_field['AC_Male']
                 variant['ac_female'] = info_field['AC_Female']
                 variant['an_male'] = info_field['AN_Male']
                 variant['an_female'] = info_field['AN_Female']
                 variant['hom_count'] = sum(variant['pop_homs'].values())
                 if variant['chrom'] in ('X', 'Y'):
-                    variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i])) for x in POPS])
+                    variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i] if ('Hemi_%s' % x) in info_field else 0)) for x in POPS])
                     variant['hemi_count'] = sum(variant['pop_hemis'].values())
                 variant['quality_metrics'] = dict([(x, info_field[x]) for x in METRICS if x in info_field])
 

@@ -12,9 +12,13 @@ import sys
 from tqdm import tqdm
 from utils import *
 
+import warnings
+from flask.exthook import ExtDeprecationWarning
+warnings.simplefilter('ignore', ExtDeprecationWarning)
+
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify, send_from_directory
-from flask.ext.compress import Compress
-from flask.ext.runner import Runner
+from flask_compress import Compress
+from flask_runner import Runner
 from flask_errormail import mail_on_500
 from flask_cors import CORS, cross_origin
 
@@ -82,8 +86,6 @@ app.config.update(dict(
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
-
-print app.config['DB_NAME']
 
 def connect_db():
     """
@@ -202,21 +204,21 @@ def load_gnomad_vcf():
         with gzip.open(sites_file) as f:
             variants_generator = get_variants_from_sites_vcf(f)
             try:
-                db.gnomadVariants.insert(variants_generator, w=0)
+                db.gnomadVariants2.insert(variants_generator, w=0)
             except pymongo.errors.InvalidOperation:
                 pass  # handle error when variant_generator is empty
 
     db = get_db()
-    db.gnomadVariants.drop()
-    print("Dropped db.gnomadVariants")
+    db.gnomadVariants2.drop()
+    print("Dropped db.gnomadVariants2")
 
     # grab variants from sites VCF
-    db.gnomadVariants.ensure_index('xpos')
-    db.gnomadVariants.ensure_index('xstart')
-    db.gnomadVariants.ensure_index('xstop')
-    db.gnomadVariants.ensure_index('rsid')
-    db.gnomadVariants.ensure_index('genes')
-    db.gnomadVariants.ensure_index('transcripts')
+    db.gnomadVariants2.ensure_index('xpos')
+    db.gnomadVariants2.ensure_index('xstart')
+    db.gnomadVariants2.ensure_index('xstop')
+    db.gnomadVariants2.ensure_index('rsid')
+    db.gnomadVariants2.ensure_index('genes')
+    db.gnomadVariants2.ensure_index('transcripts')
 
     sites_vcfs = app.config['GENOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
@@ -633,7 +635,7 @@ def variant_data(variant_str, source):
     consequences = OrderedDict()
     if 'vep_annotations' in variant:
         add_consequence_to_variant(variant)
-        variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
+        #variant['vep_annotations'] = remove_extraneous_vep_annotations(variant['vep_annotations'])
         variant['vep_annotations'] = order_vep_by_csq(variant['vep_annotations'])  # Adds major_consequence
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
@@ -707,16 +709,29 @@ def variant_page(variant_str):
     try:
         exac = variant_data(variant_str, 'exac')
         gnomad = variant_data(variant_str, 'gnomad')
+        #from pprint import pformat
+        #print("exac" + pformat(exac))
+        #print("gnomad" + pformat(gnomad))
         print 'Rendering variant: %s' % variant_str
         return render_template(
-            'variant.html',
-            variant=exac['variant'],
+            'variant.html', 
+            variant=(exac['variant'] if 'variant_id' in exac['variant'] else gnomad['variant']),
             exac=exac,
             gnomad=gnomad,
-            base_coverage=exac['base_coverage'],
-            consequences=exac['consequences'],
-            any_covered=exac['any_covered'],
-            metrics=exac['metrics'],
+            any_covered=(exac['any_covered'] or gnomad['any_covered']),  # if this variant is in gnomad, consider it covered
+
+            base_coverage=exac['base_coverage'], # TODO clean these up
+            exac_base_coverage=exac['base_coverage'],
+            gnomad_base_coverage=gnomad['base_coverage'],
+
+            consequences=exac['consequences'], # TODO clean these up
+            exac_consequences=exac['consequences'], 
+            gnomad_consequences=gnomad['consequences'],
+
+            metrics=exac['metrics'], # TODO clean these up
+            exac_metrics=exac['metrics'],
+            gnomad_metrics=gnomad['metrics'],
+
             read_viz=exac['read_viz_dict'],
         )
     except Exception:
