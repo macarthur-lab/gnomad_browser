@@ -685,7 +685,7 @@ def variant_data(variant_str, source):
             for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
 
         ]   #eg. '1-157768000-G-C_hom1',
-        
+
         read_viz_dict[het_or_hom_or_hemi]['urls'] = [
             os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
             for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
@@ -714,7 +714,7 @@ def variant_page(variant_str):
         #print("gnomad" + pformat(gnomad))
         print 'Rendering variant: %s' % variant_str
         return render_template(
-            'variant.html', 
+            'variant.html',
             variant=(exac['variant'] if 'variant_id' in exac['variant'] else gnomad['variant']),
             exac=exac,
             gnomad=gnomad,
@@ -725,7 +725,7 @@ def variant_page(variant_str):
             gnomad_base_coverage=gnomad['base_coverage'],
 
             consequences=exac['consequences'], # TODO clean these up
-            exac_consequences=exac['consequences'], 
+            exac_consequences=exac['consequences'],
             gnomad_consequences=gnomad['consequences'],
 
             metrics=exac['metrics'], # TODO clean these up
@@ -1002,14 +1002,19 @@ def region_json(region_id):
             variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
             xstart = get_xpos(chrom, start)
             xstop = get_xpos(chrom, stop)
-            coverage_array = lookups.get_coverage_for_bases(db, 'base_coverage', xstart, xstop)
+            coverage_stats_exomes = lookups.get_coverage_for_bases(db, 'exome_coverage', xstart, xstop)
+            coverage_stats_genomes = lookups.get_coverage_for_bases(db, 'genome_coverage', xstart, xstop)
+            coverage_stats = {
+                "exomes": coverage_stats_exomes,
+                "genomes": coverage_stats_genomes
+            }
             t = jsonify(
                 genes_in_region=genes_in_region,
                 variants_in_region=variants_in_region,
                 chrom=chrom,
                 start=start,
                 stop=stop,
-                coverage=coverage_array
+                coverage=coverage_stats
             )
         print 'Rendering region: %s' % region_id
         return t
@@ -1222,7 +1227,7 @@ def submit_variant_report():
         'concern': request.form.get('concern'),
         'expected_phenotype': request.form.get('expected-phenotype'),
         'additional_info': request.form.get('additional-info'),
-        'variant_id': request.form.get('variant-id')        
+        'variant_id': request.form.get('variant-id')
     }
     logging.info("Variant report: ")
     logging.info(data)
