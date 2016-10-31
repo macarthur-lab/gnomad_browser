@@ -49,6 +49,7 @@ export default {
     'pop_acs',
     'pop_ans',
     'pop_homs',
+    'pop_hemis',
     'filter',
     // 'site_quality',
     // 'genotype_depths',
