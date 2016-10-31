@@ -89,13 +89,15 @@
                     $('#table-number-' + ix).html(pop_an)
 	            an_total += pop_an
 
-                    if (variant.chrom !== 'Y') {
-	              var pop_hom = has_data_for_pop ? variant[selection].pop_homs[pop] : 0
-                      $('#table-homozygotes-' + ix).html(pop_hom)
-	              hom_total += pop_hom;
-                    }
+	            var has_data_for_pop_homs = variant[selection].pop_homs && (pop in variant[selection].pop_homs)
+	            var pop_hom = has_data_for_pop_homs ? variant[selection].pop_homs[pop] : 0
+                    $('#table-homozygotes-' + ix).html(pop_hom)
+	            hom_total += pop_hom;
+
                     if (variant.chrom === 'X' || variant.chrom === 'Y') {
-	              var pop_hemi = has_data_for_pop ? variant[selection].pop_hemis[pop] : 0
+   	              var has_data_for_pop_hemis = variant[selection].pop_hemis && (pop in variant[selection].pop_hemis)
+	              console.log(selection, has_data_for_pop_hemis, variant[selection]);
+	              var pop_hemi = has_data_for_pop_hemis ? variant[selection].pop_hemis[pop] : 0
                       $('#table-hemizygotes-' + ix).html(pop_hemi)
 	              hemi_total += pop_hemi;
                     }
@@ -106,9 +108,8 @@
                 }
                 $('#table-count-sum').html(ac_total)
                 $('#table-number-sum').html(an_total)
-                if (variant.chrom !== 'Y') {
-                  $('#table-homozygotes-sum').html(hom_total)
-                }
+                $('#table-homozygotes-sum').html(hom_total)
+
                 if (variant.chrom === 'X' || variant.chrom === 'Y') {
                   $('#table-hemizygotes-sum').html(hemi_total)
                 }
@@ -515,9 +516,7 @@
                                             {% endif %}
                                             <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
-                                            {% if chrom != 'Y' %}
-                                                <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
-                                            {% endif %}
+                                            <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% if chrom == 'X' or chrom == 'Y' %}
                                                 <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% endif %}
