@@ -31,13 +31,13 @@ export default {
     'an_female',
     'an_male',
     'hom_count',
-    // 'hemi_count',
+    'hemi_count',
   ],
   nestedSumFields: [
     'pop_acs',
     'pop_ans',
     'pop_homs',
-    // 'pop_hemis',
+    'pop_hemis',
   ],
   uniqueFields: [
     'ac_female',
@@ -50,6 +50,7 @@ export default {
     'pop_acs',
     'pop_ans',
     'pop_homs',
+    'pop_hemis',
     'filter',
     'site_quality',
     'genotype_depths',

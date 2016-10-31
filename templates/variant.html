@@ -96,7 +96,7 @@
 
                     if (variant.chrom === 'X' || variant.chrom === 'Y') {
    	              var has_data_for_pop_hemis = variant[selection].pop_hemis && (pop in variant[selection].pop_hemis)
-	              console.log(selection, has_data_for_pop_hemis, variant[selection]);
+	             //  console.log(selection, has_data_for_pop_hemis, variant[selection]);
 	              var pop_hemi = has_data_for_pop_hemis ? variant[selection].pop_hemis[pop] : 0
                       $('#table-hemizygotes-' + ix).html(pop_hemi)
 	              hemi_total += pop_hemi;

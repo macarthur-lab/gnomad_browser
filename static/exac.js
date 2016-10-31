@@ -779,6 +779,7 @@ function update_variants() {
         $(this).find('.table-allele-count').html(variant[dataSelection].allele_count)
         $(this).find('.table-allele-num').html(variant[dataSelection].allele_num)
         $(this).find('.table-hom-count').html(variant[dataSelection].hom_count)
+        $(this).find('.table-hemi-count').html(variant[dataSelection].hemi_count)
         // $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
         $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(3)).toExponential())
         $(this).find('.table-allele-freq-box').empty()
@@ -799,7 +800,6 @@ function update_variants() {
         $('#th-af').html('Freq.')
         // $('#table-head-hom').html('HOM')
         // $('#table-head-hem').html('HEMI')
-        console.log($(window).width())
     }
     update_variant_af_box()
     if ($('tr[style!="display: none;"]').length == 1) {
