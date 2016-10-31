@@ -31,7 +31,7 @@ export default {
     'an_female',
     'an_male',
     'hom_count',
-    // 'hemi_count',
+    'hemi_count',
   ],
   nestedSumFields: [
     'pop_acs',

@@ -41,6 +41,7 @@ export default {
   uniqueFields: [
     'ac_female',
     'ac_male',
+    'hemi_count',
     'allele_count',
     'allele_freq',
     'allele_num',
