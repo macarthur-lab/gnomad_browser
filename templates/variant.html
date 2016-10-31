@@ -73,18 +73,18 @@
             }
 
             function updatePopulationTable(variant, selection) {
-	        var ac_total = 0 
-	        var an_total = 0 
-	        var hom_total = 0 
+	        var ac_total = 0
+	        var an_total = 0
+	        var hom_total = 0
 	        var hemi_total = 0
-                for (var pop in variant['all'].pop_acs) {
+            for (var pop in variant['all'].pop_acs) {
 	            var has_data_for_pop = variant[selection].pop_acs && (pop in variant[selection].pop_acs)
                     ix = pop.replace(/[\s()]/g, "")
 
 	            var pop_ac = has_data_for_pop ? variant[selection].pop_acs[pop] : 0
                     $('#table-count-'+ix).html(pop_ac)
 	            ac_total += pop_ac
-	           
+
 	            var pop_an = has_data_for_pop ? variant[selection].pop_ans[pop] : 0
                     $('#table-number-' + ix).html(pop_an)
 	            an_total += pop_an
@@ -102,7 +102,7 @@
 
                     var frequency = pop_an > 0 ? (pop_ac / pop_an).toPrecision(4) : 'NA'
                     $('#table-frequency-' + ix).html(frequency)
-                
+
                 }
                 $('#table-count-sum').html(ac_total)
                 $('#table-number-sum').html(an_total)
