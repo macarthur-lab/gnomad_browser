@@ -5,12 +5,10 @@
         window.gene = {{ gene|tojson|safe }};
         window.transcript = {{ transcript|tojson|safe }};
         window.variants_in_gene = {{ variants_in_gene|tojson|safe }};
-        window.variants_in_transcript = {{ variants_in_transcript|tojson|safe }};
+	window.variants_in_transcript = window.variants_in_gene;
         window.transcripts_in_gene = {{ transcripts_in_gene|tojson|safe }};
         window.coverage_stats = {{ coverage_stats|tojson|safe }};
         window.page_name = window.gene.gene_id;
-        window.cnvs = {{ cnvs|tojson|safe }};
-        window.cnvgenes = {{ cnvgenes|tojson|safe }};
         window.uuid_lists = {{ uuid_lists|tojson|safe }};
 
         // For testing only
@@ -97,31 +95,6 @@
                             return d.filter == 'PASS' && d.category == 'lof_variant';
                         });
                         $('#number_of_lof_variants').replaceWith(lof_filtered_variants.length);
-
-			var v = window.cnvgenes;
-                        filtered_cnvs = v[0].cnv60;
-                        $('#number_of_cnvs').replaceWith(filtered_cnvs);
-
-                        unfiltered_cnvs = v[0].cnv0;
-                        $('#number_all_cnvs').replaceWith(unfiltered_cnvs);
-
-                        filtered_dels = v[0].del60;
-                        $('#number_of_dels').replaceWith(filtered_dels);
-
-                        unfiltered_dels = v[0].del0;
-                        $('#number_all_dels').replaceWith(unfiltered_dels);
-
-                        filtered_dups = v[0].dup60;
-                        $('#number_of_dups').replaceWith(filtered_dups);
-
-                        unfiltered_dups = v[0].dup0;
-                        $('#number_all_dups').replaceWith(unfiltered_dups);
-
-                        cnv_score = v[0].cnv_score;
-                        $('#cnv_score').replaceWith(cnv_score);
-
-                        rank = v[0].rank;
-                        $('#rank').replaceWith(rank);
 
                     </script>
 {#                    <dt>LoF rate</dt>#}
@@ -287,8 +260,8 @@
                     {% endwith %}
                 </div>
                 <div class="row">
-                    {% if variants_in_transcript %}
-                        {% set chrom = variants_in_transcript[0].chrom %}
+                    {% if variants_in_gene %}
+                        {% set chrom = variants_in_gene[0].chrom %}
                         {% include 'variant_table.html' %}
                     {% else %}
                         X and Y chromosome variant data not yet available in the browser. Please subscribe to <a href="https://groups.google.com/forum/#!forum/exac_data_announcements">our mailing list</a>

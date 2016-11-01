@@ -21,7 +21,7 @@ def get_transcript(db, transcript_id):
     transcript = db.transcripts.find_one({'transcript_id': transcript_id}, projection={'_id': False})
     if not transcript:
         return None
-    transcript['exons'] = get_exons_in_transcript(db, transcript_id)
+    transcript['exons'] = get_exons_in_transcript(db, transcript_id, sort=True)
     return transcript
 
 
@@ -315,12 +315,19 @@ def remove_extraneous_information(variant):
     del variant['vep_annotations']
 
 def get_variants_in_gene(db, gene_id):
-    """
-    """
+
     all_variants = []
     exac_variant_uuids = []
     gnomad_variant_uuids = []
-    for variant in db.variants.find({'genes': gene_id}):
+
+    exons = get_exons_in_gene(db, gene_id)
+
+    query_limit_to_exon_ranges = {'$or': [{'$and': [{'xpos': {'$gt': int(exon['xstart'])-75}}, {'xpos': {'$lt': int(exon['xstop'])+75}}]} for exon in exons]}
+    query = {'$and': [{'genes': gene_id}, query_limit_to_exon_ranges]}
+
+    results = list(db.variants.find(query))
+    print("Retrieving %s ExAC v2 variants in %s exons of %s" % (len(results), len(exons), gene_id))
+    for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Gene'] == gene_id]
         variant['uuid'] = str(variant['_id'])
         variant['dataset'] = 'ExAC'
@@ -329,7 +336,10 @@ def get_variants_in_gene(db, gene_id):
         remove_extraneous_information(variant)
         exac_variant_uuids.append(variant['uuid'])
         all_variants.append(variant)
-    for variant in db.gnomadVariants2.find({'genes': gene_id}):
+    
+    results = list(db.gnomadVariants2.find(query))
+    print("Retrieving %s gnomad variants in %s exons of %s" % (len(results), len(exons), gene_id))
+    for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Gene'] == gene_id]
         variant['uuid'] = str(variant['_id'])
         variant['dataset'] = 'gnomAD'
@@ -338,6 +348,7 @@ def get_variants_in_gene(db, gene_id):
         remove_extraneous_information(variant)
         gnomad_variant_uuids.append(variant['uuid'])
         all_variants.append(variant)
+    print("Returning %s variants" % len(all_variants))
     return {
         'all_variants': all_variants,
         'uuid_lists': {
@@ -354,28 +365,48 @@ def get_transcripts_in_gene(db, gene_id):
 
 
 def get_variants_in_transcript(db, transcript_id):
-    """
-    """
+    all_variants = []
+    exac_variant_uuids = []
+    gnomad_variant_uuids = []
+
+    exons = get_exons_in_transcript(db, transcript_id)
+
+    query_limit_to_exon_ranges = {'$or': [{'$and': [{'xpos': {'$gt': int(exon['xstart'])-75}}, {'xpos': {'$lt': int(exon['xstop'])+75}}]} for exon in exons]}
+    query = {'$and': [{'transcripts': transcript_id}, query_limit_to_exon_ranges]}
+
     variants = []
-    for variant in db.variants.find({'transcripts': transcript_id}, projection={'_id': False}):
+
+    results = list(db.variants.find(query, projection={'_id': False}))
+    print("Retrieving %s ExAC v2 variants in %s exons of %s" % (len(results), len(exons), transcript_id))
+    for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Feature'] == transcript_id]
         variant['dataset'] = 'ExAC'
         add_consequence_to_variant(variant)
         remove_extraneous_information(variant)
         variants.append(variant)
-    for variant in db.gnomadVariants2.find({'transcripts': transcript_id}, projection={'_id': False}):
+
+    results = list(db.gnomadVariants2.find(query, projection={'_id': False}))
+    print("Retrieving %s gnomad variants in %s exons of %s" % (len(results), len(exons), transcript_id))
+    for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if x['Feature'] == transcript_id]
         variant['dataset'] = 'gnomAD'
         add_consequence_to_variant(variant)
         remove_extraneous_information(variant)
         variants.append(variant)
+
+    print("Returning %s variants" % len(variants))
     return variants
 
+def get_exons_in_transcript(db, transcript_id, sort=True):
+    results = db.exons.find({'transcript_id': transcript_id, 'feature_type': { "$in": ['CDS', 'UTR', 'exon'] }}, projection={'_id': False})
+    if sort:        
+        return sorted(results, key=lambda k: k['start'])
+    else:
+        return results
 
-def get_exons_in_transcript(db, transcript_id):
-    # return sorted(
-    #     [x for x in
-    #      db.exons.find({'transcript_id': transcript_id}, projection={'_id': False})
-    #      if x['feature_type'] != 'exon'],
-    #     key=lambda k: k['start'])
-    return sorted(list(db.exons.find({'transcript_id': transcript_id, 'feature_type': { "$in": ['CDS', 'UTR', 'exon'] }}, projection={'_id': False})), key=lambda k: k['start'])
+def get_exons_in_gene(db, gene_id, sort=False):
+    results = list(db.exons.find({'gene_id': gene_id, 'feature_type': { "$in": ['CDS', 'UTR', 'exon'] }}, projection={'_id': False}))
+    if sort:
+        return sorted(results, key=lambda k: k['start'])
+    else:
+        return results

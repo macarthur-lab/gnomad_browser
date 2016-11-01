@@ -2,16 +2,14 @@
 {% block body %}
     <!-- Render context vars in JS here -->
     <script type="text/javascript">
-        window.transcript = {{ transcript_json|safe }};
-        window.variants_in_transcript = {{ variants_in_transcript_json|safe }};
+        window.transcript = {{ transcript|tojson|safe }};
+        window.variants_in_transcript = {{ variants_in_transcript|tojson|safe }};
         // console.log(window.table_variants)
         window.table_variants = gnomad.combineDataForTable(
             window.variants_in_transcript
         )
-        window.coverage_stats = {{ coverage_stats_json|safe }};
-        window.gene = {{ gene_json|safe }};
-	    window.cnvs = {{ cnvs|tojson|safe }};
-        window.cnvgenes = {{ cnvgenes|tojson|safe }};
+        window.coverage_stats = {{ coverage_stats|tojson|safe }};
+        window.gene = {{ gene|tojson|safe }};
         $(document).ready(function() {
             $("#variant_table_annotation_header").attr("data-tooltip",
                     "Variant Effect Predictor (VEP)\n annotation using Gencode 76");
