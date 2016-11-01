@@ -8,6 +8,7 @@ const add = (next, variant, field) => {
 }
 
 const addNested = (next, variant, field) => {
+  if (!variant[field]) return
   const keys = Object.keys(variant[field])
   if (!next[field]) return variant[field]
   return keys.reduce((acc, key) => ({
