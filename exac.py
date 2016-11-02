@@ -758,12 +758,11 @@ def variant_api(variant_str):
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
         abort(404)
 
-def get_gene_data(db, gene_id, gene,request_type, cache_key):
+def get_gene_data(db, gene_id, gene, request_type, cache_key):
     try:
-
         transcript_id = gene['canonical_transcript']
         transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
-        variant_data  = lookups.get_variants_in_transcript(db, transcript_id)
+        variant_data  = lookups.get_variants_in_gene_or_transcript(db, gene_id=gene_id)
         variants_in_transcript = variant_data["all_variants"]
 
         # Get some canonical transcript and corresponding info
@@ -838,7 +837,8 @@ def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
     try:
         gene = lookups.get_gene(db, transcript['gene_id'])
         gene['transcripts'] = lookups.get_transcripts_in_gene(db, transcript['gene_id'])
-        variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
+        variant_data = lookups.get_variants_in_gene_or_transcript(db, transcript_id=transcript_id)
+        variants_in_transcript = variant_data['all_variants']
         coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
         coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'genome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
