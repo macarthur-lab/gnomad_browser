@@ -4,8 +4,8 @@
     <script type="text/javascript">
         window.gene = {{ gene|tojson|safe }};
         window.transcript = {{ transcript|tojson|safe }};
-        window.variants_in_gene = {{ variants_in_gene|tojson|safe }};
-	window.variants_in_transcript = window.variants_in_gene;
+	window.variants_in_transcript = {{ variants_in_transcript|tojson|safe }};
+        window.variants_in_gene = window.variants_in_transcript;
         window.transcripts_in_gene = {{ transcripts_in_gene|tojson|safe }};
         window.coverage_stats = {{ coverage_stats|tojson|safe }};
         window.page_name = window.gene.gene_id;
@@ -73,7 +73,7 @@
                         <dd>{{ gene.full_gene_name }}</dd>
                     {% endif %}
                     <dt>Number of variants</dt>
-                    <dd><span id="number_of_variants"></span> (Including filtered: {{ variants_in_gene|length }})</dd>
+                    <dd><span id="number_of_variants"></span> (Including filtered: {{ variants_in_transcript|length }})</dd>
 		    <!-- <dt>Number of CNVs</dt>
 		    {% if constraint %}
 		       {% if constraint.n_cnv >= 0 %}
@@ -260,10 +260,10 @@
                     {% endwith %}
                 </div>
                 <div class="row">
-                    {% if variants_in_gene %}
-                        {% set chrom = variants_in_gene[0].chrom %}
+                    {% if variants_in_transcript %}
+                        {% set chrom = variants_in_transcript[0].chrom %}
                         {% include 'variant_table.html' %}
-                    {% else %}
+                    {% elif gene.chrom == "X" %}
                         X and Y chromosome variant data not yet available in the browser. Please subscribe to <a href="https://groups.google.com/forum/#!forum/exac_data_announcements">our mailing list</a>
                         to be notified when ExAC v2 and gnomAD VCFs are released.
                     {% endif %}

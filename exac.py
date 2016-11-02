@@ -760,12 +760,13 @@ def variant_api(variant_str):
 
 def get_gene_data(db, gene_id, gene,request_type, cache_key):
     try:
-        variant_data = lookups.get_variants_in_gene(db, gene_id)
-        variants_in_gene = variant_data['all_variants']
+
+        transcript_id = gene['canonical_transcript']
         transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
+        variant_data  = lookups.get_variants_in_transcript(db, transcript_id)
+        variants_in_transcript = variant_data["all_variants"]
 
         # Get some canonical transcript and corresponding info
-        transcript_id = gene['canonical_transcript']
         transcript = lookups.get_transcript(db, transcript_id)
         coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
@@ -774,14 +775,14 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
             'exomes': coverage_stats_exomes,
             'genomes': coverage_stats_genomes
         }
-        add_transcript_coordinate_to_variants(db, variants_in_gene, transcript_id)
+        add_transcript_coordinate_to_variants(db, variants_in_transcript, transcript_id)
         constraint_info = lookups.get_constraint_for_transcript(db, transcript_id)
         if request_type == 'template':
             result = render_template(
                 'gene.html',
                 gene=gene,
                 transcript=transcript,
-                variants_in_gene=variants_in_gene,
+                variants_in_transcript=variants_in_transcript,
                 transcripts_in_gene=transcripts_in_gene,
                 coverage_stats=coverage_stats,
                 constraint=constraint_info,
@@ -791,7 +792,7 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
             result = jsonify(
                 gene=gene,
                 transcript=transcript,
-                variants_in_gene=variants_in_gene,
+                variants_in_transcript=variants_in_transcript,
                 transcripts_in_gene=transcripts_in_gene,
                 coverage_stats=coverage_stats,
                 constraint=constraint_info,
