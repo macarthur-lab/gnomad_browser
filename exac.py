@@ -59,10 +59,10 @@ app.config.update(dict(
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
-    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 4)),
+    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 3)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, '*.vcf.gz')),
-    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, '*.vcf.gz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
+    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -163,17 +163,19 @@ def load_base_coverage_genomes():
     coverage_files = app.config['GENOME_BASE_COVERAGE_FILES']
     return load_individual_coverage_files(coverage_files, 'genome_coverage')
 
+def load_variants_in_file_using_tabix(sites_file, i, n, db_collection):
+    variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
+    try:
+        db_collection.insert(variants_generator, w=0)
+    except pymongo.errors.InvalidOperation:
+        pass  # handle error when variant_generator is empty
+
 def load_variants_file():
-    def load_variants(sites_file, i, n, db):
-        variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
-        try:
-            db.variants.insert(variants_generator, w=0)
-        except pymongo.errors.InvalidOperation:
-            pass  # handle error when variant_generator is empty
+
 
     db = get_db()
-    db.variants.drop()
-    print("Dropped db.variants")
+    #db.variants.drop()
+    #print("Dropped db.variants")
 
     # grab variants from sites VCF
     db.variants.ensure_index('xpos')
@@ -186,31 +188,37 @@ def load_variants_file():
     sites_vcfs = app.config['EXOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
-    elif len(sites_vcfs) > 1:
-        raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+    #elif len(sites_vcfs) > 1:
+    #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
 
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    for i in range(num_procs):
-        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs, db))
+    for sites_vcf in sites_vcfs:
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, db.variants))
         p.start()
         procs.append(p)
+        if len(procs) > num_procs:
+            print("Waiting for: " + str(p))
+            procs[0].join()
+            del procs[0]
+            print("Done waiting for: " + str(p))
     return procs
 
     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 
+def load_all_variants_in_file(sites_file, db_collection):
+    with gzip.open(sites_file) as f:
+        variants_generator = get_variants_from_sites_vcf(f)
+        try:
+            db_collection.insert(variants_generator, w=0)
+        except pymongo.errors.InvalidOperation:
+            pass  # handle error when variant_generator is empty
+
 def load_gnomad_vcf():
-    def load_all_variants_in_file(sites_file, db):
-        with gzip.open(sites_file) as f:
-            variants_generator = get_variants_from_sites_vcf(f)
-            try:
-                db.gnomadVariants2.insert(variants_generator, w=0)
-            except pymongo.errors.InvalidOperation:
-                pass  # handle error when variant_generator is empty
 
     db = get_db()
-    db.gnomadVariants2.drop()
-    print("Dropped db.gnomadVariants2")
+    #db.gnomadVariants2.drop()
+    #print("Dropped db.gnomadVariants2")
 
     # grab variants from sites VCF
     db.gnomadVariants2.ensure_index('xpos')
@@ -229,7 +237,7 @@ def load_gnomad_vcf():
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for sites_vcf in sites_vcfs:
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db))
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.gnomadVariants2))
         p.start()
         procs.append(p)
         if len(procs) > num_procs:
@@ -709,9 +717,6 @@ def variant_page(variant_str):
     try:
         exac = variant_data(variant_str, 'exac')
         gnomad = variant_data(variant_str, 'gnomad')
-        #from pprint import pformat
-        #print("exac" + pformat(exac))
-        #print("gnomad" + pformat(gnomad))
         print 'Rendering variant: %s' % variant_str
         return render_template(
             'variant.html',
@@ -753,18 +758,15 @@ def variant_api(variant_str):
         print 'Failed on variant:', variant_str, ';Error=', traceback.format_exc()
         abort(404)
 
-def get_gene_data(db, gene_id, gene,request_type, cache_key):
+def get_gene_data(db, gene_id, gene, request_type, cache_key):
     try:
-        variant_data = lookups.get_variants_in_gene(db, gene_id)
-        variants_in_gene = variant_data['all_variants']
+        transcript_id = gene['canonical_transcript']
         transcripts_in_gene = lookups.get_transcripts_in_gene(db, gene_id)
+        variant_data  = lookups.get_variants_in_gene_or_transcript(db, gene_id=gene_id)
+        variants_in_transcript = variant_data["all_variants"]
 
         # Get some canonical transcript and corresponding info
-        transcript_id = gene['canonical_transcript']
         transcript = lookups.get_transcript(db, transcript_id)
-        variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
-        cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
-        cnvs_per_gene = lookups.get_cnvs(db, gene_id)
         coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
         coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'genome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
@@ -779,12 +781,9 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
                 'gene.html',
                 gene=gene,
                 transcript=transcript,
-                variants_in_gene=variants_in_gene,
                 variants_in_transcript=variants_in_transcript,
                 transcripts_in_gene=transcripts_in_gene,
                 coverage_stats=coverage_stats,
-                cnvs = cnvs_in_transcript,
-                cnvgenes = cnvs_per_gene,
                 constraint=constraint_info,
                 uuid_lists=variant_data['uuid_lists']
             )
@@ -792,12 +791,9 @@ def get_gene_data(db, gene_id, gene,request_type, cache_key):
             result = jsonify(
                 gene=gene,
                 transcript=transcript,
-                variants_in_gene=variants_in_gene,
                 variants_in_transcript=variants_in_transcript,
                 transcripts_in_gene=transcripts_in_gene,
                 coverage_stats=coverage_stats,
-                cnvs = cnvs_in_transcript,
-                cnvgenes = cnvs_per_gene,
                 constraint=constraint_info,
                 uuid_lists=variant_data['uuid_lists']
             )
@@ -841,9 +837,8 @@ def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
     try:
         gene = lookups.get_gene(db, transcript['gene_id'])
         gene['transcripts'] = lookups.get_transcripts_in_gene(db, transcript['gene_id'])
-        variants_in_transcript = lookups.get_variants_in_transcript(db, transcript_id)
-        cnvs_in_transcript = lookups.get_exons_cnvs(db, transcript_id)
-        cnvs_per_gene = lookups.get_cnvs(db, transcript['gene_id'])
+        variant_data = lookups.get_variants_in_gene_or_transcript(db, transcript_id=transcript_id)
+        variants_in_transcript = variant_data['all_variants']
         coverage_stats_exomes = lookups.get_coverage_for_transcript(db, 'exome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
         # change base_coverage to e.g. genome_base_coverage when the data gets here
         coverage_stats_genomes = lookups.get_coverage_for_transcript(db, 'genome_coverage', transcript['xstart'] - EXON_PADDING, transcript['xstop'] + EXON_PADDING)
@@ -856,32 +851,16 @@ def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
             result = render_template(
                 'transcript.html',
                 transcript=transcript,
-                transcript_json=json.dumps(transcript),
                 variants_in_transcript=variants_in_transcript,
-                variants_in_transcript_json=json.dumps(variants_in_transcript),
                 coverage_stats=coverage_stats,
-                coverage_stats_json=json.dumps(coverage_stats),
                 gene=gene,
-                gene_json=json.dumps(gene),
-                cnvs = cnvs_in_transcript,
-                cnvs_json=json.dumps(cnvs_in_transcript),
-                cnvgenes = cnvs_per_gene,
-                cnvgenes_json=json.dumps(cnvs_per_gene)
             )
         if request_type == 'json':
             result = jsonify(
                 transcript=transcript,
-                transcript_json=json.dumps(transcript),
                 variants_in_transcript=variants_in_transcript,
-                variants_in_transcript_json=json.dumps(variants_in_transcript),
                 coverage_stats=coverage_stats,
-                coverage_stats_json=json.dumps(coverage_stats),
                 gene=gene,
-                gene_json=json.dumps(gene),
-                cnvs = cnvs_in_transcript,
-                cnvs_json=json.dumps(cnvs_in_transcript),
-                cnvgenes = cnvs_per_gene,
-                cnvgenes_json=json.dumps(cnvs_per_gene)
             )
         cache.set(cache_key, result, timeout=1000*60)
         return result
