@@ -7,33 +7,33 @@ var mapVariants = function() {
     /**
      * Constant fields
      */
-    xpos: this.xpos,
-    xstart: this.xstart,
-    xstop: this.xstop,
-    chrom: this.chrom,
+    xpos: Number(this.xpos),
+    xstart: Number(this.xstart),
+    xstop: Number(this.xstop),
+    chrom: Number(this.chrom),
     alt: this.alt,
     genes: this.genes,
     major_consequence: this.major_consequence,
-    pos: this.pos,
+    pos: Number(this.pos),
     ref: this.ref,
     rsid: this.rsid,
     orig_alt_alleles: this.orig_alt_alleles,
     transcripts: this.transcripts,
-    vep_annotations: this.vep_annotations,
+    // vep_annotations: this.vep_annotations,
     variant_id: this.variant_id,
 
     /**
      * Sum fields
      */
-    ac_female: this.ac_female,
-    ac_male: this.ac_male,
-    allele_count: this.allele_count,
-    allele_freq: this.allele_freq,
-    allele_num: this.allele_num,
-    an_female: this.an_female,
-    an_male: this.an_male,
-    hom_count: this.hom_count,
-    hemi_count: this.hemi_count,
+    ac_female: Number(this.ac_female),
+    ac_male: Number(this.ac_male),
+    allele_count: Number(this.allele_count),
+    allele_freq: Number(this.allele_freq),
+    allele_num: Number(this.allele_num),
+    an_female: Number(this.an_female),
+    an_male: Number(this.an_male),
+    hom_count: Number(this.hom_count),
+    hemi_count: Number(this.hemi_count),
 
     /**
     * Nested sum fields
@@ -41,7 +41,7 @@ var mapVariants = function() {
     pop_acs: this.pop_acs,
     pop_ans: this.pop_ans,
     pop_homs: this.pop_homs,
-    pop_hemis: this.pop_hemis,
+    // pop_hemis: this.pop_hemis,
 
     /**
     * Unique fields
@@ -91,7 +91,7 @@ var reduce = function(key, variants) {
       'rsid',
       'orig_alt_alleles',
       'transcripts',
-      'vep_annotations',
+      // 'vep_annotations',
       'variant_id',
     ],
     sumFields: [
@@ -107,75 +107,75 @@ var reduce = function(key, variants) {
     ],
     nestedSumFields: [
       'pop_acs',
-      // 'pop_ans',
-      // 'pop_homs',
+      'pop_ans',
+      'pop_homs',
       // 'pop_hemis',
     ],
     uniqueFields: [
-      // 'ac_female',
-      // 'ac_male',
-      // 'allele_count',
-      // 'allele_freq',
-      // 'allele_num',
-      // 'an_female',
-      // 'an_male',
-      // 'pop_acs',
-      // 'pop_ans',
-      // 'pop_homs',
-      // 'pop_hemis',
+      'ac_female',
+      'ac_male',
+      'allele_count',
+      'allele_freq',
+      'allele_num',
+      'an_female',
+      'an_male',
+      'pop_acs',
+      'pop_ans',
+      'pop_homs',
+      'pop_hemis',
       'filter',
       // 'site_quality',
       // 'genotype_depths',
       // 'genotype_qualities',
       // 'quality_metrics',
     ],
-
+    populations: [
+      "European (Non-Finnish)",
+      "East Asian",
+      "Other",
+      "African",
+      "Latino",
+      "South Asian",
+      "European (Finnish)",
+    ]
   }
-  // var result = {filters: [], datasets: [], allele_count: 0};
-  var result = {}
+  dataset = 'gnomAD'
+  var result = {
+    datasets: [],
+    all: {},
+  }
+  result[dataset] = {}
   fields.constantFields.forEach(function(constantField) {
     result[constantField] = null
   })
   fields.sumFields.forEach(function(sumField) {
-    result[sumField] = null
+    result['all'][sumField] = null
   })
   fields.nestedSumFields.forEach(function(nestedSumField) {
-    result[nestedSumField] = null
+    result['all'][nestedSumField] = {}
+    fields.populations.forEach(function(population) {
+      result['all'][nestedSumField][population] = null
+    })
   })
   fields.uniqueFields.forEach(function(uniqueField) {
-    result[uniqueField] = null
+    result[dataset][uniqueField] = null
   })
   variants.forEach(function (variant) {
-    variant.dataset = 'gnomAD';
-    // fields.constantFields.forEach(function (field) {
-    //   return next[field] = variant[field];
-    // });
-    // fields.sumFields.forEach(function (field) {
-    //   return next[field] = add(next, variant, field);
-    // });
-    // fields.nestedSumFields.forEach(function (field) {
-    //   return next[field] = addNested(next, variant, field);
-    // });
-    // if (!next['datasets']) {
-    //   next['datasets'] = ['all', variant.dataset];
-    // } else {
-    //   next['datasets'] = [].concat(_toConsumableArray(next['datasets']), [variant.dataset]);
-    // }
-    // next[variant.dataset] = fields.uniqueFields.reduce(function (acc, field) {
-    //   return _extends({}, acc, _defineProperty({}, field, variant[field]));
-    // }, {});
-    // next.all = fields.uniqueFields.reduce(function (acc, field) {
-    //   return _extends({}, acc, _defineProperty({}, field, next[field]));
-    // }, {});
+    result.datasets.push(dataset)
     fields.constantFields.forEach(function(constantField) {
       result[constantField] = variant[constantField]
     })
     fields.sumFields.forEach(function(sumField) {
-      result[sumField] += variant[sumField]
+      result['all'][sumField] += Number(variant[sumField])
     })
-    // result.filters.push(variant.filter)
-    // result.datasets.push(variant.dataset)
-    // result.allele_count += variant.allele_count
+    fields.nestedSumFields.forEach(function(nestedSumField) {
+      fields.populations.forEach(function(pop) {
+        result['all'][nestedSumField][pop] += Number(variant[nestedSumField][pop])
+      })
+    })
+    fields.uniqueFields.forEach(function(uniqueField) {
+      result[dataset][uniqueField] = variant[uniqueField]
+    })
   });
   return result
 }
