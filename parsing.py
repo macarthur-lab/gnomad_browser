@@ -100,6 +100,8 @@ def get_variants_from_sites_vcf(sites_vcf):
 
             # different variant for each alt allele
             for i, alt_allele in enumerate(alt_alleles):
+                if alt_allele == "*":
+                    continue
 
                 vep_annotations = [ann for ann in coding_annotations if int(ann['ALLELE_NUM']) == i + 1]
 
