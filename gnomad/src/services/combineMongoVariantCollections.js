@@ -13,7 +13,6 @@ var mapVariantsGenomes = function() {
     chrom: Number(this.chrom),
     alt: this.alt,
     genes: this.genes,
-    // major_consequence: this.major_consequence,
     pos: Number(this.pos),
     ref: this.ref,
     rsid: this.rsid,
@@ -46,18 +45,52 @@ var mapVariantsGenomes = function() {
     /**
     * Unique fields
     */
-    filter: this.filter,
-    site_quality: this.site_quality,
-    genotype_depths: this.genotype_depths,
-    genotype_qualities: this.genotype_qualities,
-    quality_metrics: this.quality_metrics,
+    dataset: 'gnomAD',
+    datasets: ['all', 'gnomAD'],
+    all: {
+      filter: this.filter,
+      site_quality: this.site_quality,
+      genotype_depths: this.genotype_depths,
+      genotype_qualities: this.genotype_qualities,
+      quality_metrics: this.quality_metrics,
+      ac_female: Number(this.ac_female),
+      ac_male: Number(this.ac_male),
+      allele_count: Number(this.allele_count),
+      allele_freq: Number(this.allele_freq),
+      allele_num: Number(this.allele_num),
+      an_female: Number(this.an_female),
+      an_male: Number(this.an_male),
+      hom_count: Number(this.hom_count),
+      // hemi_count: Number(this.hemi_count),
+      pop_acs: this.pop_acs,
+      pop_ans: this.pop_ans,
+      pop_homs: this.pop_homs,
+      // pop_hemis: this.pop_hemis,
+    },
+    gnomAD: {
+      filter: this.filter,
+      site_quality: this.site_quality,
+      genotype_depths: this.genotype_depths,
+      genotype_qualities: this.genotype_qualities,
+      quality_metrics: this.quality_metrics,
+      ac_female: Number(this.ac_female),
+      ac_male: Number(this.ac_male),
+      allele_count: Number(this.allele_count),
+      allele_freq: Number(this.allele_freq),
+      allele_num: Number(this.allele_num),
+      an_female: Number(this.an_female),
+      an_male: Number(this.an_male),
+      hom_count: Number(this.hom_count),
+      // hemi_count: Number(this.hemi_count),
+      pop_acs: this.pop_acs,
+      pop_ans: this.pop_ans,
+      pop_homs: this.pop_homs,
+      // pop_hemis: this.pop_hemis,
+    }
 
     /**
     * Computed fields
     */
-    // dataset: 'gnomAD'
-    dataset: 'gnomAD'
-    // datasets: []
     // CANONICAL: this.CANONICAL,
     // HGVS: this.HGVS,
     // HGVSc: this.HGVSc,
@@ -65,6 +98,7 @@ var mapVariantsGenomes = function() {
     // category: this.category,
     // flags: this.flags,
     // indel: this.indel,
+    // major_consequence: this.major_consequence,
   }
 
 
@@ -81,7 +115,6 @@ var mapVariantsExomes = function() {
     chrom: Number(this.chrom),
     alt: this.alt,
     genes: this.genes,
-    // major_consequence: this.major_consequence,
     pos: Number(this.pos),
     ref: this.ref,
     rsid: this.rsid,
@@ -114,18 +147,52 @@ var mapVariantsExomes = function() {
     /**
     * Unique fields
     */
-    filter: this.filter,
-    site_quality: this.site_quality,
-    genotype_depths: this.genotype_depths,
-    genotype_qualities: this.genotype_qualities,
-    quality_metrics: this.quality_metrics,
+    dataset: 'ExAC',
+    datasets: ['all', 'ExAC'],
+    all: {
+      filter: this.filter,
+      site_quality: this.site_quality,
+      genotype_depths: this.genotype_depths,
+      genotype_qualities: this.genotype_qualities,
+      quality_metrics: this.quality_metrics,
+      ac_female: Number(this.ac_female),
+      ac_male: Number(this.ac_male),
+      allele_count: Number(this.allele_count),
+      allele_freq: Number(this.allele_freq),
+      allele_num: Number(this.allele_num),
+      an_female: Number(this.an_female),
+      an_male: Number(this.an_male),
+      hom_count: Number(this.hom_count),
+      // hemi_count: Number(this.hemi_count),
+      pop_acs: this.pop_acs,
+      pop_ans: this.pop_ans,
+      pop_homs: this.pop_homs,
+      // pop_hemis: this.pop_hemis,
+    },
+    ExAC: {
+      filter: this.filter,
+      site_quality: this.site_quality,
+      genotype_depths: this.genotype_depths,
+      genotype_qualities: this.genotype_qualities,
+      quality_metrics: this.quality_metrics,
+      ac_female: Number(this.ac_female),
+      ac_male: Number(this.ac_male),
+      allele_count: Number(this.allele_count),
+      allele_freq: Number(this.allele_freq),
+      allele_num: Number(this.allele_num),
+      an_female: Number(this.an_female),
+      an_male: Number(this.an_male),
+      hom_count: Number(this.hom_count),
+      // hemi_count: Number(this.hemi_count),
+      pop_acs: this.pop_acs,
+      pop_ans: this.pop_ans,
+      pop_homs: this.pop_homs,
+      // pop_hemis: this.pop_hemis,
+    }
 
     /**
     * Computed fields
     */
-    // dataset: 'gnomAD'
-    dataset: 'ExAC',
-    // datasets: []
     // CANONICAL: this.CANONICAL,
     // HGVS: this.HGVS,
     // HGVSc: this.HGVSc,
@@ -133,6 +200,7 @@ var mapVariantsExomes = function() {
     // category: this.category,
     // flags: this.flags,
     // indel: this.indel,
+    // major_consequence: this.major_consequence,
   }
 
 
@@ -231,9 +299,6 @@ var reduce = function(key, variants) {
   //     result['all'][nestedSumField][population] = null
   //   })
   // })
-  // fields.uniqueFields.forEach(function(uniqueField) {
-  //   result[variant.dataset][uniqueField] = null
-  // })
   variants.forEach(function (variant) {
     result[variant.dataset] = {}
     result.datasets.push(variant.dataset)
@@ -243,15 +308,14 @@ var reduce = function(key, variants) {
     fields.sumFields.forEach(function(sumField) {
       result['all'][sumField] += Number(variant[sumField])
     })
+    result[variant.dataset] = variant[variant.dataset]
     // fields.nestedSumFields.forEach(function(nestedSumField) {
     //   fields.populations.forEach(function(pop) {
     //     // result[nestedSumField][pop] += Number(variant[nestedSumField][pop])
     //     result['all'][nestedSumField][pop] += Number(variant[nestedSumField][pop])
     //   })
     // })
-    fields.uniqueFields.forEach(function(uniqueField) {
-      result[variant.dataset][uniqueField] = variant[uniqueField]
-    })
+
   });
   return result
 }
