@@ -61,3 +61,4 @@ reduce = function(k, values) {
 db.users.mapReduce(mapUsers, reduce, {"out": {"reduce": "users_comments"}});
 db.comments.mapReduce(mapComments, reduce, {"out": {"reduce": "users_comments"}});
 db.users_comments.find().pretty(); // see the resulting collection
+s
