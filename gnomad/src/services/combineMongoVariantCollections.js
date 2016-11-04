@@ -2,7 +2,7 @@
 
 // db.combinedVariants.drop()
 
-var mapVariants = function() {
+var mapVariantsGenomes = function() {
   var values = {
     /**
      * Constant fields
@@ -55,7 +55,76 @@ var mapVariants = function() {
     /**
     * Computed fields
     */
+    // dataset: 'gnomAD'
     dataset: 'gnomAD'
+    // datasets: []
+    // CANONICAL: this.CANONICAL,
+    // HGVS: this.HGVS,
+    // HGVSc: this.HGVSc,
+    // HGVSp: this.HGVSp,
+    // category: this.category,
+    // flags: this.flags,
+    // indel: this.indel,
+  }
+
+
+  emit(this.variant_id, values)
+}
+var mapVariantsExomes = function() {
+  var values = {
+    /**
+     * Constant fields
+     */
+    xpos: Number(this.xpos),
+    xstart: Number(this.xstart),
+    xstop: Number(this.xstop),
+    chrom: Number(this.chrom),
+    alt: this.alt,
+    genes: this.genes,
+    // major_consequence: this.major_consequence,
+    pos: Number(this.pos),
+    ref: this.ref,
+    rsid: this.rsid,
+    orig_alt_alleles: this.orig_alt_alleles,
+    transcripts: this.transcripts,
+    // vep_annotations: this.vep_annotations,
+    variant_id: this.variant_id,
+
+    /**
+     * Sum fields
+     */
+    ac_female: Number(this.ac_female),
+    ac_male: Number(this.ac_male),
+    allele_count: Number(this.allele_count),
+    allele_freq: Number(this.allele_freq),
+    allele_num: Number(this.allele_num),
+    an_female: Number(this.an_female),
+    an_male: Number(this.an_male),
+    hom_count: Number(this.hom_count),
+    // hemi_count: Number(this.hemi_count),
+
+    /**
+    * Nested sum fields
+    */
+    pop_acs: this.pop_acs,
+    pop_ans: this.pop_ans,
+    pop_homs: this.pop_homs,
+    // pop_hemis: this.pop_hemis,
+
+    /**
+    * Unique fields
+    */
+    filter: this.filter,
+    site_quality: this.site_quality,
+    genotype_depths: this.genotype_depths,
+    genotype_qualities: this.genotype_qualities,
+    quality_metrics: this.quality_metrics,
+
+    /**
+    * Computed fields
+    */
+    // dataset: 'gnomAD'
+    dataset: 'ExAC',
     // datasets: []
     // CANONICAL: this.CANONICAL,
     // HGVS: this.HGVS,
@@ -144,14 +213,14 @@ var reduce = function(key, variants) {
   var result = {
     datasets: ['all'],
     // dataset: '',
-    // all: {},
+    all: {},
   }
   fields.constantFields.forEach(function(constantField) {
     result[constantField] = null
   })
-  // fields.sumFields.forEach(function(sumField) {
-  //   result['all'][sumField] = null
-  // })
+  fields.sumFields.forEach(function(sumField) {
+    result['all'][sumField] = null
+  })
   // fields.nestedSumFields.forEach(function(nestedSumField) {
   //   // result[nestedSumField] = {}
   //   // result[dataset][nestedSumField] = {}
@@ -163,33 +232,34 @@ var reduce = function(key, variants) {
   //   })
   // })
   // fields.uniqueFields.forEach(function(uniqueField) {
-  //   result[dataset][uniqueField] = null
+  //   result[variant.dataset][uniqueField] = null
   // })
   variants.forEach(function (variant) {
-    result.datasets.push(variant['dataset'])
+    result[variant.dataset] = {}
+    result.datasets.push(variant.dataset)
     fields.constantFields.forEach(function(constantField) {
       result[constantField] = variant[constantField]
     })
-  //   fields.sumFields.forEach(function(sumField) {
-  //     result['all'][sumField] += Number(variant[sumField])
-  //   })
-  //   fields.nestedSumFields.forEach(function(nestedSumField) {
-  //     fields.populations.forEach(function(pop) {
-  //       // result[nestedSumField][pop] += Number(variant[nestedSumField][pop])
-  //       result['all'][nestedSumField][pop] += Number(variant[nestedSumField][pop])
-  //     })
-  //   })
-  //   fields.uniqueFields.forEach(function(uniqueField) {
-  //     result[dataset][uniqueField] = variant[uniqueField]
-  //   })
+    fields.sumFields.forEach(function(sumField) {
+      result['all'][sumField] += Number(variant[sumField])
+    })
+    // fields.nestedSumFields.forEach(function(nestedSumField) {
+    //   fields.populations.forEach(function(pop) {
+    //     // result[nestedSumField][pop] += Number(variant[nestedSumField][pop])
+    //     result['all'][nestedSumField][pop] += Number(variant[nestedSumField][pop])
+    //   })
+    // })
+    fields.uniqueFields.forEach(function(uniqueField) {
+      result[variant.dataset][uniqueField] = variant[uniqueField]
+    })
   });
   return result
 }
 
-db.gnomadVariants.mapReduce(mapVariants, reduce, {
+db.gnomadVariants.mapReduce(mapVariantsGenomes, reduce, {
   'out': { 'reduce': 'combinedVariants' }
 })
-// db.pparaExacVariants.mapReduce(mapVariants, reduce, {
-//   'out': { 'reduce': 'combinedVariants' }
-// })
+db.pparaExacVariants.mapReduce(mapVariantsExomes, reduce, {
+  'out': { 'reduce': 'combinedVariants' }
+})
 
