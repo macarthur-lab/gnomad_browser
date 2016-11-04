@@ -289,16 +289,16 @@ var reduce = function(key, variants) {
   fields.sumFields.forEach(function(sumField) {
     result['all'][sumField] = null
   })
-  // fields.nestedSumFields.forEach(function(nestedSumField) {
-  //   // result[nestedSumField] = {}
-  //   // result[dataset][nestedSumField] = {}
-  //   result['all'][nestedSumField] = {}
-  //   fields.populations.forEach(function(population) {
-  //     // result[nestedSumField][population] = null
-  //     // result[dataset][nestedSumField][population] = null
-  //     result['all'][nestedSumField][population] = null
-  //   })
-  // })
+  fields.nestedSumFields.forEach(function(nestedSumField) {
+    // result[nestedSumField] = {}
+    // result[dataset][nestedSumField] = {}
+    result['all'][nestedSumField] = {}
+    fields.populations.forEach(function(population) {
+      // result[nestedSumField][population] = null
+      // result[dataset][nestedSumField][population] = null
+      result['all'][nestedSumField][population] = null
+    })
+  })
   variants.forEach(function (variant) {
     result[variant.dataset] = {}
     result.datasets.push(variant.dataset)
@@ -309,13 +309,12 @@ var reduce = function(key, variants) {
       result['all'][sumField] += Number(variant[sumField])
     })
     result[variant.dataset] = variant[variant.dataset]
-    // fields.nestedSumFields.forEach(function(nestedSumField) {
-    //   fields.populations.forEach(function(pop) {
-    //     // result[nestedSumField][pop] += Number(variant[nestedSumField][pop])
-    //     result['all'][nestedSumField][pop] += Number(variant[nestedSumField][pop])
-    //   })
-    // })
-
+    fields.nestedSumFields.forEach(function(nestedSumField) {
+      fields.populations.forEach(function(pop) {
+        // result[nestedSumField][pop] += Number(variant[nestedSumField][pop])
+        result['all'][nestedSumField][pop] += Number(variant[variant.dataset][nestedSumField][pop])
+      })
+    })
   });
   return result
 }
