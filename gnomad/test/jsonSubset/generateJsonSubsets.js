@@ -6,16 +6,17 @@
 
 import fs from 'fs'
 import R from 'ramda'
-import geneSubsets from '../testCases/testGenes'
 import mongodb from 'mongodb'
 
 const url = 'mongodb://127.0.0.1:27017/exac'
 
-const exomeVariantCollectionName = 'variants'
-const genomeVariantCollectionName = 'gnomadVariants'
+import geneSubsets from '../testCases/testGenes'
 
-const exomeCoverageCollectionName = 'exome_coverage'
-const genomeCoverageCollectionName = 'genome_coverage'
+const exomeVariantCollectionName = 'variants'
+const genomeVariantCollectionName = 'gnomadVariants2'
+
+// const exomeCoverageCollectionName = 'exome_coverage'
+// const genomeCoverageCollectionName = 'genome_coverage'
 
 const genes = R.pipe(
   R.pluck('genes'),
@@ -23,6 +24,8 @@ const genes = R.pipe(
     R.tap(console.log),
   R.pluck('name'),
 )(geneSubsets)
+
+// const genes = ['PPARA']
 
 const m = mongodb.MongoClient
 
@@ -66,33 +69,36 @@ const getVariantsForGenes = (geneList, collection, cb) => {
   })
 }
 
-const getCoverageForGenes = (geneList, collection, cb) => {
-  console.log('Retrieving coverage for genes', geneList)
-  m.connect(url, (error, db) => {
-    const coverage = db.collection(collection).find({
-      xpos: {
-        '$gte': Number(xstart),
-        '$lte': Number(xstop)
-      }
-    }).toArray((error, data) => {
-      if (error) {
-        console.log(error)
-        cb(error, null)
-      }
-      cb(null, data)
-      db.close()
-    })
-  })
-}
+// const getCoverageForGenes = (geneList, collection, cb) => {
+//   console.log('Retrieving coverage for genes', geneList)
+//   m.connect(url, (error, db) => {
+//     const coverage = db.collection(collection).find({
+//       xpos: {
+//         '$gte': Number(xstart),
+//         '$lte': Number(xstop)
+//       }
+//     }).toArray((error, data) => {
+//       if (error) {
+//         console.log(error)
+//         cb(error, null)
+//       }
+//       cb(null, data)
+//       db.close()
+//     })
+//   })
+// }
 
-const generateDatabaseSubsetsJSONs = (geneList) => {
+const generateDatabaseSubsetsJSONs = (geneList, out) => {
   getGenes(geneList, (error, data) => {
-    fs.writeFile('./jsonSubset/geneDatabaseSubset.json', JSON.stringify(data))
+    fs.writeFile(`${__dirname}/${out}/geneDatabaseSubset.json`, JSON.stringify(data))  // eslint-disable-line
     const ids = R.flatten(data.map(gene => gene.gene_id))
-    getVariants(ids, (error, data) => {
-      fs.writeFile('./jsonSubset/variantsDatabaseSubset.json', JSON.stringify(data))
+    getVariantsForGenes(ids, exomeVariantCollectionName, (error, data) => {
+      fs.writeFile(`${__dirname}/${out}/exomeVariantsSubset.json`, JSON.stringify(data))  // eslint-disable-line
+    })
+    getVariantsForGenes(ids, genomeVariantCollectionName, (error, data) => {
+      fs.writeFile(`${__dirname}/${out}/genomeVariantsSubset.json`, JSON.stringify(data))  // eslint-disable-line
     })
   })
 }
 
-generateDatabaseSubsetsJSONs(genes)
+generateDatabaseSubsetsJSONs(genes, 'out')

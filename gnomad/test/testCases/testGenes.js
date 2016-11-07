@@ -13,8 +13,8 @@ export default [
     ],
   },
   {
-    groupName: 'Chromosome 22',
-    description: 'Genes and variants on chromosome 22',
+    groupName: 'Chromosome loading',
+    description: 'Genes for testing chromosome loading',
     genes: [
       {
         name: 'PPARA',
@@ -38,50 +38,46 @@ export default [
       },
     ],
   },
-  {
-    groupName: 'Very large genes',
-    description: 'For profiling loading/rendering of very large genes',
-    genes: [
-      {
-        name: 'TTN',
-        variants: [
-          'rs1800414',
-        ],
-      },
-    ],
-  },
-  {
-    groupName: 'Most-browsed genes...',
-    description: 'Test the most frequently browsed genes',
-    genes: [
-      {
-        name: 'BRCA1',
-        variants: [],
-      },
-      {
-        name: 'BRCA2',
-        variants: [],
-      },
-      {
-        name: 'CFTR',
-        variants: [],
-      },
-      {
-        name: 'FBN1',
-        variants: [],
-      },
-      {
-        name: 'TP53',
-        variants: [],
-      },
-      {
-        name: 'MYH7',
-        variants: [],
-      },
-      {
-        name: 'FBN1',
-        variants: [],
-      },
-    ],
-  },
+  // {
+  //   groupName: 'Very large genes',
+  //   description: 'For profiling loading/rendering of very large genes',
+  //   genes: [
+  //     {
+  //       name: 'TTN',
+  //       variants: [
+  //         'rs1800414',
+  //       ],
+  //     },
+  //   ],
+  // },
+  // {
+  //   groupName: 'Most-browsed genes...',
+  //   description: 'Test the most frequently browsed genes',
+  //   genes: [
+  //     {
+  //       name: 'BRCA1',
+  //       variants: [],
+  //     },
+  //     {
+  //       name: 'BRCA2',
+  //       variants: [],
+  //     },
+  //     {
+  //       name: 'CFTR',
+  //       variants: [],
+  //     },
+  //     {
+  //       name: 'FBN1',
+  //       variants: [],
+  //     },
+  //     {
+  //       name: 'TP53',
+  //       variants: [],
+  //     },
+  //     {
+  //       name: 'MYH7',
+  //       variants: [],
+  //     },
+  //   ],
+  // },
 ]
