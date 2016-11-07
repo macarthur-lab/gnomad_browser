@@ -30,7 +30,7 @@ describe('gnomad/exac variant api', () => {
           'base_coverage',
           'consequences',
           'metrics',
-          'read_viz',
+          'read_viz_dict',
           'variant'
         ])
         expect(Object.keys(data.gnomad)).toEqual([
@@ -38,7 +38,7 @@ describe('gnomad/exac variant api', () => {
           'base_coverage',
           'consequences',
           'metrics',
-          'read_viz',
+          'read_viz_dict',
           'variant'
         ])
         done()
