@@ -648,7 +648,7 @@ def variant_data(variant_str, source):
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
             consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
-    base_coverage = lookups.get_coverage_for_bases(db, 'base_coverage', xpos, xpos + len(ref) - 1)
+    base_coverage = lookups.get_coverage_for_bases(db, source, xpos, xpos + len(ref) - 1)
     any_covered = any([x['has_coverage'] for x in base_coverage])
     metrics = lookups.get_metrics(db, variant)
 

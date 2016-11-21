@@ -14,8 +14,8 @@
     <script type="text/javascript">
         window.exac = {{ exac|tojson|safe }};
         window.gnomAD = {{ gnomad|tojson|safe }};
-        //console.log(window.exac.variant)
-        //console.log(window.gnomAD.variant)
+        console.log('window.exac.variant', window.exac.variant)
+        console.log('window.gnomAD.variant', window.gnomAD.variant)
 
         window.variant = gnomad.combineDataForVariantPage(
             window.exac.variant,
@@ -23,11 +23,8 @@
         )
         window.any_covered = {{ any_covered|tojson|safe }};
         window.base_coverage = {{ base_coverage|tojson|safe }};
-        //window.gnomad_base_coverage = {{ gnomad_base_coverage|tojson|safe }};
-
         window.consequences = {{ consequences|tojson|safe }};
         window.metrics = {{ exac_metrics|tojson|safe }};
-
         function hasData(rawVariant) {
             if (rawVariant.variant_id) {
                 return true
@@ -205,17 +202,21 @@
             });
 
             function renderQualityHistogram() {
-                console.log(window.exac)
-                console.log(window.gnomAD)
                 if (window.exac.metrics && window.gnomAD.metrics) {
                     var genotypeDataSelection = 'exac'
+                    var siteDataSelection = 'exac'
                 } else if (window.exac.metrics && !window.gnomAD.metrics) {
                     var genotypeDataSelection = 'exac'
+                    var siteDataSelection = 'exac'
                     $('input[name=genotype-source][value=gnomad]').attr('disabled', true)
+                    $('input[name=site-source][value=gnomAD]').attr('disabled', true)
                 } else if (!window.exac.metrics && window.gnomAD.metrics) {
                     var genotypeDataSelection = 'gnomad'
+                    var siteDataSelection = 'gnomAD'
                     $('input[name=genotype-source][value=exac]').attr('disabled', true)
+                    $('input[name=site-source][value=exac]').attr('disabled', true)
                     $('input[name=genotype-source][value=gnomad]').attr('checked', true)
+                    $('input[name=site-source][value=gnomAD]').attr('checked', true)
                 }
                 if (window.variant != null && 'genotype_depths' in window.variant[genotypeDataSelection]) {
                     draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[1], '#quality_display_container', false, 'Depth', 'Variant Carriers');
@@ -225,16 +226,12 @@
                         var carriersOrAll = Number($('input[name=carriers-or-all]:checked').val())
                         var ylab = carriersOrAll ? 'Variant Carriers': 'Individuals'
                         var xlab = depthOrQuality === 'genotype_depths' ? 'Depth' : 'Genotype Quality'
-                        console.log('genotypeDataSelection', genotypeDataSelection)
-                        console.log('depthOrQuality', depthOrQuality)
-                        console.log('carriersOrAll', carriersOrAll)
-
-                        // console.log(genotypeDataSelection, depthOrQuality, carriersOrAll)
                         draw_quality_histogram(window.variant[genotypeDataSelection][depthOrQuality][carriersOrAll], '#quality_display_container', false, xlab, ylab);
                     });
 
                     // Quality metric histograms
                     var siteDataSelection = $('input[name=site-source]:checked').val()
+                    console.log('initializing site quality data', siteDataSelection)
                     var data = _.zip(_.map(window[siteDataSelection].metrics['Site Quality']['mids'], Math.exp), window[siteDataSelection].metrics['Site Quality']['hist']);
                     draw_quality_histogram(data, '#quality_metric_container', true, 'Site Quality', 'Variants');
                     var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
@@ -244,9 +241,11 @@
                     var log_these = ['Site Quality', 'DP'];
                     $('.site-quality').change(function() {
                         var siteDataSelection = $('input[name=site-source]:checked').val()
+                        console.log('site quality data changed', siteDataSelection)
                         console.log($('#quality_metric_select').val())
+                        console.log('seriously', $('#quality_metric_select').val())
                         var v = $('#quality_metric_select').val().split(': ');
-                        console.log(v)
+                        console.log('this is v', v)
                         var log = false;
                         $('#site_quality_note').html('');
                         var data;
@@ -260,6 +259,7 @@
                             var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                             $('#site_quality_note').html(get_af_bucket_text(bin));
                         }
+                        console.log(siteDataSelection, data)
                         draw_quality_histogram(data, '#quality_metric_container', log, v[0], 'Variants');
                         add_line_to_quality_histogram(data, v[1], '#quality_metric_container', log);
                     });
