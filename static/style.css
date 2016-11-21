@@ -598,9 +598,8 @@ TODO: come up with a better way to position tooltip
 }
 
 .jobs a {
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
+  color: #428bca;
+  /*text-decoration: none;*/
 }
 
 .btn.btn-success.report {
