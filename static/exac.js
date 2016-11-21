@@ -760,7 +760,6 @@ function update_variants() {
         if (!indelState && $(this).attr('indel') === 'true') {
             return
         }
-        if (variant.variant_id === '1-43396718-G-T') { console.log('it is still here', variant) }
         if (!_.contains(categoryDefinitions[category], $(this).attr('major_consequence'))) {
             return
         }
