@@ -224,28 +224,42 @@
                         var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
                         var depthOrQuality = $('input[name=depth-or-quality]:checked').val()
                         var carriersOrAll = Number($('input[name=carriers-or-all]:checked').val())
-                        var ylab = carriersOrAll ? 'Variant Carriers': 'Individuals'
+                        var ylab = carriersOrAll ? 'Variant Carriers': 'All Individuals'
                         var xlab = depthOrQuality === 'genotype_depths' ? 'Depth' : 'Genotype Quality'
                         draw_quality_histogram(window.variant[genotypeDataSelection][depthOrQuality][carriersOrAll], '#quality_display_container', false, xlab, ylab);
                     });
 
                     // Quality metric histograms
-                    var siteDataSelection = $('input[name=site-source]:checked').val()
                     console.log('initializing site quality data', siteDataSelection)
                     var data = _.zip(_.map(window[siteDataSelection].metrics['Site Quality']['mids'], Math.exp), window[siteDataSelection].metrics['Site Quality']['hist']);
                     draw_quality_histogram(data, '#quality_metric_container', true, 'Site Quality', 'Variants');
                     var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                     $('#site_quality_note').html(get_af_bucket_text(bin));
-                    var pos = $('#quality_metric_select').val().split(': ')[1];
-                    add_line_to_quality_histogram(data, pos, '#quality_metric_container', true);
+                    var position = window[siteDataSelection].variant.site_quality
+                    console.log(' initial site quality', position)
+                    $('#site-quality-score').html('Site Quality: ' + position)
+                    for (metricType in window[siteDataSelection].variant.quality_metrics) {
+                        var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
+                        $('#' + metricType).html(metricType + ': ' + metricValue)
+                    }
+                    add_line_to_quality_histogram(data, position, '#quality_metric_container', true);
                     var log_these = ['Site Quality', 'DP'];
-                    $('.site-quality').change(function() {
+                    var firstLoad = true
+                    $('#quality_collapse').change(function() {
                         var siteDataSelection = $('input[name=site-source]:checked').val()
                         console.log('site quality data changed', siteDataSelection)
-                        console.log($('#quality_metric_select').val())
-                        console.log('seriously', $('#quality_metric_select').val())
+                        console.log('currently selected metric', $('#quality_metric_select').val())
+                        $('#site-quality-score').html('Site Quality: ' + window[siteDataSelection].variant.site_quality)
+                        for (metricType in window[siteDataSelection].variant.quality_metrics) {
+                            var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
+                            $('#' + metricType).html(metricType + ': ' + metricValue)
+                        }
+                        var selectedMetric = $('#quality_metric_select').val()
+                        console.log('selectedMetric', selectedMetric)
+                        var metricValue = window[siteDataSelection].variant.quality_metrics[selectedMetric]
+                        console.log('metricValue', metricValue)
                         var v = $('#quality_metric_select').val().split(': ');
-                        console.log('this is v', v)
+                        // console.log('this is v', v)
                         var log = false;
                         $('#site_quality_note').html('');
                         var data;
@@ -259,9 +273,9 @@
                             var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                             $('#site_quality_note').html(get_af_bucket_text(bin));
                         }
-                        console.log(siteDataSelection, data)
+                        // console.log(siteDataSelection, data)
                         draw_quality_histogram(data, '#quality_metric_container', log, v[0], 'Variants');
-                        add_line_to_quality_histogram(data, v[1], '#quality_metric_container', log);
+                        add_line_to_quality_histogram(data, metricValue, '#quality_metric_container', log);
                     });
                 } else {
                     $('#quality_metrics_container').hide();
@@ -445,9 +459,9 @@
                                                 <small><div id="site_quality_note"></div></small>
                                                 <small><span class="label label-info">Note:</span> These are site-level quality metrics: they may be unpredictable for multi-allelic sites.</small>
                                                 <select id="quality_metric_select" class="form-control">
-                                                    <option><small>Site Quality: {{ variant.site_quality }}</small></option>
+                                                    <option id="site-quality-score" name="site-quality-choice"><small>Site Quality: {{ variant.site_quality }}</small></option>
                                                     {% for metric in variant.quality_metrics %}
-                                                        <option><small>{{ metric }}: {{ variant.quality_metrics[metric] }}</small></option>
+                                                        <option name="site-quality-choice" id="{{ metric }}" value="{{ metric }}"><small>{{ metric }}: {{ variant.quality_metrics[metric] }}</small></option>
                                                     {% endfor %}
                                                 </select>
                                                 <br/>
