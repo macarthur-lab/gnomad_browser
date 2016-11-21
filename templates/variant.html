@@ -14,8 +14,8 @@
     <script type="text/javascript">
         window.exac = {{ exac|tojson|safe }};
         window.gnomAD = {{ gnomad|tojson|safe }};
-        console.log('window.exac.variant', window.exac.variant)
-        console.log('window.gnomAD.variant', window.gnomAD.variant)
+        // console.log('window.exac.variant', window.exac.variant)
+        // console.log('window.gnomAD.variant', window.gnomAD.variant)
 
         window.variant = gnomad.combineDataForVariantPage(
             window.exac.variant,
@@ -230,13 +230,11 @@
                     });
 
                     // Quality metric histograms
-                    console.log('initializing site quality data', siteDataSelection)
                     var data = _.zip(_.map(window[siteDataSelection].metrics['Site Quality']['mids'], Math.exp), window[siteDataSelection].metrics['Site Quality']['hist']);
                     draw_quality_histogram(data, '#quality_metric_container', true, 'Site Quality', 'Variants');
                     var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                     $('#site_quality_note').html(get_af_bucket_text(bin));
                     var position = window[siteDataSelection].variant.site_quality
-                    console.log(' initial site quality', position)
                     $('#site-quality-score').html('Site Quality: ' + position)
                     for (metricType in window[siteDataSelection].variant.quality_metrics) {
                         var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
@@ -244,23 +242,24 @@
                     }
                     add_line_to_quality_histogram(data, position, '#quality_metric_container', true);
                     var log_these = ['Site Quality', 'DP'];
-                    var firstLoad = true
                     $('#quality_collapse').change(function() {
                         var siteDataSelection = $('input[name=site-source]:checked').val()
-                        console.log('site quality data changed', siteDataSelection)
-                        console.log('currently selected metric', $('#quality_metric_select').val())
-                        $('#site-quality-score').html('Site Quality: ' + window[siteDataSelection].variant.site_quality)
+                        var position = window[siteDataSelection].variant.site_quality
+                        $('#site-quality-score').html('Site Quality: ' + position)
                         for (metricType in window[siteDataSelection].variant.quality_metrics) {
                             var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
                             $('#' + metricType).html(metricType + ': ' + metricValue)
                         }
                         var selectedMetric = $('#quality_metric_select').val()
-                        console.log('selectedMetric', selectedMetric)
                         var metricValue = window[siteDataSelection].variant.quality_metrics[selectedMetric]
-                        console.log('metricValue', metricValue)
+                        if (selectedMetric.split(':')[1]) {
+                            selectedMetric = 'Site Quality'
+                            metricValue = window[siteDataSelection].variant.site_quality
+                        }
                         var v = $('#quality_metric_select').val().split(': ');
-                        // console.log('this is v', v)
                         var log = false;
+                        // console.log('site quality data changed', siteDataSelection)
+                        // console.log('selectedMetric:', selectedMetric, 'metricValue:', metricValue)
                         $('#site_quality_note').html('');
                         var data;
                         if (log_these.indexOf(v[0]) > -1) {
