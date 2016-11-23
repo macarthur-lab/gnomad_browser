@@ -53,7 +53,7 @@
                 draw_region_coverage(window.base_coverage, $(this).val(), window.variant.ref);
             });
 
-            function getInitialDataSelection(exomeFilter, genomeFilter) {
+            function setInitialPopulationTablesState(exomeFilter, genomeFilter) {
                 console.log(exomeFilter, genomeFilter)
                 console.log(window.variant)
                 if (exomeFilter === 'PASS' && genomeFilter === 'PASS') {
@@ -82,6 +82,32 @@
                     }
                     return 'gnomad'
                 }
+                if (exomeFilter !== 'PASS' && exomeFilter !== 'No variant') {
+                    if (genomeFilter === 'No variant') {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                        return 'exac'
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        return 'all'
+                    }
+                }
+                if (genomeFilter !== 'PASS' && genomeFilter !== 'No variant') {
+                    if (exomeFilter === 'No variant') {
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        $('#exome_checkbox_label').html('Exomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                        return 'gnomad'
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        return 'all'
+                    }
+                }
             }
 
             function getDataSelection(exomeState, genomeState) {
@@ -105,6 +131,7 @@
 	        var an_total = 0
 	        var hom_total = 0
 	        var hemi_total = 0
+            console.log(selection)
                 for (var pop in variant['all'].pop_acs) {
 	            var has_data_for_pop = variant[selection].pop_acs && (pop in variant[selection].pop_acs)
                     ix = pop.replace(/[\s()]/g, "")
@@ -181,7 +208,7 @@
             $('#an-total').html(variant.all.allele_num)
             $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
 
-            var initialSelection = getInitialDataSelection(variant.exac.filter, variant.gnomad.filter)
+            var initialSelection = setInitialPopulationTablesState(variant.exac.filter, variant.gnomad.filter)
             updatePopulationTable(window.variant, initialSelection)
         });
     </script>
