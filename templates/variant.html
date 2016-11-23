@@ -53,6 +53,37 @@
                 draw_region_coverage(window.base_coverage, $(this).val(), window.variant.ref);
             });
 
+            function getInitialDataSelection(exomeFilter, genomeFilter) {
+                console.log(exomeFilter, genomeFilter)
+                console.log(window.variant)
+                if (exomeFilter === 'PASS' && genomeFilter === 'PASS') {
+                    return 'all'
+                }
+                if (exomeFilter === 'PASS') {
+                    $('#genome_checkbox').attr('checked', false)
+                    if (genomeFilter === 'No variant') {
+                        $('#genome_checkbox_label').html('Genomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                    } else {
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+
+                    }
+                    return 'exac'
+                }
+                if (genomeFilter === 'PASS') {
+                    $('#exome_checkbox').attr('checked', false)
+                    if (exomeFilter === 'No variant') {
+                        $('#exome_checkbox_label').html('Exomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                    }
+                    return 'gnomad'
+                }
+            }
+
             function getDataSelection(exomeState, genomeState) {
                 if (exomeState && genomeState) {
                     $('#genome_checkbox').attr('disabled', false)
@@ -150,7 +181,8 @@
             $('#an-total').html(variant.all.allele_num)
             $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
 
-            updatePopulationTable(window.variant, 'all')
+            var initialSelection = getInitialDataSelection(variant.exac.filter, variant.gnomad.filter)
+            updatePopulationTable(window.variant, initialSelection)
         });
     </script>
     <style>
@@ -576,12 +608,12 @@
                             <div class="population_selector_checkboxes">
                                 <label>
                                     <input checked type="checkbox" id="exome_checkbox" value="">
-                                    <div class="checkbox-label">Exomes</div>
+                                    <div id="exome_checkbox_label" class="checkbox-label">Exomes</div>
                                 </label>
 
                                 <label class='hidden-xs'>
                                     <input checked type="checkbox" id="genome_checkbox" value="">
-                                    <div class="checkbox-label">Genomes</div>
+                                    <div id="genome_checkbox_label" class="checkbox-label">Genomes</div>
                                 </label>
                             </div>
                         </div>
