@@ -14,8 +14,8 @@
     <script type="text/javascript">
         window.exac = {{ exac|tojson|safe }};
         window.gnomAD = {{ gnomad|tojson|safe }};
-        //console.log(window.exac.variant)
-        //console.log(window.gnomAD.variant)
+        // console.log('window.exac.variant', window.exac.variant)
+        // console.log('window.gnomAD.variant', window.gnomAD.variant)
 
         window.variant = gnomad.combineDataForVariantPage(
             window.exac.variant,
@@ -23,11 +23,8 @@
         )
         window.any_covered = {{ any_covered|tojson|safe }};
         window.base_coverage = {{ base_coverage|tojson|safe }};
-        //window.gnomad_base_coverage = {{ gnomad_base_coverage|tojson|safe }};
-
         window.consequences = {{ consequences|tojson|safe }};
         window.metrics = {{ exac_metrics|tojson|safe }};
-
         function hasData(rawVariant) {
             if (rawVariant.variant_id) {
                 return true
@@ -56,6 +53,63 @@
                 draw_region_coverage(window.base_coverage, $(this).val(), window.variant.ref);
             });
 
+            function setInitialPopulationTablesState(exomeFilter, genomeFilter) {
+                console.log(exomeFilter, genomeFilter)
+                console.log(window.variant)
+                if (exomeFilter === 'PASS' && genomeFilter === 'PASS') {
+                    return 'all'
+                }
+                if (exomeFilter === 'PASS') {
+                    $('#genome_checkbox').attr('checked', false)
+                    if (genomeFilter === 'No variant') {
+                        $('#genome_checkbox_label').html('Genomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                    } else {
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+
+                    }
+                    return 'exac'
+                }
+                if (genomeFilter === 'PASS') {
+                    $('#exome_checkbox').attr('checked', false)
+                    if (exomeFilter === 'No variant') {
+                        $('#exome_checkbox_label').html('Exomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                    }
+                    return 'gnomad'
+                }
+                if (exomeFilter !== 'PASS' && exomeFilter !== 'No variant') {
+                    if (genomeFilter === 'No variant') {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                        return 'exac'
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        return 'all'
+                    }
+                }
+                if (genomeFilter !== 'PASS' && genomeFilter !== 'No variant') {
+                    if (exomeFilter === 'No variant') {
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        $('#exome_checkbox_label').html('Exomes (no variant)')
+                        $('#exome_checkbox').attr('disabled', true)
+                        $('#genome_checkbox').attr('disabled', true)
+                        return 'gnomad'
+                    } else {
+                        $('#exome_checkbox_label').html('Exomes (filtered)')
+                        $('#genome_checkbox_label').html('Genomes (filtered)')
+                        return 'all'
+                    }
+                }
+            }
+
             function getDataSelection(exomeState, genomeState) {
                 if (exomeState && genomeState) {
                     $('#genome_checkbox').attr('disabled', false)
@@ -73,10 +127,11 @@
             }
 
             function updatePopulationTable(variant, selection) {
-	        var ac_total = 0 
-	        var an_total = 0 
-	        var hom_total = 0 
+	        var ac_total = 0
+	        var an_total = 0
+	        var hom_total = 0
 	        var hemi_total = 0
+            console.log(selection)
                 for (var pop in variant['all'].pop_acs) {
 	            var has_data_for_pop = variant[selection].pop_acs && (pop in variant[selection].pop_acs)
                     ix = pop.replace(/[\s()]/g, "")
@@ -84,7 +139,7 @@
 	            var pop_ac = has_data_for_pop ? variant[selection].pop_acs[pop] : 0
                     $('#table-count-'+ix).html(pop_ac)
 	            ac_total += pop_ac
-	           
+
 	            var pop_an = has_data_for_pop ? variant[selection].pop_ans[pop] : 0
                     $('#table-number-' + ix).html(pop_an)
 	            an_total += pop_an
@@ -104,7 +159,7 @@
 
                     var frequency = pop_an > 0 ? (pop_ac / pop_an).toPrecision(4) : 'NA'
                     $('#table-frequency-' + ix).html(frequency)
-                
+
                 }
                 $('#table-count-sum').html(ac_total)
                 $('#table-number-sum').html(an_total)
@@ -153,7 +208,8 @@
             $('#an-total').html(variant.all.allele_num)
             $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
 
-            updatePopulationTable(window.variant, 'all')
+            var initialSelection = setInitialPopulationTablesState(variant.exac.filter, variant.gnomad.filter)
+            updatePopulationTable(window.variant, initialSelection)
         });
     </script>
     <style>
@@ -205,34 +261,64 @@
             });
 
             function renderQualityHistogram() {
-                var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
+                if (window.exac.metrics && window.gnomAD.metrics) {
+                    var genotypeDataSelection = 'exac'
+                    var siteDataSelection = 'exac'
+                } else if (window.exac.metrics && !window.gnomAD.metrics) {
+                    var genotypeDataSelection = 'exac'
+                    var siteDataSelection = 'exac'
+                    $('input[name=genotype-source][value=gnomad]').attr('disabled', true)
+                    $('input[name=site-source][value=gnomAD]').attr('disabled', true)
+                } else if (!window.exac.metrics && window.gnomAD.metrics) {
+                    var genotypeDataSelection = 'gnomad'
+                    var siteDataSelection = 'gnomAD'
+                    $('input[name=genotype-source][value=exac]').attr('disabled', true)
+                    $('input[name=site-source][value=exac]').attr('disabled', true)
+                    $('input[name=genotype-source][value=gnomad]').attr('checked', true)
+                    $('input[name=site-source][value=gnomAD]').attr('checked', true)
+                }
                 if (window.variant != null && 'genotype_depths' in window.variant[genotypeDataSelection]) {
-                    draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[0], '#quality_display_container', false, 'Depth', 'Variant Carriers');
+                    draw_quality_histogram(window.variant[genotypeDataSelection].genotype_depths[1], '#quality_display_container', false, 'Depth', 'Variant Carriers');
                     $('#quality_metrics_container').change(function() {
                         var genotypeDataSelection = $('input[name=genotype-source]:checked').val()
                         var depthOrQuality = $('input[name=depth-or-quality]:checked').val()
                         var carriersOrAll = Number($('input[name=carriers-or-all]:checked').val())
-                        var ylab = carriersOrAll ? 'Variant Carriers' : 'Individuals';
+                        var ylab = carriersOrAll ? 'Variant Carriers': 'All Individuals'
                         var xlab = depthOrQuality === 'genotype_depths' ? 'Depth' : 'Genotype Quality'
-                        // console.log(genotypeDataSelection, depthOrQuality, carriersOrAll)
                         draw_quality_histogram(window.variant[genotypeDataSelection][depthOrQuality][carriersOrAll], '#quality_display_container', false, xlab, ylab);
                     });
 
                     // Quality metric histograms
-                    var siteDataSelection = $('input[name=site-source]:checked').val()
                     var data = _.zip(_.map(window[siteDataSelection].metrics['Site Quality']['mids'], Math.exp), window[siteDataSelection].metrics['Site Quality']['hist']);
                     draw_quality_histogram(data, '#quality_metric_container', true, 'Site Quality', 'Variants');
                     var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                     $('#site_quality_note').html(get_af_bucket_text(bin));
-                    var pos = $('#quality_metric_select').val().split(': ')[1];
-                    add_line_to_quality_histogram(data, pos, '#quality_metric_container', true);
+                    var position = window[siteDataSelection].variant.site_quality
+                    $('#site-quality-score').html('Site Quality: ' + position)
+                    for (metricType in window[siteDataSelection].variant.quality_metrics) {
+                        var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
+                        $('#' + metricType).html(metricType + ': ' + metricValue)
+                    }
+                    add_line_to_quality_histogram(data, position, '#quality_metric_container', true);
                     var log_these = ['Site Quality', 'DP'];
-                    $('.site-quality').change(function() {
+                    $('#quality_collapse').change(function() {
                         var siteDataSelection = $('input[name=site-source]:checked').val()
-                        console.log($('#quality_metric_select').val())
+                        var position = window[siteDataSelection].variant.site_quality
+                        $('#site-quality-score').html('Site Quality: ' + position)
+                        for (metricType in window[siteDataSelection].variant.quality_metrics) {
+                            var metricValue = window[siteDataSelection].variant.quality_metrics[metricType]
+                            $('#' + metricType).html(metricType + ': ' + metricValue)
+                        }
+                        var selectedMetric = $('#quality_metric_select').val()
+                        var metricValue = window[siteDataSelection].variant.quality_metrics[selectedMetric]
+                        if (selectedMetric.split(':')[1]) {
+                            selectedMetric = 'Site Quality'
+                            metricValue = window[siteDataSelection].variant.site_quality
+                        }
                         var v = $('#quality_metric_select').val().split(': ');
-                        console.log(v)
                         var log = false;
+                        // console.log('site quality data changed', siteDataSelection)
+                        // console.log('selectedMetric:', selectedMetric, 'metricValue:', metricValue)
                         $('#site_quality_note').html('');
                         var data;
                         if (log_these.indexOf(v[0]) > -1) {
@@ -245,8 +331,9 @@
                             var bin = window[siteDataSelection].metrics['Site Quality']['metric'].split('_')[1];
                             $('#site_quality_note').html(get_af_bucket_text(bin));
                         }
+                        // console.log(siteDataSelection, data)
                         draw_quality_histogram(data, '#quality_metric_container', log, v[0], 'Variants');
-                        add_line_to_quality_histogram(data, v[1], '#quality_metric_container', log);
+                        add_line_to_quality_histogram(data, metricValue, '#quality_metric_container', log);
                     });
                 } else {
                     $('#quality_metrics_container').hide();
@@ -379,11 +466,11 @@
                                                     <span class="btn-group" data-toggle="buttons" id="quality_full_site_button_group">
                                                         <button class="btn btn-primary btn-sm active quality_full_site_buttons" id="variant_carriers_button"
                                                                 data-tooltip="Show metric for only individuals with this allele.">
-                                                            <input type="radio" checked value="0" name="carriers-or-all"> Variant carriers
+                                                            <input type="radio" checked value="1" name="carriers-or-all"> Variant carriers
                                                         </button>
                                                         <button class="btn btn-primary btn-sm quality_full_site_buttons" id="variant_site_button"
                                                                 data-tooltip="Show metric for all individuals (at this site, whether or not they have this allele).">
-                                                            <input type="radio" checked value="1" name="carriers-or-all"> All individuals
+                                                            <input type="radio" checked value="0" name="carriers-or-all"> All individuals
                                                         </button>
                                                     </span>
                                                     <div id="quality_display_container" class="d3_graph"></div>
@@ -430,9 +517,9 @@
                                                 <small><div id="site_quality_note"></div></small>
                                                 <small><span class="label label-info">Note:</span> These are site-level quality metrics: they may be unpredictable for multi-allelic sites.</small>
                                                 <select id="quality_metric_select" class="form-control">
-                                                    <option><small>Site Quality: {{ variant.site_quality }}</small></option>
+                                                    <option id="site-quality-score" name="site-quality-choice"><small>Site Quality: {{ variant.site_quality }}</small></option>
                                                     {% for metric in variant.quality_metrics %}
-                                                        <option><small>{{ metric }}: {{ variant.quality_metrics[metric] }}</small></option>
+                                                        <option name="site-quality-choice" id="{{ metric }}" value="{{ metric }}"><small>{{ metric }}: {{ variant.quality_metrics[metric] }}</small></option>
                                                     {% endfor %}
                                                 </select>
                                                 <br/>
@@ -548,12 +635,12 @@
                             <div class="population_selector_checkboxes">
                                 <label>
                                     <input checked type="checkbox" id="exome_checkbox" value="">
-                                    <div class="checkbox-label">Exomes</div>
+                                    <div id="exome_checkbox_label" class="checkbox-label">Exomes</div>
                                 </label>
 
                                 <label class='hidden-xs'>
                                     <input checked type="checkbox" id="genome_checkbox" value="">
-                                    <div class="checkbox-label">Genomes</div>
+                                    <div id="genome_checkbox_label" class="checkbox-label">Genomes</div>
                                 </label>
                             </div>
                         </div>
