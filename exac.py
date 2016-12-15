@@ -47,8 +47,10 @@ app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
 SHARED_FILES_DIRECTORY = '../exac_data/'
-EXOME_FILES_DIRECTORY = '../data/exomes'
-GENOME_FILES_DIRECTORY = '../data/genomes'
+EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/test-vcfs/gnomad/exomes'
+# EXOME_FILES_DIRECTORY = '../data/exome'
+GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/test-vcfs/gnomad/genomes'
+# GENOME_FILES_DIRECTORY = '../data/genomes'
 
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
@@ -61,8 +63,8 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 3)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
-    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'exac-subset.vcf.bgz')),
+    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'gnomad-subset.vcf.bgz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),

@@ -8,14 +8,14 @@ from tqdm import tqdm
 from utils import *
 
 POPS = {
-    'AFR': 'African',
-    'AMR': 'Latino',
-    'ASJ': 'Ashkenazi Jewish',
-    'EAS': 'East Asian',
-    'FIN': 'European (Finnish)',
-    'NFE': 'European (Non-Finnish)',
-    'SAS': 'South Asian',
-    'OTH': 'Other'
+    'AFR': 'african',
+    'AMR': 'latino',
+    'ASJ': 'ashkenazi_jewish',
+    'EAS': 'east_asian',
+    'FIN': 'european_finnish',
+    'NFE': 'european_non_finnish',
+    'SAS': 'south_asian',
+    'OTH': 'other'
 }
 
 
@@ -26,19 +26,21 @@ def get_base_coverage_from_file(base_coverage_file):
         'xpos': 1e9+1,
         'mean': 0.0,
         'median': 0.0,
-        '1': 0.0,
-        '5': 0.0,
-        '10': 0.0,
-        '15': 0.0,
-        '20': 0.0,
-        '25': 0.0,
-        '30': 0.0,
-        '50': 0.0,
-        '100': 0.0,
+        'over_1': 0.0,
+        'over_5': 0.0,
+        'over_10': 0.0,
+        'over_15': 0.0,
+        'over_20': 0.0,
+        'over_25': 0.0,
+        'over_30': 0.0,
+        'over_50': 0.0,
+        'over_100': 0.0,
     }
     """
 
-    float_header_fields = ['mean', 'median', '1', '5', '10', '15', '20', '25', '30', '50', '100']
+    float_header_fields = ['mean', 'median', 'over_1', 'over_5',
+    'over_10', 'over_15', 'over_20', 'over_25',
+    'over_30', 'over_50', 'over_100']
     for line in tqdm(base_coverage_file, unit=" coverage"):
         if line.startswith('#'):
             continue
@@ -323,12 +325,12 @@ def get_exons_from_gencode_gtf(gtf_file):
 
 
 def get_cnvs_from_txt(cnv_txt_file):
-    """                                                                                                                                                                                                                                  
-    Parse gencode txt file;                                                                                                                                                                                                              
-    Returns iter of gene dicts                                                                                                                                                                                                           
     """
-    header = cnv_txt_file.next() # gets rid of the header                                                                                                                                                                                
-    #print header                                                                                                                                                                                                                        
+    Parse gencode txt file;
+    Returns iter of gene dicts
+    """
+    header = cnv_txt_file.next() # gets rid of the header
+    #print header
     for line in cnv_txt_file:
 
         fields = line.rsplit()
@@ -345,11 +347,11 @@ def get_cnvs_from_txt(cnv_txt_file):
         delpop60 = fields[10]
         duppop0 = fields[11]
         duppop60 = fields[12]
-        
 
-        #find gene from DB.genes, get ID                                                                                                                                                                                                 
-        #find exon of that gene that this CNV referes to from db.exons, get ID                                                                                                                                                           
-        #add the object reference to the cnv dict.                                                                                                                                                                                       
+
+        #find gene from DB.genes, get ID
+        #find exon of that gene that this CNV referes to from db.exons, get ID
+        #add the object reference to the cnv dict.
         cnv = {
             'transcript': transcript,
             'gene': gene,
@@ -371,7 +373,7 @@ def get_cnvs_from_txt(cnv_txt_file):
 
 
 def get_cnvs_per_gene(cnv_gene_file):
-    header = cnv_gene_file.next() # gets rid of the header                                                                                                                                                                               
+    header = cnv_gene_file.next() # gets rid of the header
     for line in cnv_gene_file:
 
         fields = line.rsplit()
