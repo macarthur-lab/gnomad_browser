@@ -31,6 +31,16 @@
             }
             return false
         }
+        window.populationDictionary = {
+            african: "African",
+            latino: "Latino",
+            ashkenazi_jewish: "Ashkenazi Jewish",
+            east_asian: "East Asian",
+            european_finnish: "European (Finnish)",
+            european_non_finnish: "European (Non-Finnish)",
+            south_asian: "South Asian",
+            other: "Other"
+        }
 
         $(document).ready(function() {
             draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
@@ -131,10 +141,11 @@
 	        var an_total = 0
 	        var hom_total = 0
 	        var hemi_total = 0
-            console.log(selection)
                 for (var pop in variant['all'].pop_acs) {
 	            var has_data_for_pop = variant[selection].pop_acs && (pop in variant[selection].pop_acs)
-                    ix = pop.replace(/[\s()]/g, "")
+                    ix = pop
+
+                $('#table-name-'+ix).html(populationDictionary[pop])
 
 	            var pop_ac = has_data_for_pop ? variant[selection].pop_acs[pop] : 0
                     $('#table-count-'+ix).html(pop_ac)
@@ -169,8 +180,8 @@
                   $('#table-hemizygotes-sum').html(hemi_total)
                 }
                 $('#table-total-freq').html( an_total > 0 ? (ac_total / an_total).toPrecision(4) : 'NA' )
-                if (!variant.all.pop_acs['Ashkenazi Jewish']
-                     || variant.all.pop_acs['Ashkenazi Jewish']  === 0) {
+                if (!variant.all.pop_acs['ashkenazi_jewish']
+                     || variant.all.pop_acs['ashkenazi_jewish']  === 0) {
                     $('#ibd-footer').hide()
                     $('#asj').html('Ashkenazi Jewish')
                 }
@@ -596,18 +607,18 @@
                                 <tbody>
                                     {% for pop in variant.pop_acs %}
                                         <tr>
-                                            {% if pop == 'Ashkenazi Jewish' %}
+                                            {% if pop == 'ashkenazi_jewish' %}
                                                 <td id="asj">{{ pop }}*</td>
                                             {% else %}
-                                                <td>{{ pop }}</td>
+                                                <td id="table-name-{{ pop }}"></td>
                                             {% endif %}
-                                            <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
-                                            <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
-                                            <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                            <td id="table-count-{{ pop }}"></td>
+                                            <td id="table-number-{{ pop }}"></td>
+                                            <td id="table-homozygotes-{{ pop }}"></td>
                                             {% if chrom == 'X' or chrom == 'Y' %}
-                                                <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                                <td id="table-hemizygotes-{{ pop }}"></td>
                                             {% endif %}
-                                            <td id="table-frequency-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                            <td id="table-frequency-{{ pop }}"></td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
