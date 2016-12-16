@@ -1006,6 +1006,10 @@ def dbsnp_page(rsid):
     db = get_db()
     try:
         variants = lookups.get_variants_by_rsid(db, rsid)
+        if not variants:
+            variants = lookups.get_variants_from_dbsnp(db, rsid)
+        if not variants:
+            raise(Exception('No variants found!'))
         chrom = None
         start = None
         stop = None
@@ -1029,6 +1033,8 @@ def dbsnp_json(rsid):
     db = get_db()
     try:
         variants = lookups.get_variants_by_rsid(db, rsid)
+        if variants == []:
+            raise(Exception('No variants found!'))
         chrom = None
         start = None
         stop = None
