@@ -366,11 +366,11 @@ TODO: come up with a better way to position tooltip
   flex-direction: row;
   justify-content: space-between;
 }
-.btn-success {
+.btn-info {
   background-color: grey;
   border: none;
 }
-.btn-success:hover {
+.btn-info:hover {
   background-color: #69584E;
   border: none;
 }
@@ -601,13 +601,13 @@ TODO: come up with a better way to position tooltip
   color: #428bca;
 }
 
-.btn.btn-success.report {
+.btn.btn-info.report {
   margin-top: 5px;
   background-color: #F5F5F5;
   color: #000000;
   /*border: none;*/
 }
-.btn.btn-success.report:hover {
+.btn.btn-info.report:hover {
   background-color: #E0E0E0;
   /*border: none;*/
 }

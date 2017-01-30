@@ -49,6 +49,7 @@ cache = SimpleCache()
 SHARED_FILES_DIRECTORY = '../exac_data/'
 EXOME_FILES_DIRECTORY = '../data/exomes'
 GENOME_FILES_DIRECTORY = '../data/genomes'
+READ_VIZ_DIRECTORY = '../data/readviz'
 
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
@@ -80,7 +81,8 @@ app.config.update(dict(
     #   tabix -s 2 -b 3 -e 3 dbsnp142.txt.bgz
     DBSNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbsnp142.txt.bgz'),
 
-    READ_VIZ_DIR=os.path.abspath(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz"))
+    #READ_VIZ_DIR=os.path.abspath(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz")),
+    READ_VIZ_DIR=os.path.abspath(READ_VIZ_DIRECTORY),
 ))
 
 
@@ -654,53 +656,59 @@ def variant_data(variant_str, source):
 
     # check the appropriate sqlite db to get the *expected* number of
     # available bams and *actual* number of available bams for this variant
-    sqlite_db_path = os.path.join(
-        app.config["READ_VIZ_DIR"],
-        "combined_bams",
-        chrom,
-        "combined_chr%s_%03d.db" % (chrom, pos % 1000))
-    logging.info(sqlite_db_path)
-    try:
-        read_viz_db = sqlite3.connect(sqlite_db_path)
-        n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'het')).fetchone()
-        n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                                    "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hom')).fetchone()
-        n_hemi = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
-                                     "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hemi')).fetchone()
-        read_viz_db.close()
-    except Exception, e:
-        logging.error("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
-        n_het = n_hom = n_hemi = None
+    all_read_viz_dict = { 'total_available': 0, 'total_expected': 0 }
+    for genomes_or_exomes in ('genomes', 'exomes'):
+        sqlite_db_path = os.path.join(
+            app.config["READ_VIZ_DIR"],
+            "combined_bams_%s" % genomes_or_exomes,
+            "combined_bams",
+            chrom,
+            "combined_chr%s_%03d.db" % (chrom, pos % 1000))
+        logging.info(sqlite_db_path)
+        try:
+            read_viz_db = sqlite3.connect(sqlite_db_path)
+            n_het = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                                        "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'het')).fetchone()
+            n_hom = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                                        "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hom')).fetchone()
+            n_hemi = read_viz_db.execute("select n_expected_samples, n_available_samples from t "
+                                         "where chrom=? and pos=? and ref=? and alt=? and het_or_hom_or_hemi=?", (chrom, pos, ref, alt, 'hemi')).fetchone()
+            read_viz_db.close()
+        except Exception, e:
+            logging.error("Error when accessing sqlite db: %s - %s", sqlite_db_path, e)
+            n_het = n_hom = n_hemi = None
 
-    read_viz_dict = {
-        'het': {'n_expected': n_het[0] if n_het is not None and n_het[0] is not None else 0,
-                'n_available': n_het[1] if n_het is not None and n_het[1] is not None else 0,},
-        'hom': {'n_expected': n_hom[0] if n_hom is not None and n_hom[0] is not None else 0,
-                'n_available': n_hom[1] if n_hom is not None  and n_hom[1] is not None else 0,},
-        'hemi': {'n_expected': n_hemi[0] if n_hemi is not None and n_hemi[0] is not None else 0,
-                 'n_available': n_hemi[1] if n_hemi is not None and n_hemi[1] is not None else 0,},
-    }
+        read_viz_dict = {
+            'het': {'n_expected':   n_het[0] if n_het is not None and n_het[0] is not None else 0,
+                    'n_available':  n_het[1] if n_het is not None and n_het[1] is not None else 0,},
+            'hom': {'n_expected':   n_hom[0] if n_hom is not None and n_hom[0] is not None else 0,
+                    'n_available':  n_hom[1] if n_hom is not None  and n_hom[1] is not None else 0,},
+            'hemi': {'n_expected':  n_hemi[0] if n_hemi is not None and n_hemi[0] is not None else 0,
+                     'n_available': n_hemi[1] if n_hemi is not None and n_hemi[1] is not None else 0,},
+        }
 
-    total_available = 0
-    total_expected = 0
-    for het_or_hom_or_hemi in ('het', 'hom', 'hemi'):
-        total_available += read_viz_dict[het_or_hom_or_hemi]['n_available']
-        total_expected += read_viz_dict[het_or_hom_or_hemi]['n_expected']
+        total_available = 0
+        total_expected = 0
+        for het_or_hom_or_hemi in ('het', 'hom', 'hemi'):
+            total_available += read_viz_dict[het_or_hom_or_hemi]['n_available']
+            total_expected += read_viz_dict[het_or_hom_or_hemi]['n_expected']
 
-        read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
-            '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
-            for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+            read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
+                '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
+                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+                
+            ]   #eg. '1-157768000-G-C_hom1',
 
-        ]   #eg. '1-157768000-G-C_hom1',
+            read_viz_dict[het_or_hom_or_hemi]['urls'] = [
+                os.path.join('combined_bams_%s' % genomes_or_exomes, 'combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
+                for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
+            ]
 
-        read_viz_dict[het_or_hom_or_hemi]['urls'] = [
-            os.path.join('combined_bams', chrom, 'combined_chr%s_%03d.bam' % (chrom, pos % 1000))
-            for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-        ]
-
-    read_viz_dict['total_available'] = total_available
-    read_viz_dict['total_expected'] = total_expected
+        read_viz_dict['total_available'] = total_available
+        read_viz_dict['total_expected'] = total_expected
+        all_read_viz_dict[genomes_or_exomes] = read_viz_dict
+        all_read_viz_dict['total_available'] += total_available
+        all_read_viz_dict['total_expected'] += total_expected
 
     print 'Rendering variant: %s' % variant_str
     return {
@@ -709,7 +717,7 @@ def variant_data(variant_str, source):
         'consequences': consequences,
         'any_covered': any_covered,
         'metrics': metrics,
-        'read_viz_dict': read_viz_dict,
+        'read_viz_dict': all_read_viz_dict,
     }
 
 @app.route('/variant/<variant_str>')
@@ -1134,7 +1142,6 @@ http://omim.org/entry/%(omim_accession)s''' % gene
 @app.route('/read_viz/<path:path>')
 def read_viz_files(path):
     full_path = os.path.abspath(os.path.join(app.config["READ_VIZ_DIR"], path))
-    #logging.info("readviz path: " + full_path)
 
     # security check - only files under READ_VIZ_DIR should be accsessible
     if not full_path.startswith(app.config["READ_VIZ_DIR"]):
