@@ -689,7 +689,7 @@
                     <br><br>
                     <center>
  		    {% for exomes_or_genomes in ('exomes', 'genomes') %}
-                      {% if read_viz[exomes_or_genomes]['het']['n_available'] > 1 or read_viz[exomes_or_genomes]['hom']['n_available'] > 1 or (variant.chrom in ('X', 'Y') and read_viz[exomes_or_genomes]['hemi'] > 1) %}
+                      {% if read_viz[exomes_or_genomes]['het']['n_available'] > 0 or read_viz[exomes_or_genomes]['hom']['n_available'] > 0 or (variant.chrom in ('X', 'Y') and read_viz[exomes_or_genomes]['hemi'] > 0) %}
 		        <div style="display:inline-block; min-width: 130px; vertical-align:bottom; font-weight:600; font-size:16px">{{ exomes_or_genomes.capitalize() }}:</div>
    		        <div style="display:inline-block;">
 
@@ -738,7 +738,7 @@
                                 indexed: true,
                                 alignmentShading: 'strand',
                                 url: '/read_viz/' + read_viz_data[exomes_or_genomes][het_or_hom_or_hemi]['urls'][i],
-                                name: exomes_or_genomes.slice(0,-1) + ' ' + het_or_hom_or_hemi + ' #' + (i + 1),
+                                name: het_or_hom_or_hemi + ' [' + exomes_or_genomes.slice(0,-1) + '] #' + (i + 1),
                                 height: 300,
                                 minHeight: 300,
                                 autoHeight: false,
@@ -824,8 +824,6 @@
                             var load_one_more = function (genomes_or_exomes, het_or_hom_or_hemi) {
                                 if (tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] < read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available']) {
                                     var i = tracks_counter[genomes_or_exomes][het_or_hom_or_hemi];
-                                    console.log(read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['urls'][i]);
-                                    console.log(read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['readgroups'][i]);
                                     igv.browser.loadTrack(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, i));
                                     tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] += 1;
                                 }
