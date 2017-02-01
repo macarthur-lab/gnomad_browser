@@ -662,7 +662,7 @@
             </div>
         </div>
 
-        {% if read_viz['genomes']['total_expected'] > 0 %}
+        {% if read_viz['total_expected'] > 0 %}
 
             <hr/>
 
@@ -689,9 +689,10 @@
                     <br><br>
                     <center>
  		    {% for exomes_or_genomes in ('exomes', 'genomes') %}
-		      <div style="display:inline-block; min-width: 130px; vertical-align:bottom; font-weight:600; font-size:16px">{{ exomes_or_genomes.capitalize() }}:</div>
-		      <div style="display:inline-block;">
                       {% if read_viz[exomes_or_genomes]['het']['n_available'] > 1 or read_viz[exomes_or_genomes]['hom']['n_available'] > 1 or (variant.chrom in ('X', 'Y') and read_viz[exomes_or_genomes]['hemi'] > 1) %}
+		        <div style="display:inline-block; min-width: 130px; vertical-align:bottom; font-weight:600; font-size:16px">{{ exomes_or_genomes.capitalize() }}:</div>
+   		        <div style="display:inline-block;">
+
                         <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
                                 style="disabled:true; width:130px; height: 32px;"
 				id="load-more-{{ exomes_or_genomes }}-het-button">Load +1 Het
@@ -814,6 +815,9 @@
 
                                 disable_load_one_more = tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] >= read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available'];
                                 $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').prop('disabled', disable_load_one_more);
+                                if(disable_load_one_more) {
+                                    $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').html('No more ' + het_or_hom_or_hemi);
+                                }
                               });
                             });
 
@@ -828,6 +832,7 @@
 
                                 if (tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] >= read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available']) {
                                     $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').prop('disabled', true);
+                                    $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').html('No more ' + het_or_hom_or_hemi);
                                 }
                             };
                        
