@@ -527,7 +527,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a class="btn btn-success report" href="/report/exac/{{ variant.variant_id }}">Report this variant</a>
+                                <a class="btn btn-info report" href="/report/exac/{{ variant.variant_id }}">Report this variant</a>
                             </div>
                         </div>
                     </div>
@@ -687,25 +687,35 @@
 
                     <div id="igv-container"></div>
                     <br><br>
-
-                    {% if read_viz['het']['n_available'] > 1 or read_viz['hom']['n_available'] > 1 or (variant.chrom in ('X', 'Y') and read_viz['hemi'] > 1) %}
                     <center>
-                        <button class="btn btn-primary quality_full_site_buttons"
-                                style="disabled:true; width:130px; height: 32px;" id="load-more-het-button">Load +1 Het
+ 		    {% for exomes_or_genomes in ('exomes', 'genomes') %}
+                      {% if read_viz[exomes_or_genomes]['het']['n_available'] > 0 or read_viz[exomes_or_genomes]['hom']['n_available'] > 0 or (variant.chrom in ('X', 'Y') and read_viz[exomes_or_genomes]['hemi'] > 0) %}
+		        <div style="display:inline-block; min-width: 130px; vertical-align:bottom; font-weight:600; font-size:16px">{{ exomes_or_genomes.capitalize() }}:</div>
+   		        <div style="display:inline-block;">
+
+                        <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
+                                style="disabled:true; width:130px; height: 32px;"
+				id="load-more-{{ exomes_or_genomes }}-het-button">Load +1 Het
                         </button>
                         &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-primary quality_full_site_buttons"
-                                style="disabled:true; width:130px; height: 32px;" id="load-more-hom-button">Load +1 Hom
+                        <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
+                                style="disabled:true; width:130px; height: 32px;" 
+				id="load-more-{{ exomes_or_genomes }}-hom-button">Load +1 Hom
                         </button>
 			{% if variant.chrom in ('X', 'Y') %}
                         &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-primary quality_full_site_buttons"
-                                style="disabled:true; width:130px; height: 32px;" id="load-more-hemi-button">Load +1 Hemi
+                        <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
+                                style="disabled:true; width:130px; height: 32px;" 
+				id="load-more-{{ exomes_or_genomes }}-hemi-button">Load +1 Hemi
                         </button>
 			{% endif %}
-                        <br>
+			<br />
+                      {% endif %}
+		      </div>
+		      <div style="display:inline-block; min-width: 180px;"> </div>
+		      <br /><br />
+		    {% endfor %}
                     </center>
-                    {% endif %}
                     <br>
 
                     <!-- IGV dependencies -->
@@ -722,17 +732,17 @@
 
                     <script type="text/javascript">
 
-                        var get_bam_track_config = function (read_viz_data, het_or_hom_or_hemi, i) {
+                        var get_bam_track_config = function (read_viz_data, exomes_or_genomes, het_or_hom_or_hemi, i) {
                             return {
                                 type: 'bam',
                                 indexed: true,
                                 alignmentShading: 'strand',
-                                url: '/read_viz/' + read_viz_data[het_or_hom_or_hemi]['urls'][i],
-                                name: het_or_hom_or_hemi + ' #' + (i + 1),
+                                url: '/read_viz/' + read_viz_data[exomes_or_genomes][het_or_hom_or_hemi]['urls'][i],
+                                name: het_or_hom_or_hemi + ' [' + exomes_or_genomes.slice(0,-1) + '] #' + (i + 1),
                                 height: 300,
                                 minHeight: 300,
                                 autoHeight: false,
-                                readgroup: read_viz_data[het_or_hom_or_hemi]['readgroups'][i],  //readgroup: '1-157768000-G-C_hom10',
+                                readgroup: read_viz_data[exomes_or_genomes][het_or_hom_or_hemi]['readgroups'][i],  //readgroup: '1-157768000-G-C_hom10',
                             };
                         };
 
@@ -765,9 +775,10 @@
 
                         //a dict of counts: n_expected_het, n_expected_hom, n_available_het, n_available_hom
                         var read_viz_data = {{ read_viz | tojson | safe }};
+			console.log(read_viz_data);
 
                         //counts number of het/hom bam tracks displayed so far
-                        var tracks_counter = {"het": 0, "hom": 0, "hemi": 0};
+                        var tracks_counter = { 'exomes': {"het": 0, "hom": 0, "hemi": 0}, 'genomes': {"het": 0, "hom": 0, "hemi": 0}};
 
                         //initialize IGV tracks
                         var tracks = [];
@@ -782,52 +793,54 @@
                         if (location.hash == '#all') {
                             //add all available tracks for het and hom and hide the 'load +1' buttons
                             // this mode was requested by Konrad and Eric
-                            ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
-                                $('#load-more-'+het_or_hom_or_hemi+'-button').hide();
-                                var n = read_viz_data[het_or_hom_or_hemi]['n_available'];
+                            ["exomes", "genomes"].forEach(function (genomes_or_exomes) {
+                              ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
+                                $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').hide();
+                                var n = read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available'];
                                 for (var i = 0; i < n; i += 1) {
-                                    tracks.push(get_bam_track_config(read_viz_data, het_or_hom_or_hemi, i));
-                                    tracks_counter[het_or_hom_or_hemi] += 1;
-                                }
+                                    tracks.push(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, i));
+                                    tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] += 1;
+                                } 
+                              })
                             });
 
                         } else {
                             //add track #1 for het and hom (assuming they're available)
-                            ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
-                                if (read_viz_data[het_or_hom_or_hemi]['n_available'] > 0) {
-                                    tracks.push(get_bam_track_config(read_viz_data, het_or_hom_or_hemi, 0));
-                                    tracks_counter[het_or_hom_or_hemi] += 1;
+                            ["genomes", "exomes"].forEach(function (genomes_or_exomes) {
+                              ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
+                                if (read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available'] > 0) {
+                                    tracks.push(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, 0));
+                                    tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] += 1;
                                 }
 
-                                disable_load_one_more = tracks_counter[het_or_hom_or_hemi] >= read_viz_data[het_or_hom_or_hemi]['n_available'];
-                                $('#load-more-' + het_or_hom_or_hemi + '-button').prop('disabled', disable_load_one_more);
+                                disable_load_one_more = tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] >= read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available'];
+                                $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').prop('disabled', disable_load_one_more);
+                                if(disable_load_one_more) {
+                                    $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').html('No more ' + het_or_hom_or_hemi);
+                                }
+                              });
                             });
 
-                            var load_one_more = function (het_or_hom_or_hemi) {
-                                if (tracks_counter[het_or_hom_or_hemi] < read_viz_data[het_or_hom_or_hemi]['n_available']) {
-                                    var i = tracks_counter[het_or_hom_or_hemi];
-                                    console.log(read_viz_data[het_or_hom_or_hemi]['urls'][i]);
-                                    console.log(read_viz_data[het_or_hom_or_hemi]['readgroups'][i]);
-                                    igv.browser.loadTrack(get_bam_track_config(read_viz_data, het_or_hom_or_hemi, i));
-                                    tracks_counter[het_or_hom_or_hemi] += 1;
+                            var load_one_more = function (genomes_or_exomes, het_or_hom_or_hemi) {
+                                if (tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] < read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available']) {
+                                    var i = tracks_counter[genomes_or_exomes][het_or_hom_or_hemi];
+                                    igv.browser.loadTrack(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, i));
+                                    tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] += 1;
                                 }
 
-                                if (tracks_counter[het_or_hom_or_hemi] >= read_viz_data[het_or_hom_or_hemi]['n_available']) {
-                                    $('#load-more-'+het_or_hom_or_hemi+'-button').prop('disabled', true);
+                                if (tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] >= read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available']) {
+                                    $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').prop('disabled', true);
+                                    $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').html('No more ' + het_or_hom_or_hemi);
                                 }
                             };
-
-                            $('#load-more-het-button').click(function () {
-                                load_one_more("het");
-                            });
-
-                            $('#load-more-hom-button').click(function () {
-                                load_one_more("hom");
-                            });
-
-                            $('#load-more-hemi-button').click(function () {
-                                load_one_more("hemi");
-                            });
+                       
+                            ["genomes", "exomes"].forEach(function (genomes_or_exomes) {
+                              ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
+                                  $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').click(function () {
+                                     load_one_more(genomes_or_exomes, het_or_hom_or_hemi);
+                                  });
+                               })
+                            })
                         }
 
 
