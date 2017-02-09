@@ -1,0 +1,28 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "gnomad-precalculate",
+    "labels": {
+      "state": "loading"
+    }
+  },
+  "spec": {
+    "restartPolicy": "Never",
+    "containers": [
+      {
+        "name": "gnomad-precalculate",
+        "image": "gcr.io/exac-gnomad/gnomadprecalculate",
+        "securityContext": {
+          "privileged": true,
+          "capabilities": {
+            "add": [
+              "NET_ADMIN"
+            ]
+          }
+        },
+        "imagePullPolicy": "Always"
+      }
+    ]
+  }
+}

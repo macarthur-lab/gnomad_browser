@@ -13,7 +13,7 @@ def hello():
 @manager.command
 def load_db():
     exac.load_db()
-# 
+#
 #
 # @manager.command
 # def load_base_coverage():
@@ -28,17 +28,17 @@ def load_base_coverage_genomes():
     exac.load_base_coverage_genomes()
 
 @manager.command
-def load_variants_file():
-    exac.load_variants_file()
+def load_exome_variants():
+    exac.load_exome_variants()
 
 @manager.command
-def load_gnomad_vcf():
-    exac.load_gnomad_vcf()
+def load_genome_variants():
+    exac.load_genome_variants()
 
 
 @manager.command
 def reload_variants():
-    exac.load_variants_file()
+    exac.load_exome_variants()
     exac.load_mnps()
     exac.precalculate_metrics()
 

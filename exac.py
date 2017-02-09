@@ -46,9 +46,9 @@ CORS(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
-SHARED_FILES_DIRECTORY = '../exac_data/'
-EXOME_FILES_DIRECTORY = '../data/exomes'
-GENOME_FILES_DIRECTORY = '../data/genomes'
+SHARED_FILES_DIRECTORY = '../data/loading_data/shared_files'
+EXOME_FILES_DIRECTORY = '../data/loading_data/exomes'
+GENOME_FILES_DIRECTORY = '../data/loading_data/genomes'
 READ_VIZ_DIRECTORY = '../data/readviz'
 
 REGION_LIMIT = 1E5
@@ -60,10 +60,10 @@ app.config.update(dict(
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
-    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 3)),
+    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 32)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
-    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'x/part-000*.bgz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'exac2.vep.vcf.gz')),
+    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'autosomes_and_x/*.bgz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -93,7 +93,8 @@ def connect_db():
     """
     Connects to the specific database.
     """
-    client = pymongo.MongoClient(host=app.config['DB_HOST'], port=app.config['DB_PORT'])
+    # client = pymongo.MongoClient(host=app.config['DB_HOST'], port=app.config['DB_PORT'])
+    client = pymongo.MongoClient("mongodb://gnomad-mongo:27017")
     return client[app.config['DB_NAME']]
 
 
@@ -149,6 +150,8 @@ def load_individual_coverage_files(coverage_files, collection):
 
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
+    if num_procs > 4:
+        num_procs = 4
     random.shuffle(coverage_files)
     for i in range(num_procs):
         p = Process(target=load_coverage, args=(coverage_files, collection, i, num_procs, db))
@@ -172,20 +175,19 @@ def load_variants_in_file_using_tabix(sites_file, i, n, db_collection):
     except pymongo.errors.InvalidOperation:
         pass  # handle error when variant_generator is empty
 
-def load_variants_file():
-
+def load_exome_variants():
 
     db = get_db()
-    #db.variants.drop()
-    #print("Dropped db.variants")
+    #db.exome_variants.drop()
+    #print("Dropped exome_variants")
 
     # grab variants from sites VCF
-    db.variants.ensure_index('xpos')
-    db.variants.ensure_index('xstart')
-    db.variants.ensure_index('xstop')
-    db.variants.ensure_index('rsid')
-    db.variants.ensure_index('genes')
-    db.variants.ensure_index('transcripts')
+    db.exome_variants.ensure_index('xpos')
+    db.exome_variants.ensure_index('xstart')
+    db.exome_variants.ensure_index('xstop')
+    db.exome_variants.ensure_index('rsid')
+    db.exome_variants.ensure_index('genes')
+    db.exome_variants.ensure_index('transcripts')
 
     sites_vcfs = app.config['EXOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
@@ -196,7 +198,7 @@ def load_variants_file():
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for sites_vcf in sites_vcfs:
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, db.variants))
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.exome_variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, exome_variants))
         p.start()
         procs.append(p)
         if len(procs) > num_procs:
@@ -216,19 +218,19 @@ def load_all_variants_in_file(sites_file, db_collection):
         except pymongo.errors.InvalidOperation:
             pass  # handle error when variant_generator is empty
 
-def load_gnomad_vcf():
+def load_genome_variants():
 
     db = get_db()
-    #db.gnomadVariants2.drop()
-    #print("Dropped db.gnomadVariants2")
+    #db.genome_variants.drop()
+    #print("Dropped db.genome_variants")
 
     # grab variants from sites VCF
-    db.gnomadVariants2.ensure_index('xpos')
-    db.gnomadVariants2.ensure_index('xstart')
-    db.gnomadVariants2.ensure_index('xstop')
-    db.gnomadVariants2.ensure_index('rsid')
-    db.gnomadVariants2.ensure_index('genes')
-    db.gnomadVariants2.ensure_index('transcripts')
+    db.genome_variants.ensure_index('xpos')
+    db.genome_variants.ensure_index('xstart')
+    db.genome_variants.ensure_index('xstop')
+    db.genome_variants.ensure_index('rsid')
+    db.genome_variants.ensure_index('genes')
+    db.genome_variants.ensure_index('transcripts')
 
     sites_vcfs = app.config['GENOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
@@ -239,7 +241,7 @@ def load_gnomad_vcf():
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for sites_vcf in sites_vcfs:
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.gnomadVariants2))
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.genome_variants))
         p.start()
         procs.append(p)
         if len(procs) > num_procs:
@@ -264,24 +266,24 @@ def load_constraint_information():
 
     db.constraint.ensure_index('transcript')
     print 'Done loading constraint info. Took %s seconds' % int(time.time() - start_time)
-
+    return []
 
 def load_mnps():
     db = get_db()
     start_time = time.time()
 
-    db.variants.ensure_index('has_mnp')
+    db.exome_variants.ensure_index('has_mnp')
     print 'Done indexing.'
-    while db.variants.find_and_modify({'has_mnp' : True}, {'$unset': {'has_mnp': '', 'mnps': ''}}):
+    while db.exome_variants.find_and_modify({'has_mnp' : True}, {'$unset': {'has_mnp': '', 'mnps': ''}}):
         pass
     print 'Deleted MNP data.'
 
     with gzip.open(app.config['MNP_FILE']) as mnp_file:
         for mnp in get_mnp_data(mnp_file):
             variant = lookups.get_raw_variant(db, mnp['xpos'], mnp['ref'], mnp['alt'], True)
-            db.variants.find_and_modify({'_id': variant['_id']}, {'$set': {'has_mnp': True}, '$push': {'mnps': mnp}}, w=0)
+            db.exome_variants.find_and_modify({'_id': variant['_id']}, {'$set': {'has_mnp': True}, '$push': {'mnps': mnp}}, w=0)
 
-    db.variants.ensure_index('has_mnp')
+    db.exome_variants.ensure_index('has_mnp')
     print 'Done loading MNP info. Took %s seconds' % int(time.time() - start_time)
 
 
@@ -382,11 +384,13 @@ def load_cnv_models():
         #progress.finish()
 
     print 'Done loading CNVs. Took %s seconds' % int(time.time() - start_time)
+    return []
 
 def drop_cnv_genes():
     db = get_db()
     start_time = time.time()
     db.cnvgenes.drop()
+    return []
 
 def load_cnv_genes():
     db = get_db()
@@ -398,7 +402,7 @@ def load_cnv_genes():
         #progress.finish()
 
     print 'Done loading CNVs in genes. Took %s seconds' % int(time.time() - start_time)
-
+    return []
 
 def load_dbsnp_file():
     db = get_db()
@@ -456,12 +460,13 @@ def load_db():
     """
     # Initialize database
     # Don't need to explicitly create tables with mongo, just indices
-    confirm = raw_input('This will drop the database and reload. Are you sure you want to continue? [no] ')
+    # confirm = raw_input('This will drop the database and reload. Are you sure you want to continue? [no] ')
+    confirm = 'yes'
     if not confirm.startswith('y'):
         print('Exiting...')
         sys.exit(1)
     all_procs = []
-    for load_function in [load_variants_file, load_dbsnp_file, load_base_coverage_exomes, load_base_coverage_genomes, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
+    for load_function in [load_exome_variants, load_genome_variants, load_dbsnp_file, load_base_coverage_exomes, load_base_coverage_genomes, load_gene_models, load_constraint_information, load_cnv_models, load_cnv_genes]:
         procs = load_function()
         all_procs.extend(procs)
         print("Started %s processes to run %s" % (len(procs), load_function.__name__))
@@ -510,12 +515,12 @@ def create_cache():
 def precalculate_metrics(chrom=None):
     import numpy
     db = get_db()
-    print 'Reading %s variants...' % db.variants.count()
+    print 'Reading %s variants...' % db.exome_variants.count()
     metrics = defaultdict(list)
     binned_metrics = defaultdict(list)
     progress = 0
     start_time = time.time()
-    for variant in tqdm(db.variants.find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db.variants.count()):
+    for variant in tqdm(db.exome_variants.find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db.exome_variants.count()):
         if chrom is not None and variant["chrom"] != chrom:
             continue
         for metric, value in variant['quality_metrics'].iteritems():
@@ -696,7 +701,7 @@ def variant_data(variant_str, source):
             read_viz_dict[het_or_hom_or_hemi]['readgroups'] = [
                 '%(chrom)s-%(pos)s-%(ref)s-%(alt)s_%(het_or_hom_or_hemi)s%(i)s' % locals()
                 for i in range(read_viz_dict[het_or_hom_or_hemi]['n_available'])
-                
+
             ]   #eg. '1-157768000-G-C_hom1',
 
             read_viz_dict[het_or_hom_or_hemi]['urls'] = [
@@ -1117,6 +1122,9 @@ def contact_page():
 def faq_page():
     return render_template('faq.html')
 
+@app.route('/<path:path>')
+def loader_verification(path):
+    return send_from_directory('static', path)
 
 @app.route('/text')
 def text_page():

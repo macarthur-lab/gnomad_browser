@@ -1,0 +1,28 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "gnomad-load",
+    "labels": {
+      "state": "loading"
+    }
+  },
+  "spec": {
+    "restartPolicy": "Never",
+    "containers": [
+      {
+        "name": "gnomad-load",
+        "image": "gcr.io/exac-gnomad/gnomadload",
+        "securityContext": {
+          "privileged": true,
+          "capabilities": {
+            "add": [
+              "NET_ADMIN"
+            ]
+          }
+        },
+        "imagePullPolicy": "Always"
+      }
+    ]
+  }
+}

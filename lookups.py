@@ -27,10 +27,10 @@ def get_transcript(db, transcript_id):
 
 def get_raw_variant(db, source, xpos, ref, alt, get_id=False):
     if source == 'exac':
-        exac_variant = db.variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
+        exac_variant = db.exome_variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
         return exac_variant
     if source == 'gnomad':
-        gnomad_variant = db.gnomadVariants2.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
+        gnomad_variant = db.genome_variants.find_one({'xpos': xpos, 'ref': ref, 'alt': alt}, projection={'_id': get_id})
         return gnomad_variant
 
 
@@ -52,13 +52,13 @@ def get_variants_by_rsid(db, rsid):
         int(rsid.lstrip('rs'))
     except Exception, e:
         return None
-    exomeVariants = list(db.variants.find({'rsid': rsid}, projection={'_id': False}))
-    for variant in exomeVariants:
+    exome_variants = list(db.exome_variants.find({'rsid': rsid}, projection={'_id': False}))
+    for variant in exome_variants:
             variant['dataset'] = 'ExAC'
-    genomeVariants = list(db.gnomadVariants2.find({'rsid': rsid}, projection={'_id': False}))
-    for variant in genomeVariants:
+    genome_variants = list(db.genome_variants.find({'rsid': rsid}, projection={'_id': False}))
+    for variant in genome_variants:
             variant['dataset'] = 'gnomAD'
-    variants = exomeVariants + genomeVariants
+    variants = exome_variants + genome_variants
     add_consequence_to_variants(variants)
     return variants
 
@@ -72,13 +72,13 @@ def get_variants_from_dbsnp(db, rsid):
         return None
     position = db.dbsnp.find_one({'rsid': rsid})
     if position:
-        exomeVariants = list(db.variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, projection={'_id': False}))
-        for variant in exomeVariants:
+        exome_variants = list(db.exome_variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, projection={'_id': False}))
+        for variant in exome_variants:
                 variant['dataset'] = 'ExAC'
-        genomeVariants = list(db.variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, projection={'_id': False}))
-        for variant in genomeVariants:
+        genome_variants = list(db.exome_variants.find({'xpos': {'$lte': position['xpos'], '$gte': position['xpos']}}, projection={'_id': False}))
+        for variant in genome_variants:
                 variant['dataset'] = 'gnomAD'
-        variants = exomeVariants + genomeVariants
+        variants = exome_variants + genome_variants
         add_consequence_to_variants(variants)
         return variants
     return []
@@ -261,17 +261,17 @@ def get_variants_in_region(db, chrom, start, stop):
     xstart = get_xpos(chrom, start)
     xstop = get_xpos(chrom, stop)
 
-    exomeVariants = list(db.variants.find({
+    exome_variants = list(db.exome_variants.find({
         'xpos': {'$lte': xstop, '$gte': xstart}
     }, projection={'_id': False}, limit=SEARCH_LIMIT))
-    for variant in exomeVariants:
+    for variant in exome_variants:
         variant['dataset'] = 'ExAC'
-    genomeVariants = list(db.gnomadVariants2.find({
+    genome_variants = list(db.genome_variants.find({
         'xpos': {'$lte': xstop, '$gte': xstart}
     }, projection={'_id': False}, limit=SEARCH_LIMIT))
-    for variant in genomeVariants:
+    for variant in genome_variants:
         variant['dataset'] = 'gnomAD'
-    variants = exomeVariants + genomeVariants
+    variants = exome_variants + genome_variants
     add_consequence_to_variants(variants)
     for variant in variants:
         remove_extraneous_information(variant)
@@ -339,7 +339,7 @@ def get_variants_in_gene_or_transcript(db, gene_id=None, transcript_id=None):
 
 
 
-    results = list(db.variants.find(query))
+    results = list(db.exome_variants.find(query))
     print("Retrieving %s ExAC v2 variants in %s exons of %s" % (len(results), len(exons), gene_id or transcript_id))
     for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if (x['Gene'] == gene_id or x['Feature'] == transcript_id)]
@@ -351,7 +351,7 @@ def get_variants_in_gene_or_transcript(db, gene_id=None, transcript_id=None):
         exac_variant_uuids.append(variant['uuid'])
         all_variants.append(variant)
 
-    results = list(db.gnomadVariants2.find(query))
+    results = list(db.genome_variants.find(query))
     print("Retrieving %s gnomad variants in %s exons of %s" % (len(results), len(exons), gene_id or transcript_id))
     for variant in results:
         variant['vep_annotations'] = [x for x in variant['vep_annotations'] if  (x['Gene'] == gene_id or x['Feature'] == transcript_id)]
