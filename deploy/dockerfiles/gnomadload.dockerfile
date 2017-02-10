@@ -11,4 +11,5 @@ CMD gcsfuse \
   --key-file=/var/www/deploy/keys/exac-gnomad-30ea80400948.json \
   gnomad-browser /var/data/loading_data && \
   ls /var/data/loading_data && \
-  python manage.py load_db
+  # python manage.py load_db
+  python manage.py load_exome_variants

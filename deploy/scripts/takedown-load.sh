@@ -12,4 +12,4 @@ kubectl delete rc gnomad-mongo-controller
 kubectl delete pod gnomad-load
 
 # Delete the cluster
-# gcloud container clusters delete gnomad-loading-cluster --zone us-east1-d
+gcloud container clusters delete gnomad-loading-cluster --zone us-east1-d

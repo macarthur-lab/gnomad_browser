@@ -19,6 +19,16 @@
         }
       },
       "spec": {
+        "volumes": [
+          {
+            "name": "gnomad-readviz",
+            "gcePersistentDisk": {
+              "pdName": "gnomad-readviz-exons",
+              "fsType": "ext4",
+              "readOnly": true
+            }
+          }
+        ],
         "containers": [
           {
             "name": "gnomad-serve",
@@ -27,6 +37,12 @@
               {
                 "containerPort": 80,
                 "protocol": "TCP"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "gnomad-readviz-exons",
+                "mountPath": "/local/data/readviz"
               }
             ],
             "securityContext": {

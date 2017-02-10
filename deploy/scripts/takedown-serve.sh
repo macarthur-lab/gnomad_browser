@@ -4,7 +4,7 @@
 set -e
 
 # Set project
-gcloud config set project gnomad-gnomad
+gcloud config set project exac-gnomad
 
 # Bring down previous replication controller
 kubectl delete service gnomad-serve
