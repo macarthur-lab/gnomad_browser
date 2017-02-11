@@ -5,7 +5,7 @@ set -e
 
 # Set project and kubernetes cluster
 gcloud config set project exac-gnomad
-kubectl config use-context gke_exac-gnomad_us-east1-d_exac-serving-cluster
+kubectl config use-context gke_exac-gnomad_us-east1-d_gnomad-serving-cluster
 
 # Start mongo -- takes 20 seconds or so
 kubectl create -f deploy/config/mongo-service.yaml

@@ -8,14 +8,14 @@ set -e
 gcloud config set project exac-gnomad
 
 # Create the disk, wait 5 minutes
-gcloud compute disks create --size=350GB --zone=us-east1-d gnomad-readviz-exons
+# gcloud compute disks create --size=1000GB --zone=us-east1-d gnomad-readviz-exons-gpd
 
-"$(dirname "$0")"/start-load-cluster.sh
+# "$(dirname "$0")"/start-load-cluster.sh
 
-# docker build -f deploy/dockerfiles/copygnomadreadviz.dockerfile -t gcr.io/exac-gnomad/copygnomadreadviz .
-# gcloud docker push gcr.io/exac-gnomad/copygnomadreadviz
+docker build -f deploy/dockerfiles/copygnomadreadviz.dockerfile -t gcr.io/exac-gnomad/copygnomadreadviz .
+gcloud docker push gcr.io/exac-gnomad/copygnomadreadviz
 
-sleep 300
+# sleep 60
 
 # start pod
 kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-loading-cluster

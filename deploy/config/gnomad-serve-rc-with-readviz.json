@@ -21,9 +21,9 @@
       "spec": {
         "volumes": [
           {
-            "name": "gnomad-readviz",
+            "name": "gnomad-readviz-exons-vol",
             "gcePersistentDisk": {
-              "pdName": "gnomad-readviz-exons",
+              "pdName": "gnomad-readviz-exons-gpd",
               "fsType": "ext4",
               "readOnly": true
             }
@@ -41,8 +41,8 @@
             ],
             "volumeMounts": [
               {
-                "name": "gnomad-readviz-exons",
-                "mountPath": "/local/data/readviz"
+                "name": "gnomad-readviz-exons-vol",
+                "mountPath": "/var/data/readviz"
               }
             ],
             "securityContext": {
