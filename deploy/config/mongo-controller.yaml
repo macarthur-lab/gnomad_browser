@@ -17,7 +17,7 @@ spec:
         ports:
         - name: gnomad-mongo
           containerPort: 27017
-          hostPort: 27017
+          # hostPort: 27017
         volumeMounts:
             - name: gnomad-mongo-persistent-storage
               mountPath: /data/db
