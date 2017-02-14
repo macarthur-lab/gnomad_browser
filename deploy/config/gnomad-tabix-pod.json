@@ -1,0 +1,43 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "gnomad-tabix-pod",
+    "labels": {
+      "state": "loading"
+    }
+  },
+  "spec": {
+    "restartPolicy": "Never",
+    "volumes": [
+      {
+        "name": "gnomad-tabix-vol",
+        "gcePersistentDisk": {
+          "pdName": "gnomad-tabix-temp",
+          "fsType": "ext4"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "gnomad-tabix-container",
+        "image": "gcr.io/exac-gnomad/gnomadtabix",
+        "volumeMounts": [
+          {
+            "name": "gnomad-tabix-vol",
+            "mountPath": "/var/data/tabixtemp"
+          }
+        ],
+        "securityContext": {
+          "privileged": true,
+          "capabilities": {
+            "add": [
+              "NET_ADMIN"
+            ]
+          }
+        },
+        "imagePullPolicy": "Always"
+      }
+    ]
+  }
+}

@@ -12,4 +12,5 @@ CMD gcsfuse \
   gnomad-browser /var/data/loading_data && \
   ls /var/data/loading_data && \
   # python manage.py load_db
-  python manage.py load_exome_variants
+  python manage.py load_exome_variants && \
+  python manage.py load_genome_variants

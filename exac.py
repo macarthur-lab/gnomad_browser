@@ -62,8 +62,8 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 32)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'exac2.vep.vcf.gz')),
-    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'autosomes_and_x/*.bgz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-test/*.bg')),
+    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-test/*.bgz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -175,40 +175,40 @@ def load_variants_in_file_using_tabix(sites_file, i, n, db_collection):
     except pymongo.errors.InvalidOperation:
         pass  # handle error when variant_generator is empty
 
-# def load_exome_variants():
-#
-#     db = get_db()
-#     #db.exome_variants.drop()
-#     #print("Dropped exome_variants")
-#
-#     # grab variants from sites VCF
-#     db.exome_variants.ensure_index('xpos')
-#     db.exome_variants.ensure_index('xstart')
-#     db.exome_variants.ensure_index('xstop')
-#     db.exome_variants.ensure_index('rsid')
-#     db.exome_variants.ensure_index('genes')
-#     db.exome_variants.ensure_index('transcripts')
-#
-#     sites_vcfs = app.config['EXOMES_SITES_VCFS']
-#     if len(sites_vcfs) == 0:
-#         raise IOError("No vcf file found")
-#     #elif len(sites_vcfs) > 1:
-#     #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
-#
-#     procs = []
-#     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-#     for sites_vcf in sites_vcfs:
-#         p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.exome_variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, exome_variants))
-#         p.start()
-#         procs.append(p)
-#         if len(procs) > num_procs:
-#             print("Waiting for: " + str(p))
-#             procs[0].join()
-#             del procs[0]
-#             print("Done waiting for: " + str(p))
-#     return procs
-#
-#     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
+def load_exome_variants_multi():
+
+    db = get_db()
+    #db.exome_variants.drop()
+    #print("Dropped exome_variants")
+
+    # grab variants from sites VCF
+    db.exome_variants.ensure_index('xpos')
+    db.exome_variants.ensure_index('xstart')
+    db.exome_variants.ensure_index('xstop')
+    db.exome_variants.ensure_index('rsid')
+    db.exome_variants.ensure_index('genes')
+    db.exome_variants.ensure_index('transcripts')
+
+    sites_vcfs = app.config['EXOMES_SITES_VCFS']
+    if len(sites_vcfs) == 0:
+        raise IOError("No vcf file found")
+    #elif len(sites_vcfs) > 1:
+    #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+
+    procs = []
+    num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
+    for sites_vcf in sites_vcfs:
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.exome_variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, exome_variants))
+        p.start()
+        procs.append(p)
+        if len(procs) > num_procs:
+            print("Waiting for: " + str(p))
+            procs[0].join()
+            del procs[0]
+            print("Done waiting for: " + str(p))
+    return procs
+
+    #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 def load_exome_variants():
     def load_variants(sites_file, i, n, db):
         variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)

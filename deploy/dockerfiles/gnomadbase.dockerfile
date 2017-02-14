@@ -7,7 +7,8 @@ ENV EXAC_DATA=/var/exac_data/ READ_VIZ=/mongo/readviz \
 
 COPY deploy/keys/* /var/www/deploy/keys/
 
-RUN apt-get update && apt-get install -y apt-transport-https && apt-get install -y apt-utils
+RUN apt-get update && \
+  apt-get install -y apt-transport-https apt-utils tabix
 
 # Install gcloud
 RUN echo "deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
