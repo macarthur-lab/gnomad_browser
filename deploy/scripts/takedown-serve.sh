@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # halt on any error
-set -e
+# set -e
 
 # Set project
 gcloud config set project exac-gnomad
+kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-serving-cluster
 
 # Bring down previous replication controller
 kubectl delete service gnomad-serve

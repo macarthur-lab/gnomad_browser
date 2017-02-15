@@ -48,6 +48,7 @@ cache = SimpleCache()
 
 SHARED_FILES_DIRECTORY = '../data/loading_data/shared_files'
 EXOME_FILES_DIRECTORY = '../data/loading_data/exomes'
+# EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/one_gene'
 GENOME_FILES_DIRECTORY = '../data/loading_data/genomes'
 READ_VIZ_DIRECTORY = '../data/readviz'
 
@@ -62,7 +63,9 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 32)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-test/*.bg')),
+    # EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'gnomad.exomes.sites.all.vcf.gz')),
+    # GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-test/*.bgz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz')),
     GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-test/*.bgz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
@@ -256,7 +259,7 @@ def load_all_variants_in_file(sites_file, db_collection):
 def load_genome_variants():
 
     db = get_db()
-    #db.genome_variants.drop()
+    db.genome_variants.drop()
     #print("Dropped db.genome_variants")
 
     # grab variants from sites VCF

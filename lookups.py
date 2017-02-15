@@ -302,8 +302,8 @@ def get_metrics(db, variant):
 
 
 def remove_extraneous_information(variant):
-    del variant['genotype_depths']
-    del variant['genotype_qualities']
+    # del variant['genotype_depths']
+    # del variant['genotype_qualities']
     del variant['transcripts']
     del variant['genes']
     del variant['orig_alt_alleles']

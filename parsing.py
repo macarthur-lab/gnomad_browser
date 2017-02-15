@@ -128,12 +128,12 @@ def get_variants_from_sites_vcf(sites_vcf):
                 variant['filter'] = fields[6]
                 variant['vep_annotations'] = vep_annotations
 
-                variant['allele_count'] = int(info_field['AC_Adj'].split(',')[i])
-                if not variant['allele_count'] and variant['filter'] == 'PASS': variant['filter'] = 'AC_Adj0' # Temporary filter
-                variant['allele_num'] = int(info_field['AN_Adj'])
+                variant['allele_count'] = int(info_field['AC'].split(',')[i])
+                if not variant['allele_count'] and variant['filter'] == 'PASS': variant['filter'] = 'AC0' # Temporary filter
+                variant['allele_num'] = int(info_field['AN'])
 
                 if variant['allele_num'] > 0:
-                    variant['allele_freq'] = variant['allele_count']/float(info_field['AN_Adj'])
+                    variant['allele_freq'] = variant['allele_count']/float(info_field['AN'])
                 else:
                     variant['allele_freq'] = None
 
@@ -153,11 +153,14 @@ def get_variants_from_sites_vcf(sites_vcf):
                 variant['genes'] = list({annotation['Gene'] for annotation in vep_annotations})
                 variant['transcripts'] = list({annotation['Feature'] for annotation in vep_annotations})
 
-                if 'DP_HIST' in info_field:
-                    hists_all = [info_field['DP_HIST'].split(',')[0], info_field['DP_HIST'].split(',')[i+1]]
+                if 'DP_HIST_ALL' in info_field:
+                    # hists_all = [info_field['DP_HIST'].split(',')[0], info_field['DP_HIST'].split(',')[i+1]]
+                    hists_all = [info_field['DP_HIST_ALL'], info_field['DP_HIST_ALT'].split(',')[i]]
+                    # print hists_all
                     variant['genotype_depths'] = [zip(dp_mids, map(int, x.split('|'))) for x in hists_all]
-                if 'GQ_HIST' in info_field:
-                    hists_all = [info_field['GQ_HIST'].split(',')[0], info_field['GQ_HIST'].split(',')[i+1]]
+                if 'GQ_HIST_ALL' in info_field:
+                    # hists_all = [info_field['GQ_HIST'].split(',')[0], info_field['GQ_HIST'].split(',')[i+1]]
+                    hists_all = [info_field['GQ_HIST_ALL'], info_field['GQ_HIST_ALT'].split(',')[i]]
                     variant['genotype_qualities'] = [zip(gq_mids, map(int, x.split('|'))) for x in hists_all]
 
                 yield variant
@@ -323,12 +326,12 @@ def get_exons_from_gencode_gtf(gtf_file):
 
 
 def get_cnvs_from_txt(cnv_txt_file):
-    """                                                                                                                                                                                                                                  
-    Parse gencode txt file;                                                                                                                                                                                                              
-    Returns iter of gene dicts                                                                                                                                                                                                           
     """
-    header = cnv_txt_file.next() # gets rid of the header                                                                                                                                                                                
-    #print header                                                                                                                                                                                                                        
+    Parse gencode txt file;
+    Returns iter of gene dicts
+    """
+    header = cnv_txt_file.next() # gets rid of the header
+    #print header
     for line in cnv_txt_file:
 
         fields = line.rsplit()
@@ -345,11 +348,11 @@ def get_cnvs_from_txt(cnv_txt_file):
         delpop60 = fields[10]
         duppop0 = fields[11]
         duppop60 = fields[12]
-        
 
-        #find gene from DB.genes, get ID                                                                                                                                                                                                 
-        #find exon of that gene that this CNV referes to from db.exons, get ID                                                                                                                                                           
-        #add the object reference to the cnv dict.                                                                                                                                                                                       
+
+        #find gene from DB.genes, get ID
+        #find exon of that gene that this CNV referes to from db.exons, get ID
+        #add the object reference to the cnv dict.
         cnv = {
             'transcript': transcript,
             'gene': gene,
@@ -371,7 +374,7 @@ def get_cnvs_from_txt(cnv_txt_file):
 
 
 def get_cnvs_per_gene(cnv_gene_file):
-    header = cnv_gene_file.next() # gets rid of the header                                                                                                                                                                               
+    header = cnv_gene_file.next() # gets rid of the header
     for line in cnv_gene_file:
 
         fields = line.rsplit()

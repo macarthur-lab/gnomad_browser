@@ -29,7 +29,7 @@ def load_base_coverage_genomes():
 
 @manager.command
 def load_exome_variants():
-    exac.load_exome_variants_multi()
+    exac.load_exome_variants()
 
 @manager.command
 def load_genome_variants():

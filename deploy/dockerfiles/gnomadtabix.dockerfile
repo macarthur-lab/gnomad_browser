@@ -11,7 +11,7 @@ RUN gcloud auth activate-service-account \
 RUN mkdir /var/data/
 
 CMD echo "Creating directories..." && \
-  # mkdir /var/data/tabixtemp/exomes /var/data/tabixtemp/genomes && \
+  mkdir /var/data/tabixtemp/exomes /var/data/tabixtemp/genomes && \
   echo "Copying VCF files from buckets..." && \
   gsutil -m cp gs://gnomad-browser/exomes/feb-2017-test/* /var/data/tabixtemp/exomes/ && \
   gsutil -m cp gs://gnomad-browser/genomes/feb-2017-test/* /var/data/tabixtemp/genomes/ && \
@@ -20,7 +20,7 @@ CMD echo "Creating directories..." && \
   echo "Exome files:" && \
   ls /var/data/tabixtemp/exomes/ && \
   echo "Creating tabix index for genomes..." && \
-  `for i in /var/data/tabixtemp/genomes/*gz; do tabix -f -p vcf $i; done`; \
+  `for i in /var/data/tabixtemp/genomes/*gz; do tabix -f -p vcf $i & done`; \
   echo "Done creating indexes for genomes: " && \
   ls /var/data/tabixtemp/genomes/ && \
   echo "Creating tabix index for exomes..." && \
