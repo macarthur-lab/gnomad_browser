@@ -64,6 +64,8 @@ def get_variants_from_sites_vcf(sites_vcf):
     dp_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
     line = '##INFO=<ID=GQ_HIST,Number=R,Type=String,Description="Histogram for GQ; Mids: 2.5|7.5|12.5|17.5|22.5|27.5|32.5|37.5|42.5|47.5|52.5|57.5|62.5|67.5|72.5|77.5|82.5|87.5|92.5|97.5">'
     gq_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
+    line = '##INFO=<ID=GQ_HIST,Number=R,Type=String,Description="Histogram for GQ; Mids: 2.5|7.5|12.5|17.5|22.5|27.5|32.5|37.5|42.5|47.5|52.5|57.5|62.5|67.5|72.5|77.5|82.5|87.5|92.5|97.5">'
+    ab_mids = map(float, line.split('Mids: ')[-1].strip('">').split('|'))
     #line = '##INFO=<ID=CSQ,Number=.,Type=String,Description="Consequence annotations from Ensembl VEP. Format: Allele|Consequence|IMPACT|SYMBOL|Gene|Feature_type|Feature|BIOTYPE|EXON|INTRON|HGVSc|HGVSp|cDNA_position|CDS_position|Protein_position|Amino_acids|Codons|Existing_variation|ALLELE_NUM|DISTANCE|STRAND|VARIANT_CLASS|MINIMISED|SYMBOL_SOURCE|HGNC_ID|CANONICAL|TSL|CCDS|ENSP|SWISSPROT|TREMBL|UNIPARC|SIFT|PolyPhen|DOMAINS|HGVS_OFFSET|GMAF|AFR_MAF|AMR_MAF|ASN_MAF|EAS_MAF|EUR_MAF|SAS_MAF|AA_MAF|EA_MAF|CLIN_SIG|SOMATIC|PHENO|PUBMED|MOTIF_NAME|MOTIF_POS|HIGH_INF_POS|MOTIF_SCORE_CHANGE|LoF_info|LoF_flags|LoF_filter|LoF|context|ancestral">'
 
     #vep_field_names = line.split('Format: ')[-1].strip('">').split('|')
@@ -162,6 +164,10 @@ def get_variants_from_sites_vcf(sites_vcf):
                     # hists_all = [info_field['GQ_HIST'].split(',')[0], info_field['GQ_HIST'].split(',')[i+1]]
                     hists_all = [info_field['GQ_HIST_ALL'], info_field['GQ_HIST_ALT'].split(',')[i]]
                     variant['genotype_qualities'] = [zip(gq_mids, map(int, x.split('|'))) for x in hists_all]
+                if 'AB_HIST_ALL' in info_field:
+                    # hists_all = [info_field['GQ_HIST'].split(',')[0], info_field['GQ_HIST'].split(',')[i+1]]
+                    hists_all = [info_field['AB_HIST_ALL'], info_field['AB_HIST_ALT'].split(',')[i]]
+                    variant['allele_balance'] = [zip(ab_mids, map(int, x.split('|'))) for x in hists_all]
 
                 yield variant
         except Exception:

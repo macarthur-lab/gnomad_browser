@@ -15,4 +15,4 @@ kubectl delete rc gnomad-mongo-controller
 kubectl delete rc gnomad-serve
 
 # Delete the cluster
-# gcloud container clusters delete gnomad-serving-cluster --zone us-east1-d
+gcloud container clusters delete gnomad-serving-cluster --zone us-east1-d

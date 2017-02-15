@@ -1,11 +1,660 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="container" style="font-size: 16px;">
-        <h1>Downloads</h1>
-        <p>
+        <h1 class="download-header">Downloads</h1>
+        <!-- <p>
             Please subscribe to <a href="https://groups.google.com/forum/#!forum/exac_data_announcements">our mailing list</a>
             to be notified when ExAC v2 and gnomAD VCFs are released.
+        </p> -->
+        <!-- <p>
+            Data for release from the Genome Aggregation Database (gnomAD) consortium are available via FTP <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release">here</a> <em>(updated 02-15-2016)</em> or through the links provided below.
+        </p> -->
+        <p class="download-header">
+            Genome Aggregation Database (gnomAD) data are available at the links provided below. The data can also be downloaded using <a href="https://cloud.google.com/storage/docs/gsutil"/>Google Storage Bucket command line utilities (gsutil)</a> to retrieve files from <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release-170215/">this public storage bucket</a>.
         </p>
+         <ul class="media-list">
+            <div class="media-body">
+                <div class="download-tables">
+                    <div class="download-table-group">
+                        <h3>Exome data</h3>
+                        <table class="downloads-table" border="1" cellspacing="0" cellpadding="0">
+                            <tbody align="center">
+                                <tr>
+                                    <td width="429 ">
+                                        <p>
+                                            <strong>Exome VCF Files</strong>
+                                        </p>
+                                    </td>
+                                    <td width="429">
+                                        <p>
+                                            <strong>Exome Coverage Files</strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                     <td width="428">
+                                         <p>
+                                             <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release">All autosomes sites VCF</a>
+                                         </p>
+                                     </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr1.cov.txt.gz">Chromosome 1 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                     <td width="428">
+                                         <p>
+                                             <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release">Chromosome X sites VCF</a>
+                                         </p>
+                                     </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr2.cov.txt.gz">Chromosome 2 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <td width="428">
+                                    <p>
+                                        <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release">Chromosome Y sites VCF</a>
+                                    </p>
+                                </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr3.cov.txt.gz">Chromosome 3 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr4.cov.txt.gz">Chromosome 4 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr5.cov.txt.gz">Chromosome 5 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr6.cov.txt.gz">Chromosome 6 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr7.cov.txt.gz">Chromosome 7 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr8.cov.txt.gz">Chromosome 8 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr9.cov.txt.gz">Chromosome 9 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr10.cov.txt.gz">Chromosome 10 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr11.cov.txt.gz">Chromosome 11 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr12.cov.txt.gz">Chromosome 12 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr13.cov.txt.gz">Chromosome 13 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr14.cov.txt.gz">Chromosome 14 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr15.cov.txt.gz">Chromosome 15 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr16.cov.txt.gz">Chromosome 16 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr17.cov.txt.gz">Chromosome 17 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr18.cov.txt.gz">Chromosome 18 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr19.cov.txt.gz">Chromosome 19 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr20.cov.txt.gz">Chromosome 20 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.ch21.cov.txt.gz">Chromosome 21 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chr22.cov.txt.gz">Chromosome 22 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chrX.cov.txt.gz">Chromosome X coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="429">
+
+                                    </td>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/exomes/coverage/exacv2.chrX.cov.txt.gz">Chromosome Y coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <!-- <tr>
+                                    <td width="857">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.1.vcf.bgz">Chromosome Y sites VCF</a>
+                                        </p>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="download-table-group">
+                        <h3>Genome data</h3>
+                        <table class="downloads-table" border="1" cellspacing="0" cellpadding="0">
+                        <tbody align="center">
+                            <tr>
+                                <td width="429 ">
+                                    <p>
+                                        <strong>Genome VCF Files</strong>
+                                    </p>
+                                </td>
+                                <td width="429">
+                                    <p>
+                                        <strong>Genome Coverage Files</strong>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.1.vcf.bgz">Chromosome 1 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr1.cov.txt.gz">Chromosome 1 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.2.vcf.bgz">Chromosome 2 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr1.cov.txt.gz">Chromosome 2 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.3.vcf.bgz">Chromosome 3 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr3.cov.txt.gz">Chromosome 3 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.4.vcf.bgz">Chromosome 4 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr4.cov.txt.gz">Chromosome 4 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.5.vcf.bgz">Chromosome 5 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr5.cov.txt.gz">Chromosome 5 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.6.vcf.bgz">Chromosome 6 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr6.cov.txt.gz">Chromosome 6 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.7.vcf.bgz">Chromosome 7 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr7.cov.txt.gz">Chromosome 7 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.8.vcf.bgz">Chromosome 8 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr8.cov.txt.gz">Chromosome 8 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.9.vcf.bgz">Chromosome 9 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr9.cov.txt.gz">Chromosome 9 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.10.vcf.bgz">Chromosome 10 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr10.cov.txt.gz">Chromosome 10 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.11.vcf.bgz">Chromosome 11 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr11.cov.txt.gz">Chromosome 11 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.12.vcf.bgz">Chromosome 12 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr12.cov.txt.gz">Chromosome 12 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.13.vcf.bgz">Chromosome 13 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr13.cov.txt.gz">Chromosome 13 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.14.vcf.bgz">Chromosome 14 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr14.cov.txt.gz">Chromosome 14 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.15.vcf.bgz">Chromosome 15 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr15.cov.txt.gz">Chromosome 15 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.16.vcf.bgz">Chromosome 16 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr16.cov.txt.gz">Chromosome 16 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.17.vcf.bgz">Chromosome 17 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr17.cov.txt.gz">Chromosome 17 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.18.vcf.bgz">Chromosome 18 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr18.cov.txt.gz">Chromosome 18 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.19.vcf.bgz">Chromosome 19 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr19.cov.txt.gz">Chromosome 19 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.20.vcf.bgz">Chromosome 20 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr20.cov.txt.gz">Chromosome 20 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.21.vcf.bgz">Chromosome 21 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.ch21.cov.txt.gz">Chromosome 21 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.22.vcf.bgz">Chromosome 22 sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chr22.cov.txt.gz">Chromosome 22 coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.X.vcf.bgz">Chromosome X sites VCF</a>
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/coverage/gnomad.chrX.cov.txt.gz">Chromosome X coverage</a>
+                                    </p>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="429">
+                                    <p>
+                                        &nbsp;
+                                    </p>
+                                </td>
+                                <td width="428">
+                                    <p>
+                                        &nbsp;
+                                    </p>
+                                </td>
+                            </tr>
+                             <!-- <tr>
+                                <td width="857">
+                                    <p>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release-170215/genomes/vcf/gnomad.genomes.sites.1.vcf.bgz">Chromosome Y sites VCF</a>
+                                    </p>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <!-- <h2>Reference data</h2> -->
+                <!-- <table class="downloads-table"border="1" cellspacing="0" cellpadding="0">
+                    <tbody align="center">
+                        <tr>
+                            <td width="357">
+                                <p>
+                                    <strong>FTP Link</strong>
+                                </p>
+                            </td>
+                            <td width="500">
+                                <p align="center">
+                                    <strong>Description</strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="357">
+                                <p>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage">Exome coverage</a>
+                                </p>
+                            </td>
+                            <td width="500">
+                                <p align="center">
+                                    Exome Per Base Coverage
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="357">
+                                <p>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage">Genome coverage</a>
+                                </p>
+                            </td>
+                            <td width="500">
+                                <p align="center">
+                                    Genome Per Base Coverage
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="357">
+                                <p>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/subsets">Subsets</a>
+                                </p>
+                            </td>
+                            <td width="500">
+                                <p align="center">
+                                    Non-TCGA VCF Subset
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> -->
+            </div>
 
     </div>
 {% endblock %}

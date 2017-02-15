@@ -611,3 +611,26 @@ TODO: come up with a better way to position tooltip
   background-color: #E0E0E0;
   /*border: none;*/
 }
+
+.download-header {
+  padding-left: 13px;
+}
+
+.download-tables {
+  display: flex;
+  flex-direction: row;
+  /*border: 1px solid blue;*/
+  margin-right: 10px;
+  /*width: 2000px;*/
+}
+
+.download-table-group {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.downloads-table {
+  margin-bottom: 20px;
+
+}

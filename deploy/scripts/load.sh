@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # halt on any error
-set -e
+# set -e
 
-
+"$(dirname "$0")"/start-load-cluster.sh
 
 # Set project
 gcloud config set project exac-gnomad

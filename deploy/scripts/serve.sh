@@ -3,6 +3,8 @@
 # halt on any error
 set -e
 
+"$(dirname "$0")"/start-serve-cluster.sh
+
 # Set project and kubernetes cluster
 gcloud config set project exac-gnomad
 kubectl config use-context gke_exac-gnomad_us-east1-d_gnomad-serving-cluster
