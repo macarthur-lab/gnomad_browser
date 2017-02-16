@@ -35,6 +35,14 @@ def load_exome_variants():
 def load_genome_variants():
     exac.load_genome_variants()
 
+@manager.command
+def drop_exome_variants():
+    exac.drop_exome_variants()
+
+@manager.command
+def drop_genome_variants():
+    exac.drop_genome_variants()
+
 
 @manager.command
 def reload_variants():

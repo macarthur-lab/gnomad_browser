@@ -50,6 +50,7 @@ SHARED_FILES_DIRECTORY = '../data/loading_data/shared_files'
 EXOME_FILES_DIRECTORY = '../data/loading_data/exomes'
 # EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/one_gene'
 GENOME_FILES_DIRECTORY = '../data/loading_data/genomes'
+# GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
 READ_VIZ_DIRECTORY = '../data/readviz'
 
 REGION_LIMIT = 1E5
@@ -63,10 +64,9 @@ app.config.update(dict(
     SECRET_KEY='development key',
     LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 32)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    # EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'gnomad.exomes.sites.all.vcf.gz')),
-    # GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-test/*.bgz')),
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-release/gnomad.exomes.sites.all.vcf.gz')),
+    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz')),
     GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-release/*.bgz')),
+    # GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'one_gene/*.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
@@ -213,18 +213,17 @@ def load_exome_variants_multi():
 
     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 def load_exome_variants():
-    def load_variants(sites_file, i, n, db):
+    def load_variants(sites_file, i, n):
+        db = get_db()
         variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
         try:
             db.exome_variants.insert(variants_generator, w=0)
         except pymongo.errors.InvalidOperation:
             pass  # handle error when variant_generator is empty
 
-    db = get_db()
-    db.exome_variants.drop()
-    print("Dropped db.exome_variants")
+    sites_vcfs = app.config['EXOMES_SITES_VCFS']
 
-    # grab variants from sites VCF
+    db = get_db()
     db.exome_variants.ensure_index('xpos')
     db.exome_variants.ensure_index('xstart')
     db.exome_variants.ensure_index('xstop')
@@ -232,7 +231,6 @@ def load_exome_variants():
     db.exome_variants.ensure_index('genes')
     db.exome_variants.ensure_index('transcripts')
 
-    sites_vcfs = app.config['EXOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
     elif len(sites_vcfs) > 1:
@@ -241,27 +239,26 @@ def load_exome_variants():
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for i in range(num_procs):
-        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs, db))
+        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs))
         p.start()
         procs.append(p)
     return procs
 
     #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
 
-def load_all_variants_in_file(sites_file, db_collection):
-    with gzip.open(sites_file) as f:
-        variants_generator = get_variants_from_sites_vcf(f)
-        try:
-            db_collection.insert(variants_generator, w=0)
-        except pymongo.errors.InvalidOperation:
-            pass  # handle error when variant_generator is empty
-
-def load_genome_variants():
-
+def drop_genome_variants():
     db = get_db()
     db.genome_variants.drop()
-    #print("Dropped db.genome_variants")
+    print("Dropped db.genome_variants")
 
+def drop_exome_variants():
+    db = get_db()
+    db.genome_variants.drop()
+    print("Dropped db.genome_variants")
+
+def load_all_variants_in_file(sites_file, word):
+    db = get_db()
+    print word
     # grab variants from sites VCF
     db.genome_variants.ensure_index('xpos')
     db.genome_variants.ensure_index('xstart')
@@ -270,6 +267,14 @@ def load_genome_variants():
     db.genome_variants.ensure_index('genes')
     db.genome_variants.ensure_index('transcripts')
 
+    with gzip.open(sites_file) as f:
+        variants_generator = get_variants_from_sites_vcf(f)
+        try:
+            db.genome_variants.insert(variants_generator, w=0)
+        except pymongo.errors.InvalidOperation:
+            pass  # handle error when variant_generator is empty
+
+def load_genome_variants():
     sites_vcfs = app.config['GENOMES_SITES_VCFS']
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
@@ -279,7 +284,8 @@ def load_genome_variants():
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for sites_vcf in sites_vcfs:
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.genome_variants))
+        print sites_vcf
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, 'Creating new process'))
         p.start()
         procs.append(p)
         if len(procs) > num_procs:

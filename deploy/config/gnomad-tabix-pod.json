@@ -22,6 +22,12 @@
       {
         "name": "gnomad-tabix-container",
         "image": "gcr.io/exac-gnomad/gnomadtabix",
+        "env": [
+          {
+            "name": "BUCKET_PATH",
+            "value": "gs://gnomad-browser/genomes/feb-2017-test"
+          }
+        ],
         "volumeMounts": [
           {
             "name": "gnomad-tabix-vol",
