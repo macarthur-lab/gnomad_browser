@@ -3,16 +3,18 @@
 # halt on any error
 # set -e
 
+. "$(dirname "$0")"/config.sh
+
 # Set project
-gcloud config set project exac-gnomad
-kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-serving-cluster
+gcloud config set project $GCLOUD_PROJECT
+kubectl config set-context $SERVING_CLUSTER
 
 # Bring down previous replication controller
-kubectl delete service gnomad-serve
-kubectl delete hpa gnomad-serve
-kubectl delete service gnomad-mongo
-kubectl delete rc gnomad-mongo-controller
-kubectl delete rc gnomad-serve
+kubectl delete service $SERVER_REPLICATION_CONTROLLER_NAME
+kubectl delete hpa $SERVER_REPLICATION_CONTROLLER_NAME
+kubectl delete rc $SERVER_REPLICATION_CONTROLLER_NAME
+kubectl delete service $MONGO_SERVICE_NAME
+kubectl delete rc $MONGO_REPLICATION_CONTROLLER
 
 # Delete the cluster
-gcloud container clusters delete gnomad-serving-cluster --zone us-east1-d
+gcloud container clusters delete $SERVING_CLUSTER_NAME --zone $GCLOUD_ZONE

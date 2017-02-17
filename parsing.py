@@ -142,10 +142,11 @@ def get_variants_from_sites_vcf(sites_vcf):
                 variant['pop_acs'] = dict([(POPS[x], int(info_field['AC_%s' % x].split(',')[i]) if ('AC_%s' % x) in info_field else 0) for x in POPS])
                 variant['pop_ans'] = dict([(POPS[x], int(info_field.get('AN_%s' % x, 0))) for x in POPS])
                 variant['pop_homs'] = dict([(POPS[x], int(info_field['Hom_%s' % x].split(',')[i] if ('Hom_%s' % x) in info_field else 0)) for x in POPS])
-                variant['ac_male'] = info_field['AC_Male']
-                variant['ac_female'] = info_field['AC_Female']
-                variant['an_male'] = info_field['AN_Male']
-                variant['an_female'] = info_field['AN_Female']
+                if variant['chrom'] not in ('X', 'Y'):
+                    variant['ac_male'] = info_field['AC_Male']
+                    variant['ac_female'] = info_field['AC_Female']
+                    variant['an_male'] = info_field['AN_Male']
+                    variant['an_female'] = info_field['AN_Female']
                 variant['hom_count'] = sum(variant['pop_homs'].values())
                 if variant['chrom'] in ('X', 'Y'):
                     variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i] if ('Hemi_%s' % x) in info_field else 0)) for x in POPS])

@@ -3,21 +3,34 @@
 # halt on any error
 # set -e
 
-"$(dirname "$0")"/start-load-cluster.sh
+. "$(dirname "$0")"/config.sh
 
-# Set project
-gcloud config set project exac-gnomad
-kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-loading-cluster
+gcloud config set project $GCLOUD_PROJECT
+kubectl config set-context $LOADING_CLUSTER
 
-# Create the replication controller
-kubectl create -f deploy/config/mongo-service.yaml
-kubectl create -f deploy/config/mongo-controller.yaml
+kubectl delete pod $LOADING_POD_NAME
 
-# Wait for mongo to initialize
-sleep 30
+if [[ $RESTART_MONGO = "true" ]]; then
+  # Stop mongo
+  kubectl delete service $MONGO_SERVICE_NAME
+  kubectl delete rc $MONGO_REPLICATION_CONTROLLER
+fi
 
-# load data
-kubectl create -f deploy/config/gnomad-load-pod.json
+if [[ $REBUILD_IMAGES = "all" ]]; then
+  "$(dirname "$0")"/images-build.sh
+  "$(dirname "$0")"/images-push.sh
+fi
 
-# copy readviz files
-# kubectl create -f deploy/config/copygnomadreadviz-pod.json
+if [[ $REBUILD_IMAGES = "specific" ]]; then
+  docker build -f "deploy/dockerfiles/${LOADING_IMAGE_DOCKERFILE}" -t "${LOADING_IMAGE_TAG}" .
+  gcloud docker push "${LOADING_IMAGE_TAG}"
+fi
+
+if [[ $RESTART_MONGO = "true" ]]; then
+  # Start mongo -- takes 20 seconds or so
+  kubectl create -f deploy/config/$MONGO_SERVICE_CONFIG
+  kubectl create -f deploy/config/$MONGO_CONTROLLER_CONFIG
+  sleep 30
+fi
+
+kubectl create -f deploy/config/$LOADING_POD_CONFIG

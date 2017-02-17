@@ -43,6 +43,9 @@ def drop_exome_variants():
 def drop_genome_variants():
     exac.drop_genome_variants()
 
+@manager.command
+def environment_test():
+    exac.environment_test()
 
 @manager.command
 def reload_variants():

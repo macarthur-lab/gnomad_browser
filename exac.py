@@ -46,11 +46,28 @@ CORS(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
+DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENV', 'development')
+
+
+if DEPLOYMENT_ENVIRONMENT == 'development':
+     EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
+     GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
+     EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF', 'exomes-feb2017-test/gnomad.exomes.sites.X.vcf.gz')))
+     GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'genomes-feb2017-test/*.bgz'))
+
+if DEPLOYMENT_ENVIRONMENT == 'production':
+    EXOME_FILES_DIRECTORY = '/var/data/loading_data/exomes'
+    GENOME_FILES_DIRECTORY = '/var/data/loading_data/genomes'
+    EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF')))
+    GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, os.getenv('GENOMES_VCF_GLOB')))
+
+if DEPLOYMENT_ENVIRONMENT == 'production_test':
+    EXOME_FILES_DIRECTORY = '/var/data/loading_data/exomes'
+    GENOME_FILES_DIRECTORY = '/var/data/loading_data/genomes'
+    EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF_TEST')))
+    GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, os.getenv('GENOMES_VCF_GLOB_TEST')))
+
 SHARED_FILES_DIRECTORY = '../data/loading_data/shared_files'
-EXOME_FILES_DIRECTORY = '../data/loading_data/exomes'
-# EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/one_gene'
-GENOME_FILES_DIRECTORY = '../data/loading_data/genomes'
-# GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
 READ_VIZ_DIRECTORY = '../data/readviz'
 
 REGION_LIMIT = 1E5
@@ -62,10 +79,10 @@ app.config.update(dict(
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',
-    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 32)),
+    LOAD_DB_PARALLEL_PROCESSES = int(os.getenv('LOAD_DB_PARALLEL_PROCESSES_NUMB', 2)),
     # contigs assigned to threads, so good to make this a factor of 24 (eg. 2,3,4,6,8)
-    EXOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz')),
-    GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'feb-2017-release/*.bgz')),
+    EXOMES_SITES_VCFS=EXOMES_SITES_VCFS,
+    GENOMES_SITES_VCFS=GENOMES_SITES_VCFS,
     # GENOMES_SITES_VCFS=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'one_gene/*.gz')),
     GENCODE_GTF=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'gencode.gtf.gz'),
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
@@ -88,17 +105,27 @@ app.config.update(dict(
     READ_VIZ_DIR=os.path.abspath(READ_VIZ_DIRECTORY),
 ))
 
+print app.config['GENOMES_SITES_VCFS']
+print app.config['EXOMES_SITES_VCFS']
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
+
+def environment_test():
+     print app.config['LOAD_DB_PARALLEL_PROCESSES']
+     print DEPLOYMENT_ENVIRONMENT
 
 def connect_db():
     """
     Connects to the specific database.
     """
-    # client = pymongo.MongoClient(host=app.config['DB_HOST'], port=app.config['DB_PORT'])
-    client = pymongo.MongoClient("mongodb://gnomad-mongo:27017")
+    if DEPLOYMENT_ENVIRONMENT == 'production' or DEPLOYMENT_ENVIRONMENT == 'production_test' :
+        client = pymongo.MongoClient("mongodb://gnomad-mongo:27017")
+    elif DEPLOYMENT_ENVIRONMENT == 'development':
+        client = pymongo.MongoClient(host=app.config['DB_HOST'], port=app.config['DB_PORT'])
     return client[app.config['DB_NAME']]
+
+
 
 
 def parse_tabix_file_subset(tabix_filenames, subset_i, subset_n, record_parser):
@@ -238,6 +265,8 @@ def load_exome_variants():
 
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
+    if num_procs > 24:
+        num_procs = 24
     for i in range(num_procs):
         p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs))
         p.start()
@@ -253,8 +282,8 @@ def drop_genome_variants():
 
 def drop_exome_variants():
     db = get_db()
-    db.genome_variants.drop()
-    print("Dropped db.genome_variants")
+    db.exome_variants.drop()
+    print("Dropped db.exome_variants")
 
 def load_all_variants_in_file(sites_file, word):
     db = get_db()

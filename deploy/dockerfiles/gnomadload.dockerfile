@@ -4,6 +4,8 @@ MAINTAINER MacArthur Lab
 
 COPY . /var/www/
 
+ENV LOAD_DB_PARALLEL_PROCESSES_NUMB=32
+
 RUN mkdir /var/data/; mkdir /var/data/loading_data
 
 CMD gcsfuse \
@@ -12,7 +14,8 @@ CMD gcsfuse \
   gnomad-browser /var/data/loading_data && \
   ls /var/data/loading_data && \
   # python manage.py load_db
-  python manage.py drop_exome_variants && \
-  python manage.py load_exome_variants
-  # python manage.py drop_genome_variants && \
-  # python manage.py load_genome_variants
+  # echo $DEPLOYMENT_ENV
+  # python manage.py drop_exome_variants && \
+  # python manage.py load_exome_variants && \
+  python manage.py drop_genome_variants && \
+  python manage.py load_genome_variants
