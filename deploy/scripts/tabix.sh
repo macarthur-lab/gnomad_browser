@@ -1,34 +1,28 @@
 #!/bin/bash
 
-# halt on any error
 # set -e
 
+. "$(dirname "$0")"/config.sh
+
 # Takedown pod if already running
-kubectl delete pod gnomad-tabix-pod
+kubectl delete pod $TABIX_POD_NAME
 
 # Set project
-gcloud config set project exac-gnomad
-kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-loading-cluster
+gcloud config set project $GCLOUD_PROJECT
+kubectl config set-context $LOADING_CLUSTER
 
-# Create the disk, wait 5 minutes
+# Create the disk
 # gcloud compute disks create --size=1000GB --zone=us-east1-d gnomad-tabix-temp
 
 # "$(dirname "$0")"/start-load-cluster.sh
 
-if [[ $1 = "rebuild" ]]; then
-  docker build -f deploy/dockerfiles/gnomadtabix.dockerfile -t gcr.io/exac-gnomad/gnomadtabix .
-
-  gcloud docker push gcr.io/exac-gnomad/gnomadtabix
+if [[ $REBUILD_IMAGE = "specific" ]]; then
+  docker build -f deploy/dockerfiles/$TABIX_IMAGE_DOCKERFILE -t $TABIX_IMAGE_TAG .
+  gcloud docker push $TABIX_IMAGE_TAG
 fi
 
-
-# sleep 60
-
 # start pod
-kubectl create -f deploy/config/gnomad-tabix-pod.json
-
-# takedown pod
-# kubectl delete pod gnomad-tabix-pod
+kubectl create -f deploy/config/$TABIX_POD_CONFIG
 
 # Delete
 # gcloud compute disks delete gnomad-tabix-temp --zone=us-east1-d

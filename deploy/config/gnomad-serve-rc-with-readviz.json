@@ -33,6 +33,28 @@
           {
             "name": "gnomad-serve",
             "image": "gcr.io/exac-gnomad/gnomadserve",
+            "env": [
+              {
+                "name": "DEPLOYMENT_ENV",
+                "value": "production"
+              },
+              {
+                "name": "EXOMES_SINGLE_VCF",
+                "value": "feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz"
+              },
+              {
+                "name": "GENOMES_VCF_GLOB",
+                "value": "feb-2017-release/*.bgz"
+              },
+              {
+                "name": "EXOMES_SINGLE_VCF_TEST",
+                "value": "feb-2017-test/gnomad.exomes.sites.all.vcf.gz"
+              },
+              {
+                "name": "GENOMES_VCF_GLOB_TEST",
+                "value": "feb-2017-test/*.bgz"
+              }
+            ],
             "ports": [
               {
                 "containerPort": 80,

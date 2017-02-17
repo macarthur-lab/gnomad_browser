@@ -2,7 +2,7 @@
   "kind": "Pod",
   "apiVersion": "v1",
   "metadata": {
-    "name": "gnomad-load",
+    "name": "gnomad-copyreadviz",
     "labels": {
       "state": "loading"
     }
@@ -11,33 +11,20 @@
     "restartPolicy": "Never",
     "volumes": [
       {
-        "name": "gnomad-readviz",
+        "name": "gnomad-readviz-exons-vol",
         "gcePersistentDisk": {
-          "pdName": "gnomad-readviz",
+          "pdName": "gnomad-readviz-exons-gpd",
           "fsType": "ext4"
         }
       }
     ],
     "containers": [
       {
-        "name": "gnomad-load",
-        "image": "gcr.io/exac-gnomad/gnomadload",
-        "securityContext": {
-          "privileged": true,
-          "capabilities": {
-            "add": [
-              "NET_ADMIN"
-            ]
-          }
-        },
-        "imagePullPolicy": "Always"
-      },
-      {
-        "name": "exac-load",
-        "image": "gcr.io/exac-gnomad/copygnomadreadviz",
+        "name": "gnomad-copyreadviz",
+        "image": "gcr.io/exac-gnomad/gnomadcopyreadviz",
         "volumeMounts": [
           {
-            "name": "gnomad-readviz",
+            "name": "gnomad-readviz-exons-vol",
             "mountPath": "/var/data/readviz"
           }
         ],

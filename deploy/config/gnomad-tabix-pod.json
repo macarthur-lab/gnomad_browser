@@ -25,7 +25,7 @@
         "env": [
           {
             "name": "BUCKET_PATH",
-            "value": "gs://gnomad-browser/genomes/feb-2017-test"
+            "value": "gs://gnomad-browser/exomes/feb-2017-release"
           }
         ],
         "volumeMounts": [
