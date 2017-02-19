@@ -11,7 +11,7 @@ kubectl create -f deploy/config/mongo-service.yaml
 kubectl create -f deploy/config/mongo-controller.yaml
 
 # Wait for mongo to initialize
-sleep 120
+# sleep 120
 
 # load data
 kubectl create -f deploy/config/gnomad-precalculate-pod.json
