@@ -24,7 +24,7 @@
           },
           {
             "name": "EXOMES_SINGLE_VCF",
-            "value": "feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz"
+            "value": "feb-2017-release/gnomad.exomes.sites.vcf.gz"
           },
           {
             "name": "GENOMES_VCF_GLOB",

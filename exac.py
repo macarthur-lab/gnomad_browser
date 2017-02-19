@@ -52,7 +52,7 @@ DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENV', 'development')
 if DEPLOYMENT_ENVIRONMENT == 'development':
      EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
      GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
-     EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF', 'exomes-feb2017-test/gnomad.exomes.sites.X.vcf.gz')))
+     EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF', 'feb-x-chromosome/gnomad.exomes.sites.Y.vcf.bgz')))
      GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'genomes-feb2017-test/*.bgz'))
 
 if DEPLOYMENT_ENVIRONMENT == 'production':
@@ -891,20 +891,21 @@ def get_gene_data(db, gene_id, gene, request_type, cache_key):
 
 @app.route('/gene/<gene_id>')
 def gene_page(gene_id):
-    if gene_id in GENES_TO_CACHE:
-        return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
-        print 'accessing from gene page'
-    else:
-        db = get_db()
-        gene = lookups.get_gene(db, gene_id)
-        if gene is None:
-            abort(404)
-        cache_key = 'template-gene-{}'.format(gene_id)
-        template = cache.get(cache_key)
-        if template is None:
-            template = get_gene_data(db, gene_id, gene, 'template', cache_key)
-        print 'Rendering gene: %s' % gene_id
-        return template
+    # if gene_id in GENES_TO_CACHE:
+    #
+    #     return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
+    #     print 'accessing from gene page'
+    # else:
+    db = get_db()
+    gene = lookups.get_gene(db, gene_id)
+    if gene is None:
+        abort(404)
+    cache_key = 'template-gene-{}'.format(gene_id)
+    template = cache.get(cache_key)
+    if template is None:
+        template = get_gene_data(db, gene_id, gene, 'template', cache_key)
+    print 'Rendering gene: %s' % gene_id
+    return template
 
 @app.route('/api/gene/<gene_id>')
 def gene_api(gene_id):

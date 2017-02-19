@@ -39,5 +39,6 @@ fi
 # Start the server and expose to the internet w/ autoscaling & load balancing
 kubectl create -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
 kubectl expose rc $SERVER_REPLICATION_CONTROLLER_NAME --type="LoadBalancer"
+# --load-balancer-ip=104.199.232.124
 # --load-balancer-ip=35.185.33.81
 kubectl autoscale rc $SERVER_REPLICATION_CONTROLLER_NAME --min=1 --max=1 --cpu-percent=80

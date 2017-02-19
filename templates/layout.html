@@ -67,9 +67,9 @@
 
 </head>
 <body>
-<div class="container-fluid disclaimer">
+<!-- <div class="container-fluid disclaimer">
     <p>This resource is still in early beta mode and we are actively working to improve the filtering of variant calls. All data on this website should be treated with caution.</p>
-</div>
+</div> -->
 <nav class="navbar navbar-default" role="navigation" style="background: #222;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -79,7 +79,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/" style="color: white; font-weight: bold; float: left; font-size: 15px;">gnomAD browser beta</a>
+            <a class="navbar-brand" href="/" style="color: white; font-weight: bold; float: left; font-size: 15px;">gnomAD browser</a>
             <div class="col-xs-5" id="navbar_form_container">
                 <form action="/awesome" class="navbar-form" role="search">
                     <div class="form-group" id="navbar-awesomebar">
@@ -111,25 +111,5 @@
         </a>
     </p>
 </div>
-{#<div id="header">#}
-{#    <div class="container">#}
-{#        <span>#}
-{#            <a href="/" style="color: white; font-weight: bold; float: left;">ExAC Browser (Beta)</a>#}
-{#        </span>#}
-{#        <form action="/awesome" class="navbar-form navbar-left" role="search">#}
-{#            <div class="form-group">#}
-{#                <input type="submit" style="display: none;"/>#}
-{#                <input id="navbar-searchbox-input" name="query" class="form-control" type="text" placeholder="Gene, transcript, variant, or region"/>#}
-{#                <input type="submit" style="position: absolute; left: -9999px"/>#}
-{#            </div>#}
-{#        </form>#}
-{#        <div id="header-links">#}
-{#            <a href="/">Home</a> |#}
-{#            <a href="/downloads">Downloads</a> |#}
-{#            <a href="/terms">Terms</a> |#}
-{#            <a href="/about">About</a>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
 {% block body %}{% endblock %}
 </body>

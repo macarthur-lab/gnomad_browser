@@ -18,6 +18,8 @@ POPS = {
     'OTH': 'Other'
 }
 
+def par(chrom, pos):
+    return (chrom == 'X' and (60001 <= pos <= 2699520) or (154931044 <= pos <= 155260560))
 
 def get_base_coverage_from_file(base_coverage_file):
     """
@@ -127,7 +129,7 @@ def get_variants_from_sites_vcf(sites_vcf):
                     for x in alt_alleles
                 ]
                 variant['site_quality'] = float(fields[5])
-                variant['filter'] = fields[6]
+                variant['filter'] = info_field['AS_FilterStatus'].split(',')[i]
                 variant['vep_annotations'] = vep_annotations
 
                 variant['allele_count'] = int(info_field['AC'].split(',')[i])
@@ -148,9 +150,12 @@ def get_variants_from_sites_vcf(sites_vcf):
                     variant['an_male'] = info_field['AN_Male']
                     variant['an_female'] = info_field['AN_Female']
                 variant['hom_count'] = sum(variant['pop_homs'].values())
-                if variant['chrom'] in ('X', 'Y'):
-                    variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i] if ('Hemi_%s' % x) in info_field else 0)) for x in POPS])
-                    variant['hemi_count'] = sum(variant['pop_hemis'].values())
+                if variant['chrom'] == 'X':
+                    if not par(variant['chrom'], variant['pos']):
+                        variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i] if ('Hemi_%s' % x) in info_field else 0)) for x in POPS])
+                        variant['hemi_count'] = sum(variant['pop_hemis'].values())
+                if variant['chrom'] == 'Y':
+                    variant['pop_hemis'] = variant['pop_acs']
                 variant['quality_metrics'] = dict([(x, info_field[x]) for x in METRICS if x in info_field])
 
                 variant['genes'] = list({annotation['Gene'] for annotation in vep_annotations})

@@ -21,6 +21,7 @@ export default {
     // 'transcripts',
     // 'vep_annotations',
     'variant_id',
+    'par_region',
   ],
   sumFields: [
     'ac_female',

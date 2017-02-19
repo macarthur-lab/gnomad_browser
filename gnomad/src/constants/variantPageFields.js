@@ -21,6 +21,7 @@ export default {
     'transcripts',
     // 'vep_annotations',
     'variant_id',
+    'par_region',
   ],
   sumFields: [
     'ac_female',
@@ -37,7 +38,7 @@ export default {
     'pop_acs',
     'pop_ans',
     'pop_homs',
-    // 'pop_hemis',
+    'pop_hemis',
   ],
   uniqueFields: [
     'ac_female',

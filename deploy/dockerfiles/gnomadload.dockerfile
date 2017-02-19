@@ -1,7 +1,7 @@
 FROM gcr.io/exac-gnomad/gnomadbase
 
 MAINTAINER MacArthur Lab
-
+#
 COPY . /var/www/
 
 ENV LOAD_DB_PARALLEL_PROCESSES_NUMB=32
@@ -15,7 +15,7 @@ CMD gcsfuse \
   ls /var/data/loading_data && \
   # python manage.py load_db
   # echo $DEPLOYMENT_ENV
-  # python manage.py drop_exome_variants && \
-  # python manage.py load_exome_variants
+  python manage.py drop_exome_variants && \
+  python manage.py load_exome_variants && \
   python manage.py drop_genome_variants && \
   python manage.py load_genome_variants
