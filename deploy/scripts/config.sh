@@ -9,9 +9,10 @@ export SERVING_CLUSTER_NAME=gnomad-serving-cluster
 export SERVING_CLUSTER=gke_exac-gnomad_us-east1-d_gnomad-serving-cluster
 
 # Options:
-export REBUILD_IMAGES=all # Which images to rebuild: none, all, specific?
+export LOAD_BALANCER_IP=35.185.14.139
+export REBUILD_IMAGES=none # Which images to rebuild: none, all, specific?
 export RESTART_MONGO=false # Restart mongo on every script launch?
-export MONITOR_LOADING=true # Start server on the loading cluster rather than serving cluster.
+export MONITOR_LOADING=false # Start server on the loading cluster rather than serving cluster.
 
 # Mongo config
 export MONGO_CONTROLLER_CONFIG=mongo-controller.yaml
