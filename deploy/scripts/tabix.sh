@@ -2,7 +2,7 @@
 
 # set -e
 
-. "$(dirname "$0")"/config.sh
+. "$(dirname "$0")"/../config/config.sh
 
 # Takedown pod if already running
 kubectl delete pod $TABIX_POD_NAME

@@ -1,12 +1,65 @@
 import jinja2
 import os
-#
-# if len(sys.argv) != 2:
-#   print("usage: {} [template-file]".format(sys.argv[0]), file=sys.stderr)
-#   sys.exit(1)
+import stat
+from os import listdir
 
-template_file = '../templates/template-mongo-service.yaml'
-template_path = os.path.join(os.path.dirname(__file__), template_file)
+template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
+config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
+template_file_list = os.listdir(template_folder_path)
 
-with open(template_path, "r") as f:
-  print jinja2.Template(f.read()).render(name='gnomad',  port=27017)
+config = {
+  # gcloud config
+  'GCLOUD_PROJECT': 'exac-gnomad',
+  'GCLOUD_ZONE': 'us-east1-d',
+
+  # infrastructure config
+  'EXTERNAL_IP': '35.185.14.139',
+  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
+  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
+  'MONGO_PORT': 27017,
+  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
+  'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
+
+  'LOADING_CLUSTER_NAME': 'gnomad-dev-cluster',
+  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
+  'LOADING_MACHINE_TYPE': 'n1-highmem-32',
+  'LOAD_DB_PARALLEL_PROCESSES_NUMB': 32,
+
+  'SERVING_CLUSTER_NAME': 'gnomad-dev-cluster',
+  'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
+  'SERVER_MACHINE_TYPE': 'n1-standard-4',
+  'SERVING_NODES': 1,
+  'SERVING_AUTOSCALE_MINIMUM': 2,
+  'SERVING_AUTOSCALE_MAXIMUM': 10,
+  'SERVING_AUTOSCALE_MAXIMUM_CPU': 70,
+  'READVIZ_VOLUME': 'gnomad-readviz-exons-vol',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+
+  # browser config
+  'PROJECT_NAME': 'gnomad',
+  'BROWSER_VERSION': '0.0.1-beta',
+  'DEPLOYMENT_ENV': 'production',
+
+  # data config
+  'DATA_VERSION': '170219-release',
+  'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
+  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-release'
+}
+
+for template_file_name in template_file_list:
+  template_file_full_path = os.path.join(template_folder_path, template_file_name)
+  with open(template_file_full_path, "r") as template:
+    parsed = jinja2.Template(template.read()).render(config)
+    if template_file_name == 'template-config.sh':
+      configsh = os.path.join(config_folder_path, 'config.sh')
+      with open(configsh, "wb") as fh:
+        st = os.stat(configsh)
+        os.chmod(configsh, st.st_mode | 0111)
+        fh.write(parsed)
+    else:
+      parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_NAME']))
+      with open(parsed_file_path, "wb") as fh:
+        fh.write(parsed)

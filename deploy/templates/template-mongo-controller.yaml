@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: {{ PROJECT_NAME }}-mongo
+  name: {{ PROJECT_NAME }}-mongo-controller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: {{ PROJECT_NAME }}-mongo
+    spec:
+      containers:
+      - image: mongo
+        name: {{ PROJECT_NAME }}-mongo
+        ports:
+        - name: {{ PROJECT_NAME }}-mongo
+          containerPort: {{ MONGO_PORT }}
+          # hostPort: {{ MONGO_PORT }}
+        volumeMounts:
+            - name: {{ PROJECT_NAME }}-mongo-persistent-storage
+              mountPath: /data/db
+      volumes:
+        - name: {{ PROJECT_NAME }}-mongo-persistent-storage
+          gcePersistentDisk:
+            pdName: {{ PROJECT_NAME }}-mongo-disk
+            fsType: ext4

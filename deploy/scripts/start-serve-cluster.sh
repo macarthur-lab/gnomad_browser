@@ -3,8 +3,10 @@
 # halt on any error
 set -e
 
-gcloud container clusters create gnomad-serving-cluster \
---machine-type n1-standard-4 \
---zone us-east1-d \
---num-nodes 1 \
---project exac-gnomad
+. "$(dirname "$0")"/../config/config.sh
+
+gcloud container clusters create $SERVING_CLUSTER_NAME \
+--machine-type $SERVER_MACHINE_TYPE \
+--zone $GCLOUD_ZONE \
+--num-nodes $SERVING_NODES \
+--project $GCLOUD_PROJECT

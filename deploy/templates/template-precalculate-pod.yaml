@@ -1,0 +1,29 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: {{ PROJECT_NAME }}-precalculate
+  labels:
+    state: loading
+spec:
+  restartPolicy: Never
+  containers:
+  - name: {{ PROJECT_NAME }}-precalculate
+    image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}precalculate
+    env:
+    - name: DEPLOYMENT_ENV
+      value: production
+    - name: EXOMES_SINGLE_VCF
+      value: {{ EXOMES_SINGLE_VCF }}
+    - name: GENOMES_VCF_GLOB
+      value: {{ GENOMES_VCF_GLOB }}
+    - name: EXOMES_SINGLE_VCF_TEST
+      value: {{ EXOMES_SINGLE_VCF_TEST }}
+    - name: GENOMES_VCF_GLOB_TEST
+      value: {{ GENOMES_VCF_GLOB_TEST }}
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN
+    imagePullPolicy: Always

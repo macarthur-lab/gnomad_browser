@@ -1,0 +1,50 @@
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: {{ PROJECT_NAME }}-serve
+  labels:
+    state: serving
+spec:
+  replicas: 1
+  selector:
+    app: {{ PROJECT_NAME }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ PROJECT_NAME }}-app
+    spec:
+      volumes:
+      - name: {{ READVIZ_VOLUME }}
+        gcePersistentDisk:
+          pdName: {{ READVIZ_DISK }}
+          fsType: ext4
+          readOnly: true
+      containers:
+      - name: {{ PROJECT_NAME }}-serve
+        image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve
+        env:
+        - name: DEPLOYMENT_ENV
+          value: production
+        - name: EXOMES_SINGLE_VCF
+          value: {{ EXOMES_SINGLE_VCF }}
+        - name: GENOMES_VCF_GLOB
+          value: {{ GENOMES_VCF_GLOB }}
+        - name: EXOMES_SINGLE_VCF_TEST
+          value: {{ EXOMES_SINGLE_VCF_TEST }}
+        - name: GENOMES_VCF_GLOB_TEST
+          value: {{ GENOMES_VCF_GLOB_TEST }}
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: {{ READVIZ_VOLUME }}
+          mountPath: "/var/data/readviz"
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+        imagePullPolicy: Always
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst

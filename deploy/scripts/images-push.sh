@@ -3,11 +3,12 @@
 # halt on any error
 set -e
 
+. "$(dirname "$0")"/../config/config.sh
+
 # Set project
-gcloud config set project exac-gnomad
+gcloud config set project ${GCLOUD_PROJECT}
 
 # Push docker images
-gcloud docker push gcr.io/exac-gnomad/gnomadbase
-gcloud docker push gcr.io/exac-gnomad/gnomadload
-gcloud docker push gcr.io/exac-gnomad/gnomadserve
-gcloud docker push gcr.io/exac-gnomad/gnomadprecalculate
+gcloud docker push "${BASE_IMAGE_TAG}"
+gcloud docker push "${LOADING_IMAGE_TAG}"
+gcloud docker push "${SERVER_IMAGE_TAG}"

@@ -3,7 +3,7 @@ w#!/bin/bash
 # halt on any error
 # set -e
 
-. "$(dirname "$0")"/config.sh
+. "$(dirname "$0")"/../config/config.sh
 
 # Set project
 gcloud config set project $GCLOUD_PROJECT

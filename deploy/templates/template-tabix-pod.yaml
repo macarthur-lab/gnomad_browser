@@ -1,0 +1,29 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: {{ PROJECT_NAME }}-tabix-pod
+  labels:
+    state: loading
+spec:
+  restartPolicy: Never
+  volumes:
+  - name: {{ PROJECT_NAME }}-tabix-vol
+    gcePersistentDisk:
+      pdName: {{ PROJECT_NAME }}-tabix-temp
+      fsType: ext4
+  containers:
+  - name: {{ PROJECT_NAME }}-tabix-container
+    image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}tabix
+    env:
+    - name: BUCKET_PATH
+      value: {{ TABIX_BUCKET_PATH }}
+    volumeMounts:
+    - name: {{ PROJECT_NAME }}-tabix-vol
+      mountPath: "/var/data/tabixtemp"
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN
+    imagePullPolicy: Always

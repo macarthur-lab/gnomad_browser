@@ -19,7 +19,7 @@ gcloud docker push gcr.io/exac-gnomad/gnomadcopyreadviz
 
 # start pod
 kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-loading-cluster
-kubectl create -f deploy/config/gnomad-copy-readviz-pod.json
+kubectl create -f deploy/config/gnomad-copy-readviz-pod.yaml
 
 # takedown pod
 # kubectl delete pod gnomad-copyreadviz

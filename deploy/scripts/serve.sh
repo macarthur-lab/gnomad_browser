@@ -3,7 +3,7 @@
 # halt on any error
 # set -e
 
-. "$(dirname "$0")"/config.sh
+. "$(dirname "$0")"/../config/config.sh
 
 gcloud config set project $GCLOUD_PROJECT
 kubectl config set-context $SERVING_CLUSTER
@@ -38,6 +38,12 @@ fi
 
 # Start the server and expose to the internet w/ autoscaling & load balancing
 kubectl create -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
-kubectl expose rc $SERVER_REPLICATION_CONTROLLER_NAME --type="LoadBalancer" --load-balancer-ip="${LOAD_BALANCER_IP}"
 
-kubectl autoscale rc $SERVER_REPLICATION_CONTROLLER_NAME --min=1 --max=1 --cpu-percent=80
+kubectl expose rc $SERVER_REPLICATION_CONTROLLER_NAME \
+--type="LoadBalancer" \
+--load-balancer-ip="${LOAD_BALANCER_IP}"
+
+kubectl autoscale rc $SERVER_REPLICATION_CONTROLLER_NAME \
+--min=$SERVING_AUTOSCALE_MINIMUM \
+--max=$SERVING_AUTOSCALE_MAXIMUM \
+--cpu-percent=$SERVING_AUTOSCALE_MAXIMUM_CPU

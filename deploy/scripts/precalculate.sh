@@ -4,9 +4,12 @@
 # set -e
 
 # Set project
-gcloud config set project exac-gnomad
+gcloud config set project {{ GCLOUD_PROJECT }}
 
-kubectl delete pod gnomad-precalculate
+kubectl delete pod {{ PROJECT_NAME }}-precalculate-pod
+
+docker build -f deploy/dockerfiles/gnomadprecalculate.dockerfile -t gcr.io/exac-gnomad/gnomadprecalculate .
+gcloud docker push gcr.io/exac-gnomad/gnomadprecalculate
 
 if [[ $REBUILD_IMAGES = "all" ]]; then
   "$(dirname "$0")"/images-build.sh
@@ -21,4 +24,4 @@ fi
 # sleep 120
 
 # load data
-kubectl create -f deploy/config/gnomad-precalculate-pod.json
+kubectl create -f deploy/config/gnomad-precalculate-pod.yaml
