@@ -41,7 +41,7 @@ kubectl create -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
 
 kubectl expose rc $SERVER_REPLICATION_CONTROLLER_NAME \
 --type="LoadBalancer" \
---load-balancer-ip="${LOAD_BALANCER_IP}"
+# --load-balancer-ip="${LOAD_BALANCER_IP}"
 
 kubectl autoscale rc $SERVER_REPLICATION_CONTROLLER_NAME \
 --min=$SERVING_AUTOSCALE_MINIMUM \

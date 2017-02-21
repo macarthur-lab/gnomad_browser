@@ -19,10 +19,10 @@ spec:
           containerPort: {{ MONGO_PORT }}
           # hostPort: {{ MONGO_PORT }}
         volumeMounts:
-            - name: {{ PROJECT_NAME }}-mongo-persistent-storage
+            - name: {{ MONGO_VOLUME }}
               mountPath: /data/db
       volumes:
-        - name: {{ PROJECT_NAME }}-mongo-persistent-storage
+        - name: {{ MONGO_VOLUME }}
           gcePersistentDisk:
-            pdName: {{ PROJECT_NAME }}-mongo-disk
+            pdName: {{ MONGO_DISK }}
             fsType: ext4

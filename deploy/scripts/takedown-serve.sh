@@ -17,4 +17,4 @@ kubectl delete service $MONGO_SERVICE_NAME
 kubectl delete rc $MONGO_REPLICATION_CONTROLLER
 
 # Delete the cluster
-gcloud container clusters delete $SERVING_CLUSTER_NAME --zone $GCLOUD_ZONE
+# gcloud container clusters delete $SERVING_CLUSTER_NAME --zone $GCLOUD_ZONE

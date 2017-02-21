@@ -20,6 +20,8 @@ export MONGO_CONTROLLER_CONFIG={{ PROJECT_NAME }}-mongo-controller.yaml
 export MONGO_SERVICE_CONFIG={{ PROJECT_NAME }}-mongo-service.yaml
 export MONGO_SERVICE_NAME={{ PROJECT_NAME }}-mongo
 export MONGO_REPLICATION_CONTROLLER={{ PROJECT_NAME }}-mongo-controller
+export MONGO_VOLUME={{ MONGO_VOLUME }}
+export MONGO_DISK={{ MONGO_DISK }}
 
 # Base image config
 export BASE_IMAGE_PREFIX="gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}base"
