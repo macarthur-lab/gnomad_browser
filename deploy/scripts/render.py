@@ -64,16 +64,16 @@ development_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-dev-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
-  'LOAD_DB_PARALLEL_PROCESSES_NUMB': 32,
+  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
   # serving
   'SERVING_CLUSTER_NAME': 'gnomad-dev-cluster',
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-1',
-  'SERVING_NODES': 1,
-  'SERVING_AUTOSCALE_MINIMUM': 1,
-  'SERVING_AUTOSCALE_MAXIMUM': 1,
-  'SERVING_AUTOSCALE_MAXIMUM_CPU': 70,
+  'SERVING_NODES': '1',
+  'SERVING_AUTOSCALE_MINIMUM': '1',
+  'SERVING_AUTOSCALE_MAXIMUM': '1',
+  'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
   'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol',
@@ -82,25 +82,24 @@ development_config = {
   # mongo config
   'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
-  'MONGO_HOST': 'gnomad-dev-mongo',
-  'MONGO_PORT': '27017',
-  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
+  'MONGO_HOST': 'gnomad-d-mongo',
+  'MONGO_PORT': 27017,
+  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
 
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'ENVIRONMENT_NAME': '',
+  'ENVIRONMENT_NAME': 'd',
   'BROWSER_VERSION': '0.0.1-beta',
-  'DEPLOYMENT_ENV': 'production_test',
-
+  'DEPLOYMENT_ENV': 'production',
   # data config
   'DATA_VERSION': '170219-release',
   'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
 
   # tabix
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-release',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
@@ -115,6 +114,16 @@ else:
 # def ensure_dir(file_path):
 #     if not os.path.exists(config_folder_path):
 #         os.makedirs(directory)
+
+print 'Cleaning previous files...'
+for the_file in os.listdir(config_folder_path):
+  file_path = os.path.join(config_folder_path, the_file)
+  try:
+    if os.path.isfile(file_path):
+        os.unlink(file_path)
+    #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+  except Exception as e:
+    print(e)
 
 print 'Parsing templates...'
 for template_file_name in template_file_list:

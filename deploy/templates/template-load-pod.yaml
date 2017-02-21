@@ -16,7 +16,7 @@ spec:
     - name: MONGO_HOST
       value: {{ MONGO_HOST }}
     - name: MONGO_PORT
-      value: {{ MONGO_PORT }}
+      value: '{{ MONGO_PORT }}'
     - name: LOAD_DB_PARALLEL_PROCESSES_NUMB
       value: {{ LOAD_DB_PARALLEL_PROCESSES_NUMB }}
     - name: EXOMES_SINGLE_VCF

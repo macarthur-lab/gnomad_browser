@@ -28,9 +28,9 @@ fi
 
 if [[ $RESTART_MONGO = "true" ]]; then
   # Start mongo -- takes 20 seconds or so
-  kubectl create -f deploy/config/$MONGO_SERVICE_CONFIG
-  kubectl create -f deploy/config/$MONGO_CONTROLLER_CONFIG
+  kubectl create -f deploy/config/$MONGO_SERVICE_CONFIG --validate=false
+  kubectl create -f deploy/config/$MONGO_CONTROLLER_CONFIG --validate=false
   sleep 30
 fi
 
-kubectl create -f deploy/config/$LOADING_POD_CONFIG
+kubectl create -f deploy/config/$LOADING_POD_CONFIG --validate=false

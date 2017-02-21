@@ -51,6 +51,7 @@ DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENV', 'development')
 MONGO_HOST = os.getenv('MONGO_HOST', 'mongo')
 MONGO_PORT = os.getenv('MONGO_PORT', 27017)
 MONGO_URL = 'mongodb://%s:%s' % (MONGO_HOST, MONGO_PORT)
+print MONGO_URL
 
 if DEPLOYMENT_ENVIRONMENT == 'development':
      EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
