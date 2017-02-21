@@ -48,6 +48,9 @@ cache = SimpleCache()
 
 DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENV', 'development')
 
+MONGO_HOST = os.getenv('MONGO_HOST', 'mongo')
+MONGO_PORT = os.getenv('MONGO_PORT', 27017)
+MONGO_URL = 'mongodb://%s:%s' % (MONGO_HOST, MONGO_PORT)
 
 if DEPLOYMENT_ENVIRONMENT == 'development':
      EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
@@ -120,13 +123,10 @@ def connect_db():
     Connects to the specific database.
     """
     if DEPLOYMENT_ENVIRONMENT == 'production' or DEPLOYMENT_ENVIRONMENT == 'production_test' :
-        client = pymongo.MongoClient("mongodb://gnomad-mongo:27017")
+        client = pymongo.MongoClient(MONGO_URL)
     elif DEPLOYMENT_ENVIRONMENT == 'development':
         client = pymongo.MongoClient(host=app.config['DB_HOST'], port=app.config['DB_PORT'])
     return client[app.config['DB_NAME']]
-
-
-
 
 def parse_tabix_file_subset(tabix_filenames, subset_i, subset_n, record_parser):
     """

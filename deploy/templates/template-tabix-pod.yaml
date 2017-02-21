@@ -2,15 +2,15 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: {{ PROJECT_NAME }}-tabix-pod
+  name: {{ PROJECT_ENVIRONMENT }}-tabix-pod
   labels:
     state: loading
 spec:
   restartPolicy: Never
   volumes:
-  - name: {{ PROJECT_NAME }}-tabix-vol
+  - name: {{ TABIX_VOLUME }}
     gcePersistentDisk:
-      pdName: {{ PROJECT_NAME }}-tabix-temp
+      pdName: {{ TABIX_DISK }}
       fsType: ext4
   containers:
   - name: {{ PROJECT_NAME }}-tabix-container
@@ -19,7 +19,7 @@ spec:
     - name: BUCKET_PATH
       value: {{ TABIX_BUCKET_PATH }}
     volumeMounts:
-    - name: {{ PROJECT_NAME }}-tabix-vol
+    - name: {{ TABIX_VOLUME }}
       mountPath: "/var/data/tabixtemp"
     securityContext:
       privileged: true

@@ -2,17 +2,21 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: {{ PROJECT_NAME }}-precalculate
+  name: {{ PROJECT_ENVIRONMENT }}-precalculate
   labels:
     state: loading
 spec:
   restartPolicy: Never
   containers:
-  - name: {{ PROJECT_NAME }}-precalculate
+  - name: {{ PROJECT_ENVIRONMENT }}-precalculate
     image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}precalculate
     env:
     - name: DEPLOYMENT_ENV
-      value: production
+      value: {{ DEPLOYMENT_ENV }}
+    - name: MONGO_HOST
+      value: {{ MONGO_HOST }}
+    - name: MONGO_PORT
+      value: {{ MONGO_PORT }}
     - name: EXOMES_SINGLE_VCF
       value: {{ EXOMES_SINGLE_VCF }}
     - name: GENOMES_VCF_GLOB

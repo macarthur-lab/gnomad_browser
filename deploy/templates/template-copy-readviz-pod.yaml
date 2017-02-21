@@ -2,21 +2,21 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: {{ PROJECT_NAME }}-copyreadviz
+  name: {{ PROJECT_ENVIRONMENT }}-copyreadviz
   labels:
     state: loading
 spec:
   restartPolicy: Never
   volumes:
-  - name: {{ PROJECT_NAME }}-readviz-exons-vol
+  - name: {{ READVIZ_VOLUME }}
     gcePersistentDisk:
-      pdName: {{ PROJECT_NAME }}-readviz-exons-gpd
+      pdName: {{ READVIZ_DISK }}
       fsType: ext4
   containers:
-  - name: {{ PROJECT_NAME }}-copyreadviz
+  - name: {{ PROJECT_ENVIRONMENT }}-copyreadviz
     image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}copyreadviz
     volumeMounts:
-    - name: {{ PROJECT_NAME }}-readviz-exons-vol
+    - name: {{ PROJECT_ENVIRONMENT }}-readviz-exons-vol
       mountPath: "/var/data/readviz"
     securityContext:
       privileged: true

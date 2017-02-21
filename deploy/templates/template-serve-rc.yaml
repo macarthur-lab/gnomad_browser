@@ -2,17 +2,17 @@
 kind: ReplicationController
 apiVersion: v1
 metadata:
-  name: {{ PROJECT_NAME }}-serve
+  name: {{ PROJECT_ENVIRONMENT }}-serve
   labels:
     state: serving
 spec:
   replicas: 1
   selector:
-    app: {{ PROJECT_NAME }}-app
+    app: {{ PROJECT_ENVIRONMENT}}-app
   template:
     metadata:
       labels:
-        app: {{ PROJECT_NAME }}-app
+        app: {{ PROJECT_ENVIRONMENT }}-app
     spec:
       volumes:
       - name: {{ READVIZ_VOLUME }}
@@ -21,11 +21,15 @@ spec:
           fsType: ext4
           readOnly: true
       containers:
-      - name: {{ PROJECT_NAME }}-serve
+      - name: {{ PROJECT_ENVIRONMENT }}-serve
         image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve
         env:
         - name: DEPLOYMENT_ENV
-          value: production
+          value: {{ DEPLOYMENT_ENV }}
+        - name: MONGO_HOST
+          value: {{ MONGO_HOST }}
+        - name: MONGO_PORT
+          value: {{ MONGO_PORT }}
         - name: EXOMES_SINGLE_VCF
           value: {{ EXOMES_SINGLE_VCF }}
         - name: GENOMES_VCF_GLOB
@@ -39,7 +43,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: {{ READVIZ_VOLUME }}
-          mountPath: "/var/data/readviz"
+          mountPath: /var/data/readviz
         securityContext:
           privileged: true
           capabilities:

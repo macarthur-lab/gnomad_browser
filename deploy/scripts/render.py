@@ -57,8 +57,6 @@ development_config = {
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
   'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
-  'MONGO_PORT': 27017,
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
@@ -84,9 +82,13 @@ development_config = {
   # mongo config
   'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
+  'MONGO_HOST': 'gnomad-dev-mongo',
+  'MONGO_PORT': '27017',
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
 
   # browser config
   'PROJECT_NAME': 'gnomad',
+  'ENVIRONMENT_NAME': '',
   'BROWSER_VERSION': '0.0.1-beta',
   'DEPLOYMENT_ENV': 'production_test',
 
@@ -96,10 +98,19 @@ development_config = {
   'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-release'
+
+  # tabix
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-release',
+  'TABIX_VOLUME': 'gnomad-tabix-vol',
+  'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
 config = development_config
+
+if config['ENVIRONMENT_NAME'] == '':
+  config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME']
+else:
+  config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME'] + '-' + config['ENVIRONMENT_NAME']
 
 # def ensure_dir(file_path):
 #     if not os.path.exists(config_folder_path):
@@ -117,6 +128,7 @@ for template_file_name in template_file_list:
         os.chmod(configsh, st.st_mode | 0111)
         fh.write(parsed)
     else:
-      parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_NAME']))
+      parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_ENVIRONMENT']))
       with open(parsed_file_path, "wb") as fh:
         fh.write(parsed)
+#

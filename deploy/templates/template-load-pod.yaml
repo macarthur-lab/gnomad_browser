@@ -2,19 +2,23 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: gnomad-load
+  name: {{ PROJECT_ENVIRONMENT }}-load
   labels:
     state: loading
 spec:
   restartPolicy: Never
   containers:
-  - name: gnomad-load
-    image: gcr.io/exac-gnomad/gnomadload
+  - name: {{ PROJECT_ENVIRONMENT }}-load
+    image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}load
     env:
     - name: DEPLOYMENT_ENV
-      value: production
+      value: {{ DEPLOYMENT_ENV }}
+    - name: MONGO_HOST
+      value: {{ MONGO_HOST }}
+    - name: MONGO_PORT
+      value: {{ MONGO_PORT }}
     - name: LOAD_DB_PARALLEL_PROCESSES_NUMB
-      value: '32'
+      value: {{ LOAD_DB_PARALLEL_PROCESSES_NUMB }}
     - name: EXOMES_SINGLE_VCF
       value: {{ EXOMES_SINGLE_VCF }}
     - name: GENOMES_VCF_GLOB
