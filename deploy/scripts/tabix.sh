@@ -16,7 +16,7 @@ kubectl config set-context $LOADING_CLUSTER
 
 # "$(dirname "$0")"/start-load-cluster.sh
 
-if [[ $REBUILD_IMAGE = "specific" ]]; then
+if [[ $REBUILD_IMAGES = "specific" ]]; then
   docker build -f deploy/dockerfiles/$TABIX_IMAGE_DOCKERFILE -t $TABIX_IMAGE_TAG .
   gcloud docker push $TABIX_IMAGE_TAG
 fi

@@ -13,5 +13,5 @@ CMD gcsfuse \
   --key-file=/var/www/deploy/keys/exac-gnomad-30ea80400948.json \
   exac /var/exac_data && \
   # npm --prefix gnomad run build && \
-  python manage.py create_cache && \
+  # python manage.py create_cache && \
   gunicorn --workers 2 --bind 0.0.0.0:80 wsgi --access-logfile -

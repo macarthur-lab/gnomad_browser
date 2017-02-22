@@ -43,10 +43,11 @@ prod_config = {
   # data config
   'DATA_VERSION': '170219-release',
   'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-distribute/gnomad.genomes.sites.X.vcf.bgz',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-release'
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-distribute'
 }
 
 development_config = {
@@ -57,7 +58,7 @@ development_config = {
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
   'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
-  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
+  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
   # loading
@@ -94,12 +95,13 @@ development_config = {
   # data config
   'DATA_VERSION': '170219-release',
   'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-distribute/gnomad.genomes.sites.X.vcf.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
 
   # tabix
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
