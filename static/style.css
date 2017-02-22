@@ -631,6 +631,11 @@ TODO: come up with a better way to position tooltip
 }
 
 .downloads-table {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 
+}
+
+.download-code {
+  margin-left: 30px;
+  margin-right: 30px;
 }
