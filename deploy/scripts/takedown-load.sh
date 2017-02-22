@@ -15,4 +15,4 @@ kubectl delete pod $TABIX_POD_NAME
 # kubectl delete rc $MONGO_REPLICATION_CONTROLLER
 
 # Delete the cluster
-# gcloud container clusters delete $LOADING_CLUSTER_NAME --zone $GCLOUD_ZONE
+gcloud container clusters delete $LOADING_CLUSTER_NAME --zone $GCLOUD_ZONE

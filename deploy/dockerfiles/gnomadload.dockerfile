@@ -18,4 +18,4 @@ CMD gcsfuse \
   # python manage.py drop_exome_variants && \
   # python manage.py load_exome_variants && \
   # python manage.py drop_genome_variants && \
-  python manage.py load_genome_variants
+  # python manage.py load_genome_variants

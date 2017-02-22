@@ -7,47 +7,60 @@ template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
 config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
 template_file_list = os.listdir(template_folder_path)
 
-prod_config = {
+production_config = {
   # gcloud config
   'GCLOUD_PROJECT': 'exac-gnomad',
   'GCLOUD_ZONE': 'us-east1-d',
 
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
-  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-  'MONGO_PORT': 27017,
+  'REBUILD_IMAGES': 'all', # Which images to rebuild: none, all, specific?
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
-  'LOADING_CLUSTER_NAME': 'gnomad-dev-cluster',
-  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
+  # loading
+  'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
+  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
-  'LOAD_DB_PARALLEL_PROCESSES_NUMB': 32,
+  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
-  'SERVING_CLUSTER_NAME': 'gnomad-dev-cluster',
-  'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
+  # serving
+  'SERVING_CLUSTER_NAME': 'gnomad-serving-cluster',
+  'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-4',
-  'SERVING_NODES': 1,
-  'SERVING_AUTOSCALE_MINIMUM': 2,
-  'SERVING_AUTOSCALE_MAXIMUM': 10,
-  'SERVING_AUTOSCALE_MAXIMUM_CPU': 70,
-  'READVIZ_VOLUME': 'gnomad-readviz-exons-vol',
+  'SERVING_NODES': '2',
+  'SERVING_AUTOSCALE_MINIMUM': '10',
+  'SERVING_AUTOSCALE_MAXIMUM': '20',
+  'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
+
+  # readviz
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol',
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+
+  # mongo config
+  'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
+  'MONGO_DISK': 'gnomad-mongo-disk-2',
+  'MONGO_HOST': 'gnomad-p-mongo',
+  'MONGO_PORT': 27017,
 
   # browser config
   'PROJECT_NAME': 'gnomad',
+  'ENVIRONMENT_NAME': 'p',
   'BROWSER_VERSION': '0.0.1-beta',
   'DEPLOYMENT_ENV': 'production',
-
   # data config
   'DATA_VERSION': '170219-release',
-  'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-distribute/gnomad.genomes.sites.X.vcf.bgz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
+  'EXOMES_SINGLE_VCF': 'none',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  'GENOMES_VCF_GLOB': 'none',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/feb-2017-distribute'
+
+  # tabix
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
+  'TABIX_VOLUME': 'gnomad-tabix-vol',
+  'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
 development_config = {
@@ -77,11 +90,11 @@ development_config = {
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
@@ -106,7 +119,8 @@ development_config = {
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
-config = development_config
+# config = development_config
+config = production_config
 
 if config['ENVIRONMENT_NAME'] == '':
   config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME']
