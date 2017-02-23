@@ -14,8 +14,8 @@ production_config = {
 
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
-  'REBUILD_IMAGES': 'all', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
+  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
+  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
@@ -47,8 +47,9 @@ production_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
   'ENVIRONMENT_NAME': 'p',
-  'BROWSER_VERSION': '0.0.1-beta',
+  'BROWSER_VERSION': '0.0.1',
   'DEPLOYMENT_ENV': 'production',
+
   # data config
   'DATA_VERSION': '170219-release',
   'EXOMES_SINGLE_VCF': 'none',
@@ -70,13 +71,13 @@ development_config = {
 
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
-  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
   # loading
-  'LOADING_CLUSTER_NAME': 'gnomad-dev-cluster',
-  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
+  'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
+  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
@@ -106,7 +107,7 @@ development_config = {
   'BROWSER_VERSION': '0.0.1-beta',
   'DEPLOYMENT_ENV': 'production',
   # data config
-  'DATA_VERSION': '170219-release',
+  'DATA_VERSION': '2.0',
   'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
   'GENOMES_VCF_GLOB': 'feb-2017-distribute/gnomad.genomes.sites.X.vcf.bgz',
@@ -156,4 +157,3 @@ for template_file_name in template_file_list:
       parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_ENVIRONMENT']))
       with open(parsed_file_path, "wb") as fh:
         fh.write(parsed)
-#

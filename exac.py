@@ -1171,7 +1171,7 @@ def page_not_found(error):
 
 @app.route('/downloads')
 def downloads_page():
-    return render_template('downloads.html')
+    return render_template('downloads_blank.html')
 
 
 @app.route('/about')
