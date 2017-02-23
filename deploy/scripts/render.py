@@ -13,9 +13,9 @@ production_config = {
   'GCLOUD_ZONE': 'us-east1-d',
 
   # infrastructure config
-  'EXTERNAL_IP': '35.185.14.139',
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
+  'EXTERNAL_IP': '104.196.31.30',
+  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
@@ -35,11 +35,11 @@ production_config = {
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
+  'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage-2',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
   'MONGO_HOST': 'gnomad-p-mongo',
   'MONGO_PORT': 27017,
@@ -91,12 +91,12 @@ development_config = {
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
-  'MONGO_DISK': 'gnomad-mongo-disk-2',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-1',
+  'MONGO_DISK': 'gnomad-mongo-disk',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
@@ -119,6 +119,12 @@ development_config = {
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
+
+if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
+  raise StandardError
+
+if production_config['MONGO_DISK'] == development_config['MONGO_DISK']:
+  raise StandardError
 
 # config = development_config
 config = production_config
