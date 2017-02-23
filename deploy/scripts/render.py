@@ -7,23 +7,45 @@ template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
 config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
 template_file_list = os.listdir(template_folder_path)
 
-production_config = {
-  # gcloud config
-  'GCLOUD_PROJECT': 'exac-gnomad',
-  'GCLOUD_ZONE': 'us-east1-d',
+project_config = {
+  # browser config
+  'PROJECT_NAME': 'gnomad',
+  'BROWSER_VERSION': '0.0.1',
+  'DATA_VERSION': '170219-release',
+  'DEPLOYMENT_ENV': 'development',
+}
 
-  # infrastructure config
-  'EXTERNAL_IP': '104.196.31.30',
+options = {
   'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'true', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
-  'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
+}
 
-  # loading
+loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
+
+  'EXOMES_SINGLE_VCF': 'none',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  'GENOMES_VCF_GLOB': 'none',
+  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
+
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
+  'TABIX_VOLUME': 'gnomad-tabix-vol',
+  'TABIX_DISK': 'gnomad-tabix-temp'
+}
+
+production_config = {
+  'ENVIRONMENT_NAME': 'p', # p for production
+
+  # gcloud config
+  'GCLOUD_PROJECT': 'exac-gnomad',
+  'GCLOUD_ZONE': 'us-east1-d',
+  'EXTERNAL_IP': '104.196.31.30',
+  'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
   # serving
   'SERVING_CLUSTER_NAME': 'gnomad-serving-cluster',
@@ -38,48 +60,23 @@ production_config = {
   'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
 
-  # mongo config
+  # mongo
   'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage-2',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
   'MONGO_HOST': 'gnomad-p-mongo',
   'MONGO_PORT': 27017,
-
-  # browser config
-  'PROJECT_NAME': 'gnomad',
-  'ENVIRONMENT_NAME': 'p',
-  'BROWSER_VERSION': '0.0.1',
-  'DEPLOYMENT_ENV': 'production',
-
-  # data config
-  'DATA_VERSION': '170219-release',
-  'EXOMES_SINGLE_VCF': 'none',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
-  'GENOMES_VCF_GLOB': 'none',
-  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
-  'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
-
-  # tabix
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
-  'TABIX_VOLUME': 'gnomad-tabix-vol',
-  'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
 development_config = {
+  'ENVIRONMENT_NAME': 'd', # d for development
+
   # gcloud config
   'GCLOUD_PROJECT': 'exac-gnomad',
   'GCLOUD_ZONE': 'us-east1-d',
 
   # infrastructure config
   'EXTERNAL_IP': '35.185.14.139',
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
-
-  # loading
-  'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
-  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
-  'LOADING_MACHINE_TYPE': 'n1-highmem-32',
-  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
   # serving
   'SERVING_CLUSTER_NAME': 'gnomad-dev-cluster',
@@ -99,25 +96,6 @@ development_config = {
   'MONGO_DISK': 'gnomad-mongo-disk',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-
-  # browser config
-  'PROJECT_NAME': 'gnomad',
-  'ENVIRONMENT_NAME': 'd',
-  'BROWSER_VERSION': '0.0.1-beta',
-  'DEPLOYMENT_ENV': 'production',
-  # data config
-  'DATA_VERSION': '2.0',
-  'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.autosomes.vcf.bgz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-distribute/gnomad.genomes.sites.X.vcf.bgz',
-  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
-  'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
-
-  # tabix
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
-  'TABIX_VOLUME': 'gnomad-tabix-vol',
-  'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
 if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
@@ -126,40 +104,52 @@ if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
 if production_config['MONGO_DISK'] == development_config['MONGO_DISK']:
   raise StandardError
 
-# config = development_config
-config = production_config
+config = project_config.copy()
+config.update(options)
+config.update(loading_config)
+
+if config['DEPLOYMENT_ENV'] == 'production':
+  config.update(production_config)
+if config['DEPLOYMENT_ENV'] == 'development':
+  config.update(development_config)
 
 if config['ENVIRONMENT_NAME'] == '':
   config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME']
 else:
   config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME'] + '-' + config['ENVIRONMENT_NAME']
 
-# def ensure_dir(file_path):
-#     if not os.path.exists(config_folder_path):
-#         os.makedirs(directory)
+def ensure_dir(file_path):
+  if not os.path.exists(config_folder_path):
+    os.makedirs(directory)
 
-print 'Cleaning previous files...'
-for the_file in os.listdir(config_folder_path):
-  file_path = os.path.join(config_folder_path, the_file)
-  try:
-    if os.path.isfile(file_path):
-        os.unlink(file_path)
-    #elif os.path.isdir(file_path): shutil.rmtree(file_path)
-  except Exception as e:
-    print(e)
 
-print 'Parsing templates...'
-for template_file_name in template_file_list:
-  template_file_full_path = os.path.join(template_folder_path, template_file_name)
-  with open(template_file_full_path, "r") as template:
-    parsed = jinja2.Template(template.read()).render(config)
-    if template_file_name == 'template-config.sh':
-      configsh = os.path.join(config_folder_path, 'config.sh')
-      with open(configsh, "wb") as fh:
-        st = os.stat(configsh)
-        os.chmod(configsh, st.st_mode | 0111)
-        fh.write(parsed)
-    else:
-      parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_ENVIRONMENT']))
-      with open(parsed_file_path, "wb") as fh:
-        fh.write(parsed)
+def clean():
+  print 'Cleaning previous files...'
+  for the_file in os.listdir(config_folder_path):
+    file_path = os.path.join(config_folder_path, the_file)
+    try:
+      if os.path.isfile(file_path):
+          os.unlink(file_path)
+      #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+    except Exception as e:
+      print(e)
+
+def parse_templates():
+  print 'Parsing templates...'
+  for template_file_name in template_file_list:
+    template_file_full_path = os.path.join(template_folder_path, template_file_name)
+    with open(template_file_full_path, "r") as template:
+      parsed = jinja2.Template(template.read()).render(config)
+      if template_file_name == 'template-config.sh':
+        configsh = os.path.join(config_folder_path, 'config.sh')
+        with open(configsh, "wb") as fh:
+          st = os.stat(configsh)
+          os.chmod(configsh, st.st_mode | 0111)
+          fh.write(parsed)
+      else:
+        parsed_file_path = os.path.join(config_folder_path, template_file_name.replace('template', config['PROJECT_ENVIRONMENT']))
+        with open(parsed_file_path, "wb") as fh:
+          fh.write(parsed)
+
+clean()
+parse_templates()

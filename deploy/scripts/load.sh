@@ -8,6 +8,14 @@
 gcloud config set project $GCLOUD_PROJECT
 kubectl config set-context $LOADING_CLUSTER
 
+read -p "Are you sure you want to load the data? y/n" input
+
+if [[ $input = y ]]; then
+  continue
+else
+  exit 0
+fi
+
 kubectl delete pod $LOADING_POD_NAME
 
 if [[ $RESTART_MONGO = "true" ]]; then
