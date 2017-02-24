@@ -103,6 +103,9 @@ def get_variants_from_sites_vcf(sites_vcf):
             alt_alleles = fields[4].split(',')
 
             # different variant for each alt allele
+            # print ' '
+            # print 'number of alternate alleles:', len(alt_alleles)
+            # print '--------------------'
             for i, alt_allele in enumerate(alt_alleles):
                 if alt_allele == "*":
                     continue
@@ -129,7 +132,19 @@ def get_variants_from_sites_vcf(sites_vcf):
                     for x in alt_alleles
                 ]
                 variant['site_quality'] = float(fields[5])
-                variant['filter'] = info_field['AS_FilterStatus'].split(',')[i]
+
+                filter_status = info_field['AS_FilterStatus'].split(',')[i]
+                filter_field_list = fields[6].split(';')
+                fail_filters = ('LCR', 'SEGDUP', 'InbreedingCoeff')
+                failed = set(filter_field_list).intersection(fail_filters)
+
+                if filter_status == 'PASS' and len(failed) > 0:
+                    variant['filter'] = '|'.join(failed)
+                elif filter_status is not 'PASS' and len(failed) > 0:
+                    variant['filter'] = filter_status + '|' + '|'.join(failed)
+                else:
+                    variant['filter'] = filter_status
+
                 variant['vep_annotations'] = vep_annotations
 
                 variant['allele_count'] = int(info_field['AC'].split(',')[i])
