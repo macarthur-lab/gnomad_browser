@@ -6,7 +6,28 @@
 . "$(dirname "$0")"/../config/config.sh
 
 gcloud config set project $GCLOUD_PROJECT
+gcloud container clusters get-credentials $SERVING_CLUSTER_NAME --zone=$GCLOUD_ZONE
 kubectl config set-context $SERVING_CLUSTER
+kubectl config set-cluster $SERVING_CLUSTER
+
+echo "Project name is ${PROJECT_NAME}"
+echo "Project environment is ${DEPLOYMENT_ENV}"
+echo "Environment is ${PROJECT_ENVIRONMENT}"
+echo "Images will be rebuilt: ${REBUILD_IMAGES}"
+echo "Mongo disk set to: ${MONGO_DISK}"
+echo "Readviz disk set to: ${READVIZ_DISK}"
+echo "Mongo will be restarted: ${RESTART_MONGO}"
+echo "Monitor loading cluster? ${MONITOR_LOADING}"
+
+read -p "Are you sure you want to restart the ${DEPLOYMENT_ENV} server? (y/n) " input
+if [[ $input = "n" ]]; then
+  exit 0
+fi
+
+# read -p "Would you like to start/restart mongo? (y/n) " mongo_restart
+# if [[ $mongo_restart = "n" ]]; then
+#   exit 0
+# fi
 
 if [[ $REBUILD_IMAGES = "all" ]]; then
   "$(dirname "$0")"/images-build.sh

@@ -6,7 +6,7 @@ from os import listdir
 template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
 config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
 template_file_list = os.listdir(template_folder_path)
-
+#
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
@@ -75,7 +75,7 @@ development_config = {
   'GCLOUD_ZONE': 'us-east1-d',
 
   # infrastructure config
-  'EXTERNAL_IP': '35.185.14.139',
+  'EXTERNAL_IP': '104.196.46.19',
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
   # serving
@@ -153,3 +153,4 @@ def parse_templates():
 
 clean()
 parse_templates()
+
