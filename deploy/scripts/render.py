@@ -29,9 +29,9 @@ loading_config = {
 
   'EXOMES_SINGLE_VCF': 'none',
   # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
-  'GENOMES_VCF_GLOB': 'none',
+  'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
-  'GENOMES_VCF_GLOB_TEST': 'feb-2017-test/*.bgz',
+  'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
   'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
   'TABIX_VOLUME': 'gnomad-tabix-vol',

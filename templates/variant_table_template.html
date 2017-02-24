@@ -1,5 +1,12 @@
 <script type="text/javascript">
     window.is_gene = typeof window.transcripts_in_gene != 'undefined';
+    window.filter_definitions = {
+        SEGDUP: 'in a segmental duplication region',
+        LCR: 'in a low complexity region',
+        InbreedingCoeff: 'has an inbreeding coefficient is < -0.3',
+        RF: 'failed random forests filters (SNV cutoff 0.4, indels cutoff 0.4)',
+        AC0: 'allele Count is zero (i.e. no high-confidence genotype (GQ >= 20, DP >= 10, AB => 0.2 for het calls))'
+    }
 </script>
 <script type="text/template" id="variant-table-template">
 <span>
@@ -97,7 +104,7 @@
                             avatar = 'G';
                         }
                         %>
-                        <div class="label data-indicator-child data-indicator-<%= dataset %> label-<%= span_tag %> tooltip-table-header" data-tooltip="This variant is found in the <%= dataset %> dataset with filter value <%= variant[dataset].filter %>"><%= avatar %></div>
+                        <div class="label data-indicator-child data-indicator-<%= dataset %> label-<%= span_tag %> tooltip-table-header" data-tooltip="This variant is found in the <%= dataset %> dataset <%= variant[dataset].filter === 'PASS' ? 'with filter value PASS' : 'but is filtered for the following reasons: &#xa;' %> <%= variant[dataset].filter.split('|').map(function(filter_name) { console.log(filter_name); if (filter_name  !== 'PASS') { return filter_name + ': ' + window.filter_definitions[filter_name] } }).join('&#xa;') %>"><%= avatar %></div>
                     <% }); %>
                 </div>
             </td>
