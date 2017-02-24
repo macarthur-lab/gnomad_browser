@@ -284,7 +284,7 @@ def get_metrics(db, variant):
         return None
     metrics = {}
     for metric in METRICS:
-        metrics[metric] = db.metrics.find_one({'metric': metric}, projection={'_id': False})
+        metrics[metric] = db.exome_metrics.find_one({'metric': metric}, projection={'_id': False})
 
     metric = None
     if variant['allele_count'] == 1:
@@ -297,7 +297,7 @@ def get_metrics(db, variant):
                 metric = af
                 break
     if metric is not None:
-        metrics['Site Quality'] = db.metrics.find_one({'metric': 'binned_%s' % metric}, projection={'_id': False})
+        metrics['Site Quality'] = db.exome_metrics.find_one({'metric': 'binned_%s' % metric}, projection={'_id': False})
     return metrics
 
 

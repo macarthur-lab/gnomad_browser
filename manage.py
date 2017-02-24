@@ -95,8 +95,12 @@ def create_cache():
 
 
 @manager.command
-def precalculate_metrics():
-    exac.precalculate_metrics()
+def precalculate_metrics_exomes():
+    exac.precalculate_metrics_exomes()
+
+@manager.command
+def precalculate_metrics_genomes():
+    exac.precalculate_metrics_genomes()
 
 if __name__ == "__main__":
     manager.run()

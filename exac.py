@@ -587,18 +587,20 @@ def create_cache():
         f.close()
 
 
-def precalculate_metrics(chrom=None):
+def precalculate_metrics(variant_collection, metric_collection, chrom=None):
     import numpy
     db = get_db()
-    print 'Reading %s variants...' % db.exome_variants.count()
+    print 'Reading %s variants...' % db[variant_collection].count()
     metrics = defaultdict(list)
     binned_metrics = defaultdict(list)
     progress = 0
     start_time = time.time()
-    for variant in tqdm(db.exome_variants.find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db.exome_variants.count()):
+    for variant in tqdm(db[variant_collection].find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db[variant_collection].count()):
         if chrom is not None and variant["chrom"] != chrom:
             continue
+        print '----------'
         for metric, value in variant['quality_metrics'].iteritems():
+            print metric, value
             metrics[metric].append(float(value))
         qual = float(variant['site_quality'])
         metrics['site_quality'].append(qual)
@@ -616,7 +618,8 @@ def precalculate_metrics(chrom=None):
         if not progress % 100000:
             print 'Read %s variants. Took %s seconds' % (progress, int(time.time() - start_time))
     print 'Done reading variants. Dropping metrics database... '
-    db.metrics.drop()
+
+    db[metric_collection].drop()
     print 'Dropped metrics database. Calculating metrics...'
     for metric in metrics:
         bin_range = None
@@ -634,7 +637,7 @@ def precalculate_metrics(chrom=None):
         edges = hist[1]
         # mids = [(edges[i]+edges[i+1])/2 for i in range(len(edges)-1)]
         lefts = [edges[i] for i in range(len(edges)-1)]
-        db.metrics.insert({
+        db[metric_collection].insert({
             'metric': metric,
             'mids': lefts,
             'hist': list(hist[0])
@@ -643,13 +646,19 @@ def precalculate_metrics(chrom=None):
         hist = numpy.histogram(map(numpy.log, binned_metrics[metric]), bins=40)
         edges = hist[1]
         mids = [(edges[i]+edges[i+1])/2 for i in range(len(edges)-1)]
-        db.metrics.insert({
+        db[metric_collection].insert({
             'metric': 'binned_%s' % metric,
             'mids': mids,
             'hist': list(hist[0])
         })
-    db.metrics.ensure_index('metric')
+    db[metric_collection].ensure_index('metric')
     # print 'Done pre-calculating metrics!'
+
+def precalculate_metrics_exomes():
+    precalculate_metrics('exome_variants', 'metric_collection')
+
+def precalculate_metrics_genomes():
+    precalculate_metrics('genome_variants', 'genome_metrics')
 
 
 def get_db():
