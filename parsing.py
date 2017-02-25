@@ -172,7 +172,7 @@ def get_variants_from_sites_vcf(sites_vcf):
                 if variant['chrom'] == 'Y':
                     variant['pop_hemis'] = variant['pop_acs']
                 variant['quality_metrics'] = dict([(x, info_field[x]) for x in METRICS if x in info_field])
-                variant['quality_metrics']['AS_RF'] = info_field['AS_RF'].split(',')[i]
+                # variant['quality_metrics']['AS_RF'] = info_field['q'].split(',')[i]
                 variant['genes'] = list({annotation['Gene'] for annotation in vep_annotations})
                 variant['transcripts'] = list({annotation['Feature'] for annotation in vep_annotations})
                 if 'DP_HIST_ALL' in info_field:

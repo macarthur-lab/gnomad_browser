@@ -741,7 +741,7 @@ def variant_data(variant_str, source):
             consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
     base_coverage = lookups.get_coverage_for_bases(db, source, xpos, xpos + len(ref) - 1)
     any_covered = any([x['has_coverage'] for x in base_coverage])
-    metrics = lookups.get_metrics(db, variant)
+    metrics = lookups.get_metrics(db, variant, source)
 
     # check the appropriate sqlite db to get the *expected* number of
     # available bams and *actual* number of available bams for this variant

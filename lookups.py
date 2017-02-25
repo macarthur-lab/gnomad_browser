@@ -279,12 +279,16 @@ def get_variants_in_region(db, chrom, start, stop):
     return list(variants)
 
 
-def get_metrics(db, variant):
+def get_metrics(db, variant, source):
+    if source == 'exac':
+        metrics_collection = 'exome_metrics'
+    if source == 'gnomad':
+        metrics_collection = 'genome_metrics'
     if 'allele_count' not in variant or variant['allele_num'] == 0:
         return None
     metrics = {}
     for metric in METRICS:
-        metrics[metric] = db.exome_metrics.find_one({'metric': metric}, projection={'_id': False})
+        metrics[metric] = db[metrics_collection].find_one({'metric': metric}, projection={'_id': False})
 
     metric = None
     if variant['allele_count'] == 1:
@@ -297,7 +301,7 @@ def get_metrics(db, variant):
                 metric = af
                 break
     if metric is not None:
-        metrics['Site Quality'] = db.exome_metrics.find_one({'metric': 'binned_%s' % metric}, projection={'_id': False})
+        metrics['Site Quality'] = db[metrics_collection].find_one({'metric': 'binned_%s' % metric}, projection={'_id': False})
     return metrics
 
 
