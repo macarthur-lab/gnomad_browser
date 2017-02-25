@@ -6,7 +6,7 @@ from os import listdir
 template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
 config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
 template_file_list = os.listdir(template_folder_path)
-#
+
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
@@ -18,7 +18,7 @@ project_config = {
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
+  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
 }
 
 loading_config = {
@@ -27,15 +27,16 @@ loading_config = {
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
-  'EXOMES_SINGLE_VCF': 'none',
+  'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.vcf.gz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
   'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
-  'TABIX_DISK': 'gnomad-tabix-temp'
+  'TABIX_DISK': 'gnomad-tinabix-temp'
 }
 
 production_config = {

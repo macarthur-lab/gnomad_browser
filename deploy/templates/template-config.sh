@@ -59,6 +59,7 @@ export READVIZ_DISK={{ READVIZ_DISK }}
 
 if [[ $MONITOR_LOADING = "true" ]]; then
   export SERVING_CLUSTER=$LOADING_CLUSTER
+  export SERVING_CLUSTER_NAME=$LOADING_CLUSTER_NAME
 fi
 
 # Tabix config

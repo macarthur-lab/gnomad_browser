@@ -207,30 +207,53 @@ def load_variants_in_file_using_tabix(sites_file, i, n, db_collection):
     except pymongo.errors.InvalidOperation:
         pass  # handle error when variant_generator is empty
 
-def load_exome_variants_multi():
-
+def load_variants_single_vcf(sites_vcfs, collection_name):
+    def load_variants(sites_file, i, n, collection_name):
+        db = get_db()
+        variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
+        try:
+            db[collection_name].insert(variants_generator, w=0)
+        except pymongo.errors.InvalidOperation:
+            pass  # handle error when variant_generator is empty
     db = get_db()
-    #db.exome_variants.drop()
-    #print("Dropped exome_variants")
+    db[collection_name].ensure_index('xpos')
+    db[collection_name].ensure_index('xstart')
+    db[collection_name].ensure_index('xstop')
+    db[collection_name].ensure_index('rsid')
+    db[collection_name].ensure_index('genes')
+    db[collection_name].ensure_index('transcripts')
+    procs = []
+    num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
+    if num_procs > 24:
+        num_procs = 24
+    for i in range(num_procs):
+        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs, collection_name))
+        p.start()
+        procs.append(p)
+    return procs
 
-    # grab variants from sites VCF
-    db.exome_variants.ensure_index('xpos')
-    db.exome_variants.ensure_index('xstart')
-    db.exome_variants.ensure_index('xstop')
-    db.exome_variants.ensure_index('rsid')
-    db.exome_variants.ensure_index('genes')
-    db.exome_variants.ensure_index('transcripts')
+def load_all_variants_in_file(sites_file, collection_name):
+    db = get_db()
+    db[collection_name].ensure_index('xpos')
+    db[collection_name].ensure_index('xstart')
+    db[collection_name].ensure_index('xstop')
+    db[collection_name].ensure_index('rsid')
+    db[collection_name].ensure_index('genes')
+    db[collection_name].ensure_index('transcripts')
 
-    sites_vcfs = app.config['EXOMES_SITES_VCFS']
-    if len(sites_vcfs) == 0:
-        raise IOError("No vcf file found")
-    #elif len(sites_vcfs) > 1:
-    #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+    with gzip.open(sites_file) as f:
+        variants_generator = get_variants_from_sites_vcf(f)
+        try:
+            db[collection_name].insert(variants_generator, w=0)
+        except pymongo.errors.InvalidOperation:
+            pass  # handle error when variant_generator is empty
 
+def load_variants_chunks(sites_vcfs, collection_name):
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
     for sites_vcf in sites_vcfs:
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, db.exome_variants)) #target=load_variants_in_file_using_tabix, args=(sites_vcf, i, num_procs, exome_variants))
+        print sites_vcf
+        p = Process(target=load_all_variants_in_file, args=(sites_vcf, collection_name))
         p.start()
         procs.append(p)
         if len(procs) > num_procs:
@@ -240,108 +263,31 @@ def load_exome_variants_multi():
             print("Done waiting for: " + str(p))
     return procs
 
-    #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
-def load_exome_variants():
-    def load_variants(sites_file, i, n):
-        db = get_db()
-        variants_generator = parse_tabix_file_subset([sites_file], i, n, get_variants_from_sites_vcf)
-        try:
-            db.exome_variants.insert(variants_generator, w=0)
-        except pymongo.errors.InvalidOperation:
-            pass  # handle error when variant_generator is empty
-
-    sites_vcfs = app.config['EXOMES_SITES_VCFS']
-
-    db = get_db()
-    db.exome_variants.ensure_index('xpos')
-    db.exome_variants.ensure_index('xstart')
-    db.exome_variants.ensure_index('xstop')
-    db.exome_variants.ensure_index('rsid')
-    db.exome_variants.ensure_index('genes')
-    db.exome_variants.ensure_index('transcripts')
-
+def load_variants(sites_vcfs, collection_name):
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
-    elif len(sites_vcfs) > 1:
-        raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
+    elif len(sites_vcfs) == 1:
+        load_variants_single_vcf(sites_vcfs, collection_name)
+    else:
+        load_variants_chunks(sites_vcfs, collection_name)
 
-    procs = []
-    num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    if num_procs > 24:
-        num_procs = 24
-    for i in range(num_procs):
-        p = Process(target=load_variants, args=(sites_vcfs[0], i, num_procs))
-        p.start()
-        procs.append(p)
-    return procs
+def load_exome_variants():
+    exomes_sites_vcfs = app.config['EXOMES_SITES_VCFS']
+    load_variants(exomes_sites_vcfs, 'exome_variants')
 
-    #print 'Done loading variants. Took %s seconds' % int(time.time() - start_time)
-
-def drop_genome_variants():
-    db = get_db()
-    db.genome_variants.drop()
-    print("Dropped db.genome_variants")
+def load_genome_variants():
+    genomes_sites_vcfs = app.config['GENOMES_SITES_VCFS']
+    load_variants(genomes_sites_vcfs, 'genome_variants')
 
 def drop_exome_variants():
     db = get_db()
     db.exome_variants.drop()
     print("Dropped db.exome_variants")
 
-def load_all_variants_in_file(sites_file, word):
+def drop_genome_variants():
     db = get_db()
-    print word
-    # grab variants from sites VCF
-    db.genome_variants.ensure_index('xpos')
-    db.genome_variants.ensure_index('xstart')
-    db.genome_variants.ensure_index('xstop')
-    db.genome_variants.ensure_index('rsid')
-    db.genome_variants.ensure_index('genes')
-    db.genome_variants.ensure_index('transcripts')
-
-    with gzip.open(sites_file) as f:
-        variants_generator = get_variants_from_sites_vcf(f)
-        try:
-            db.genome_variants.insert(variants_generator, w=0)
-        except pymongo.errors.InvalidOperation:
-            pass  # handle error when variant_generator is empty
-
-def load_genome_variants():
-    sites_vcfs = app.config['GENOMES_SITES_VCFS']
-    if len(sites_vcfs) == 0:
-        raise IOError("No vcf file found")
-    #elif len(sites_vcfs) > 1:
-    #    raise Exception("More than one sites vcf file found: %s" % sites_vcfs)
-
-    procs = []
-    num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    for sites_vcf in sites_vcfs:
-        print sites_vcf
-        p = Process(target=load_all_variants_in_file, args=(sites_vcf, 'Creating new process'))
-        p.start()
-        procs.append(p)
-        if len(procs) > num_procs:
-            print("Waiting for: " + str(p))
-            procs[0].join()
-            del procs[0]
-            print("Done waiting for: " + str(p))
-
-    return procs
-
-def load_constraint_information():
-    db = get_db()
-
-    db.constraint.drop()
-    print 'Dropped db.constraint.'
-
-    start_time = time.time()
-
-    with gzip.open(app.config['CONSTRAINT_FILE']) as constraint_file:
-        for transcript in get_constraint_information(constraint_file):
-            db.constraint.insert(transcript, w=0)
-
-    db.constraint.ensure_index('transcript')
-    print 'Done loading constraint info. Took %s seconds' % int(time.time() - start_time)
-    return []
+    db.genome_variants.drop()
+    print("Dropped db.genome_variants")
 
 def load_mnps():
     db = get_db()
@@ -361,6 +307,21 @@ def load_mnps():
     db.exome_variants.ensure_index('has_mnp')
     print 'Done loading MNP info. Took %s seconds' % int(time.time() - start_time)
 
+def load_constraint_information():
+    db = get_db()
+
+    db.constraint.drop()
+    print 'Dropped db.constraint.'
+
+    start_time = time.time()
+
+    with gzip.open(app.config['CONSTRAINT_FILE']) as constraint_file:
+        for transcript in get_constraint_information(constraint_file):
+            db.constraint.insert(transcript, w=0)
+
+    db.constraint.ensure_index('transcript')
+    print 'Done loading constraint info. Took %s seconds' % int(time.time() - start_time)
+    return []
 
 def load_gene_models():
     db = get_db()
@@ -1177,11 +1138,9 @@ def page_not_found(error):
         query=""
     ), 400
 
-
 @app.route('/downloads')
 def downloads_page():
-    return render_template('downloads_blank.html')
-
+    return render_template('downloads.html')
 
 @app.route('/about')
 def about_page():
