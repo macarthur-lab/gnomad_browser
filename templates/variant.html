@@ -33,6 +33,7 @@
         }
 
         $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
             draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
             $('.coverage_metric_buttons').change(function () {
                 var v = $(this).attr('id').replace('_covmet_button', '');
@@ -183,12 +184,24 @@
                 updatePopulationTable(window.variant, dataSelection)
             })
 
+            var filter_definitions = {
+                SEGDUP: 'Filtered variant: found in a segmental duplication region',
+                LCR: 'Filtered variant: found in a low complexity region',
+                InbreedingCoeff: 'Filtered variant: has an inbreeding coefficient < -0.3',
+                RF: 'Filtered variant: failed random forests filters',
+                AC0: 'Filtered variant: allele Count is zero (i.e. no high-confidence genotype)'
+            }
+
             function addFilterFlag(filter) {
                 if (filter === 'No variant') {
                     return '<span class="label label-danger">No variant</span>'
                 }
+
                 if (filter !== 'PASS') {
-                    return '<span class="label label-warning">Filtered</span>'
+                    var labels = filter.split('|').map(function(f) {
+                        return '<a href="#" class="label filter-label label-warning data-toggle="tooltip" delay="0" title="' + filter_definitions[f] + '">' + f + '</a> &#xa'
+                    }).join(' ')
+                    return '<div>' + labels + '</div>'
                 }
                 return '<span class="label label-success">Pass</span>'
             }
@@ -699,13 +712,13 @@
                         </button>
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
-                                style="disabled:true; width:130px; height: 32px;" 
+                                style="disabled:true; width:130px; height: 32px;"
 				id="load-more-{{ exomes_or_genomes }}-hom-button">Load +1 Hom
                         </button>
 			{% if variant.chrom in ('X', 'Y') %}
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn {% if exomes_or_genomes == 'exomes' %} btn-primary {% else %} btn-success {% endif %} quality_full_site_buttons"
-                                style="disabled:true; width:130px; height: 32px;" 
+                                style="disabled:true; width:130px; height: 32px;"
 				id="load-more-{{ exomes_or_genomes }}-hemi-button">Load +1 Hemi
                         </button>
 			{% endif %}
@@ -800,7 +813,7 @@
                                 for (var i = 0; i < n; i += 1) {
                                     tracks.push(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, i));
                                     tracks_counter[genomes_or_exomes][het_or_hom_or_hemi] += 1;
-                                } 
+                                }
                               })
                             });
 
@@ -833,7 +846,7 @@
                                     $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').html('No more ' + het_or_hom_or_hemi);
                                 }
                             };
-                       
+
                             ["genomes", "exomes"].forEach(function (genomes_or_exomes) {
                               ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
                                   $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').click(function () {
@@ -891,6 +904,9 @@
                             border-left: 1px solid #cccccc;
                             border-bottom: 1px solid #cccccc;
                         }
+                        $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
                     </style>
                     {% endif %}
                 </div>

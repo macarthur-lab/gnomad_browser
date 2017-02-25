@@ -639,3 +639,13 @@ TODO: come up with a better way to position tooltip
   margin-left: 30px;
   margin-right: 30px;
 }
+
+#filter-status-genome {
+  /*display: flex;
+  flex-direction: column;
+  width: 1px;*/
+}
+#filter-status-exome {
+  /*display: flex;
+  flex-direction: column;*/
+}

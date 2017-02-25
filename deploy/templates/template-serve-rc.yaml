@@ -25,7 +25,7 @@ spec:
         image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve
         env:
         - name: DEPLOYMENT_ENV
-          value: {{ DEPLOYMENT_ENV }}
+          value: production
         - name: MONGO_HOST
           value: {{ MONGO_HOST }}
         - name: MONGO_PORT
