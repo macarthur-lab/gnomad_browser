@@ -14,7 +14,7 @@ project_config = {
   'DATA_VERSION': '170219-release',
   'DEPLOYMENT_ENV': 'development',
 }
-
+#
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
@@ -28,8 +28,8 @@ loading_config = {
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
   'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.vcf.gz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
-  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
+  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',

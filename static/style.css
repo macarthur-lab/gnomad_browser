@@ -48,7 +48,7 @@
 
 .link {
     cursor: pointer;
-}
+}where
 
 .dl-horizontal dt {
     white-space: normal;
@@ -614,6 +614,7 @@ TODO: come up with a better way to position tooltip
 
 .download-header {
   padding-left: 13px;
+  margin-bottom: 15px;
 }
 
 .download-tables {
@@ -638,6 +639,7 @@ TODO: come up with a better way to position tooltip
 .download-code {
   margin-left: 30px;
   margin-right: 30px;
+  margin-bottom: 15px;
 }
 
 #filter-status-genome {

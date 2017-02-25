@@ -55,7 +55,7 @@
             });
 
             function setInitialPopulationTablesState(exomeFilter, genomeFilter) {
-                console.log(exomeFilter, genomeFilter)
+                // console.log(exomeFilter, genomeFilter)
                 console.log(window.variant)
                 if (exomeFilter === 'PASS' && genomeFilter === 'PASS') {
                     return 'all'
@@ -189,7 +189,7 @@
                 LCR: 'Filtered variant: found in a low complexity region',
                 InbreedingCoeff: 'Filtered variant: has an inbreeding coefficient < -0.3',
                 RF: 'Filtered variant: failed random forests filters',
-                AC0: 'Filtered variant: allele Count is zero (i.e. no high-confidence genotype)'
+                AC0: 'Filtered variant: allele count is zero (i.e. no high-confidence genotype)'
             }
 
             function addFilterFlag(filter) {

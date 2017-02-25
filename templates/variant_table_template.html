@@ -5,7 +5,7 @@
         LCR: 'in a low complexity region',
         InbreedingCoeff: 'has an inbreeding coefficient < -0.3',
         RF: 'failed random forests filters',
-        AC0: 'allele account is zero (i.e. no high-confidence genotype)'
+        AC0: 'allele count is zero (i.e. no high-confidence genotype)'
     }
 </script>
 <script type="text/template" id="variant-table-template">
@@ -27,7 +27,7 @@
             <td class="hidden">RSID</td>
             <th class="hidden">Reference</th>
             <th class="hidden">Alternate</th>
-            <th id="th-data" class="tooltip-table-header" data-tooltip="Dataset/VQSR sensitivity filter & hard filters">Data</th>
+            <th id="th-data" class="tooltip-table-header" data-tooltip="Dataset/VQSR sensitivity filter & hard filters">Source</th>
             <th id="th-hgvs" class="tooltip-table-header" data-tooltip="HGVS annotation (protein change, where defined, or transcript change for splice variants, otherwise empty)">Consequence</th>
             <th class="hidden">Protein Consequence</th>
             <th class="hidden">Transcript Consequence</th>
@@ -104,7 +104,7 @@
                             avatar = 'G';
                         }
                         %>
-                        <div class="label data-indicator-child data-indicator-<%= dataset %> label-<%= span_tag %> tooltip-table-header" data-tooltip="This variant is found in the <%= dataset %> dataset <%= variant[dataset].filter === 'PASS' ? 'with filter value PASS' : 'but is filtered for the following reasons: &#xa;' %> <%= variant[dataset].filter.split('|').map(function(filter_name) { console.log(filter_name); if (filter_name  !== 'PASS') { return filter_name + ': ' + window.filter_definitions[filter_name] } }).join('&#xa;') %>"><%= avatar %></div>
+                        <div class="label data-indicator-child data-indicator-<%= dataset %> label-<%= span_tag %> tooltip-table-header" data-tooltip="This variant is found in the <%= dataset == 'ExAC' ? 'exome' : 'genome'%> dataset <%= variant[dataset].filter === 'PASS' ? 'with filter value PASS' : 'but is filtered for the following reasons: &#xa;' %> <%= variant[dataset].filter.split('|').map(function(filter_name) { if (filter_name  !== 'PASS') { return filter_name + ': ' + window.filter_definitions[filter_name] } }).join('&#xa;') %>"><%= avatar %></div>
                     <% }); %>
                 </div>
             </td>
