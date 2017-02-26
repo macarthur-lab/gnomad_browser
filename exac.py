@@ -559,9 +559,7 @@ def precalculate_metrics(variant_collection, metric_collection, chrom=None):
     for variant in tqdm(db[variant_collection].find(projection=['chrom', 'quality_metrics', 'site_quality', 'allele_num', 'allele_count']), unit=" variants", total=db[variant_collection].count()):
         if chrom is not None and variant["chrom"] != chrom:
             continue
-        print '----------'
         for metric, value in variant['quality_metrics'].iteritems():
-            print metric, value
             metrics[metric].append(float(value))
         qual = float(variant['site_quality'])
         metrics['site_quality'].append(qual)
@@ -616,7 +614,7 @@ def precalculate_metrics(variant_collection, metric_collection, chrom=None):
     # print 'Done pre-calculating metrics!'
 
 def precalculate_metrics_exomes():
-    precalculate_metrics('exome_variants', 'metric_collection')
+    precalculate_metrics('exome_variants', 'exome_metrics')
 
 def precalculate_metrics_genomes():
     precalculate_metrics('genome_variants', 'genome_metrics')

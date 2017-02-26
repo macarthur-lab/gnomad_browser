@@ -12,11 +12,11 @@ spec:
     image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}precalculate
     env:
     - name: DEPLOYMENT_ENV
-      value: {{ DEPLOYMENT_ENV }}
+      value: production
     - name: MONGO_HOST
       value: {{ MONGO_HOST }}
     - name: MONGO_PORT
-      value: {{ MONGO_PORT }}
+      value: '{{ MONGO_PORT }}'
     - name: EXOMES_SINGLE_VCF
       value: {{ EXOMES_SINGLE_VCF }}
     - name: GENOMES_VCF_GLOB

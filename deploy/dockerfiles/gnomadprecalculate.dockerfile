@@ -11,4 +11,5 @@ CMD gcsfuse \
   --key-file=/var/www/deploy/keys/exac-gnomad-30ea80400948.json \
   exac /var/exac_data && \
   ls /var/exac_data && \
-  python manage.py precalculate_metrics
+  python manage.py precalculate_metrics_exomes && \
+  python manage.py precalculate_metrics_genomes

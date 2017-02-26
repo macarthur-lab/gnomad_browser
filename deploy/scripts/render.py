@@ -17,10 +17,10 @@ project_config = {
 #
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
+  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
 }
-
+#
 loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
