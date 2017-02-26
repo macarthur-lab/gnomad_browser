@@ -55,10 +55,10 @@ print 'WAHHHH'
 print MONGO_URL
 
 if DEPLOYMENT_ENVIRONMENT == 'development':
-     EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
-     GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/'
-     EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF', 'feb-x-chromosome/gnomad.exomes.sites.Y.vcf.bgz')))
-     GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'genomes-170224-x/*bgz'))
+     EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/170226/exomes/'
+     GENOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/170226/genomes/'
+     EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'gnomad.exomes.sites.X.vcf.bgz'))
+     GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'gnomad.genomes.sites.coding.X.vcf.bgz'))
 
 if DEPLOYMENT_ENVIRONMENT == 'production':
     EXOME_FILES_DIRECTORY = '/var/data/loading_data/exomes'

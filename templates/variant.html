@@ -199,7 +199,7 @@
 
                 if (filter !== 'PASS') {
                     var labels = filter.split('|').map(function(f) {
-                        return '<a href="#" class="label filter-label label-warning data-toggle="tooltip" delay="0" title="' + filter_definitions[f] + '">' + f + '</a> &#xa'
+                        return '<span style="cursor: pointer;" class="label filter-label label-warning data-toggle="tooltip" delay="0" title="' + filter_definitions[f] + '">' + f + '</span> &#xa'
                     }).join(' ')
                     return '<div>' + labels + '</div>'
                 }
@@ -207,19 +207,32 @@
             }
             $('#filter-status-exome').html(addFilterFlag(variant.exac.filter))
             $('#filter-status-genome').html(addFilterFlag(variant.gnomad.filter))
+
+            function renderAlleleFrequency(allele_frequency) {
+                var frequency = Number(allele_frequency)
+                if (frequency === 0) {
+                    return 0
+                }
+                else if (frequency >= 0.0001) {
+                    return frequency.toPrecision(4)
+                } else {
+                    return Number(frequency.toPrecision(4)).toExponential()
+                }
+            }
+
             if (variant.exac.allele_num) {
                 $('#ac-exome').html(variant.exac.allele_count)
                 $('#an-exome').html(variant.exac.allele_num)
-                $('#af-exome').html(Number(variant.exac.allele_freq.toPrecision(4)).toExponential())
+                $('#af-exome').html(renderAlleleFrequency(variant.exac.allele_freq))
             }
             if (variant.gnomad.allele_num) {
                 $('#ac-genome').html(variant.gnomad.allele_count)
                 $('#an-genome').html(variant.gnomad.allele_num)
-                $('#af-genome').html(Number(variant.gnomad.allele_freq.toPrecision(4)).toExponential())
+                $('#af-genome').html(renderAlleleFrequency(variant.gnomad.allele_freq))
             }
             $('#ac-total').html(variant.all.allele_count)
             $('#an-total').html(variant.all.allele_num)
-            $('#af-total').html(Number(variant.all.allele_freq.toPrecision(4)).toExponential())
+            $('#af-total').html(renderAlleleFrequency(variant.all.allele_freq))
 
             var initialSelection = setInitialPopulationTablesState(variant.exac.filter, variant.gnomad.filter)
             updatePopulationTable(window.variant, initialSelection)
