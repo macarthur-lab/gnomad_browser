@@ -10,15 +10,15 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.4',
+  'BROWSER_VERSION': '1.0.5-b',
   'DATA_VERSION': 'r2.0b1',
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'development',
 }
 
 options = {
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
+  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
 }
 
 loading_config = {
@@ -70,7 +70,7 @@ production_config = {
 }
 
 development_config = {
-  'ENVIRONMENT_NAME': 'd', # d for development
+  'ENVIRONMENT_NAME': 's', # d for development
 
   # gcloud config
   'GCLOUD_PROJECT': 'exac-gnomad',
@@ -85,18 +85,23 @@ development_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-1',
   'SERVING_NODES': '1',
-  'SERVER_REPLICAS': '2',
+  'SERVER_REPLICAS': '20',
   'SERVING_AUTOSCALE_MINIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+  # 'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-3',
+  # 'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-3',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
-  'MONGO_DISK': 'gnomad-mongo-disk-3',
+  # 'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
+  # 'MONGO_DISK': 'gnomad-mongo-disk-3',
+  'MONGO_DISK': 'gnomad-mongo-disk-2',
+
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
 }

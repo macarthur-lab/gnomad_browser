@@ -26,10 +26,10 @@ fi
 
 # Bring down previous replication controller
 kubectl delete service $SERVER_REPLICATION_CONTROLLER_NAME
-kubectl delete hpa $SERVER_REPLICATION_CONTROLLER_NAME
-kubectl delete rc $SERVER_REPLICATION_CONTROLLER_NAME
+# kubectl delete hpa $SERVER_REPLICATION_CONTROLLER_NAME
+kubectl delete deployment $SERVER_REPLICATION_CONTROLLER_NAME
 kubectl delete service $MONGO_SERVICE_NAME
-kubectl delete rc $MONGO_REPLICATION_CONTROLLER
+kubectl delete deployment $MONGO_REPLICATION_CONTROLLER
 
 read -p "Are you sure you want to delete the cluster?" input
 if [[ $input = "n" ]]; then

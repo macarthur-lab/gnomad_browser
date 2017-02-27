@@ -29,7 +29,7 @@ kubectl delete pod $LOADING_POD_NAME
 if [[ $RESTART_MONGO = "true" ]]; then
   # Stop mongo
   kubectl delete service $MONGO_SERVICE_NAME
-  kubectl delete rc $MONGO_REPLICATION_CONTROLLER
+  kubectl delete deployment $MONGO_REPLICATION_CONTROLLER
 fi
 
 if [[ $REBUILD_IMAGES = "all" ]]; then
