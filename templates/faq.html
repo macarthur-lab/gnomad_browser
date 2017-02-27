@@ -45,7 +45,7 @@
             <li class="media">
                 <div class="media-body">
                     <h4 class="media-heading">What version of Gencode was used to annotate variants?</h4>
-                    Version 19 (annotated with VEP version 81).
+                    Version 19 (annotated with VEP version 85).
                 </div>
             </li>
             <li class="media">
@@ -56,13 +56,6 @@
                     and thus when parsing onto the browser, we apply a <a href="http://www.cureffi.org/2014/04/24/converting-genetic-variants-to-their-minimal-representation/">minimal representation</a> script.
                     For instance, a variant whose REF is GC and ALT alleles are TC,G - the first ALT allele is actually a SNP and will be represented in the browser as G->T.
                 </div>
-            </li>
-            <li class="media">
-                <div class="media-body">
-                    <h4 class="media-heading">Why does the allele frequency (AF) found in the gnomAD VCF differ from the AF shown on the browser?</h4>
-                    The AF shown in the VCF is AC/AN.  The browser however shows the adjusted allele frequency (AC_adj/AN_adj). The raw counts (AC and AN) refer to the total number of chromosomes with this allele, and total that were able to be called (whether reference or alternate), respectively. Thus, the allele frequency is AC/AN. However, for more stringent applications, we adjusted the allele count to only include individuals with genotype quality (GQ) >= 20 and depth (DP) >= 10, which we term AC_adj (and correspondingly, AN_adj for total number of chromosomes from individuals with those criteria regardless of genotype call).
-                </div>
-            </li>
             <li class="media">
                 <div class="media-body">
                     <h4 class="media-heading">Are all the individuals in the <a href="http://evs.gs.washington.edu/EVS/">Exome Variant Server</a> included?</h4>
