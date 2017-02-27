@@ -14,4 +14,4 @@ CMD gcsfuse \
   exac /var/exac_data && \
   # npm --prefix gnomad run build && \
   # python manage.py create_cache && \
-  gunicorn --workers 2 --bind 0.0.0.0:80 wsgi --access-logfile -
+  gunicorn --workers 4 --bind 0.0.0.0:80 wsgi --access-logfile -
