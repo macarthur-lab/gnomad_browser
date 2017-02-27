@@ -1224,11 +1224,11 @@ def read_viz_files(path):
     return rv
 
 
-@app.after_request
-def apply_caching(response):
-    # prevent click-jacking vulnerability identified by BITs
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    return response
+# @app.after_request
+# def apply_caching(response):
+#     # prevent click-jacking vulnerability identified by BITs
+#     response.headers["X-Frame-Options"] = "SAMEORIGIN"
+#     return response
 
 @app.route('/report/<dataset>/<variant_id>')
 def report_variant(variant_id, dataset):
