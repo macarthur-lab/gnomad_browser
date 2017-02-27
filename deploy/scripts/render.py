@@ -17,7 +17,7 @@ project_config = {
 #
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
+  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
 }
 #

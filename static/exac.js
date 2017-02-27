@@ -24,6 +24,19 @@ var EXON_PADDING = 75;
         - Brett, will you please write some fucking tests for this...
 
  */
+ function renderAlleleFrequency(allele_frequency) {
+    var frequency = Number(allele_frequency)
+    if (frequency === 0) {
+        return 0
+    }
+    else if (frequency >= 0.0001) {
+        return frequency.toPrecision(4)
+    } else {
+        return Number(frequency.toPrecision(4)).toExponential()
+    }
+}
+
+
 window.get_coding_coordinates = function(_transcript, position_list, skip_utrs) {
 //    console.log(_transcript.exons);
     var exons;
@@ -786,7 +799,7 @@ function update_variants() {
         $(this).find('.table-hom-count').html(variant[dataSelection].hom_count)
         $(this).find('.table-hemi-count').html(variant[dataSelection].hemi_count)
         // $(this).find('.table-allele-freq').html(variant[dataSelection].allele_freq.toPrecision(4))
-        $(this).find('.table-allele-freq').html(Number(variant[dataSelection].allele_freq.toPrecision(3)).toExponential())
+        $(this).find('.table-allele-freq').html(renderAlleleFrequency(variant[dataSelection].allele_freq))
         $(this).find('.table-allele-freq-box').empty()
         Object.keys(variant[dataSelection].pop_acs).map(function(pop) {
             $('#td-pop-acs-' + pop.replace(/[\s()]/g, '') + variant.variant_id).html(variant[dataSelection].pop_acs[pop])
