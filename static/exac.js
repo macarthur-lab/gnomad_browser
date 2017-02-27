@@ -186,11 +186,11 @@ window.get_max_cnv = function(_cnvs, filter_status){
  *
  */
 
-quality_chart_margin = {top: 10, right: 30, bottom: 45, left: 65};
+quality_chart_margin = {top: 10, right: 30, bottom: 45, left: 74};
 quality_chart_height = 250 - quality_chart_margin.top - quality_chart_margin.bottom;
 quality_chart_width = 300 - quality_chart_margin.left - quality_chart_margin.right;
 xoffset = 40;
-yoffset = 55;
+yoffset = 63;
 
 function draw_quality_histogram(data, container, log, xlabel, ylabel) {
     //Takes histogram data as a list of [midpoint, value] and puts into container

@@ -1,18 +1,19 @@
 ---
-kind: ReplicationController
-apiVersion: v1
+kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
   name: {{ PROJECT_ENVIRONMENT }}-serve
   labels:
     state: serving
 spec:
-  replicas: 1
+  replicas: {{ SERVER_REPLICAS }}
   selector:
-    app: {{ PROJECT_ENVIRONMENT}}-app
+    matchLabels:
+      name: {{ PROJECT_ENVIRONMENT}}-app
   template:
     metadata:
       labels:
-        app: {{ PROJECT_ENVIRONMENT }}-app
+        name: {{ PROJECT_ENVIRONMENT }}-app
     spec:
       volumes:
       - name: {{ READVIZ_VOLUME }}
@@ -22,7 +23,7 @@ spec:
           readOnly: true
       containers:
       - name: {{ PROJECT_ENVIRONMENT }}-serve
-        image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve
+        image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}
         env:
         - name: DEPLOYMENT_ENV
           value: production

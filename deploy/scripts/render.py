@@ -10,11 +10,11 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '0.0.1',
-  'DATA_VERSION': '170219-release',
+  'BROWSER_VERSION': '0.0.5',
+  'DATA_VERSION': 'r2.0',
   'DEPLOYMENT_ENV': 'development',
 }
-#
+
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
@@ -53,6 +53,7 @@ production_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-4',
   'SERVING_NODES': '2',
+  'SERVER_REPLICAS': '10',
   'SERVING_AUTOSCALE_MINIMUM': '10',
   'SERVING_AUTOSCALE_MAXIMUM': '20',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
@@ -84,6 +85,7 @@ development_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-1',
   'SERVING_NODES': '1',
+  'SERVER_REPLICAS': '2',
   'SERVING_AUTOSCALE_MINIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
@@ -154,4 +156,3 @@ def parse_templates():
 
 clean()
 parse_templates()
-

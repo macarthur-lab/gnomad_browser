@@ -259,11 +259,11 @@
     }
     </style>
     <script>
-        var af_buckets = [0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1];
+        var af_buckets = [0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1];
         function get_af_bucket_text(bin) {
             if (bin == 'singleton' || bin == 'doubleton') {
                 return 'This is the site quality distribution for all ' + bin + 's in ExAC.';
-            } else if (bin == '0.0001') {
+            } else if (bin == '0.00005') {
                 return 'This is the site quality distribution for all variants with AF < ' + bin + ' in ExAC.';
             } else {
                 return 'This is the site quality distribution for all variants with ' + af_buckets[af_buckets.indexOf(parseFloat(bin)) - 1] + ' < AF < ' + bin + ' in ExAC.';

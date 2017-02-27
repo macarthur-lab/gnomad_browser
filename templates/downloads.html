@@ -14,28 +14,28 @@
         </p>
         <h3 class="download-header">Variant Dataset (VDS) format</h3>
         <p class="download-header">
-            <a href="https://hail.is/">Hail</a> users can download gnomAD data quickly in <a href="https://hail.is/hail/overview.html#overview-vds">Variant Dataset (VDS) format</a>.
+            <a href="https://hail.is/">Hail</a> users can download gnomAD data in <a href="https://hail.is/hail/overview.html#overview-vds">Variant Dataset (VDS) format</a>.
         </p>
         <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil">Google Cloud Storage</a> <code>gsutil</code> tool to copy partitions in parallel to your own storage bucket or local hard drive.</p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
-            To download individual exome sites VDS files (autosomes: 56.58 GB, chrX: 1.16 GB, chrY: 15.71 MB)
+            To download individual exome sites VDS files:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.release.autosomes.vds gnomad_data/
-gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.release.X.vds gnomad_data/
-gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.release.Y.vds gnomad_data/</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.autosomes.vds gnomad_data # 16 GB
+gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.X.vds gnomad_data # 413 MB
+gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.exomes.r2.0.sites.Y.vds gnomad_data # 5 MB</code></pre>
         <p class="download-header">
-        To download individual genome sites VDS files (autosomes: 102.33 GB, chrX: 4.87 GB)
+        To download individual genome sites VDS files:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.genomes.r2.0.sites.release.autosomes.vds gnomad_data/
-gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.genomes.r2.0.sites.release.X.vds gnomad_data/</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.genomes.r2.0.sites.autosomes.vds gnomad_data # 102 GB
+gsutil -m cp -r gs://gnomad-public/release-170224/gnomad.genomes.r2.0.sites.X.vds gnomad_data # 5 GB</code></pre>
         <p class="download-header">
-        Or copy everything at once (164.96 GB)
+        Or copy everything at once:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/* gnomad_data/</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170224/* gnomad_data # 124 GB</code></pre>
         <h3 class="download-header">VCF and coverage files</h3>
         <p class="download-header">
-            To download VCFs and coverage the old-fashioned way as a 103 GB tar, click                                              <a href="https://data.broadinstitute.org/gnomAD/release-170227/gnomAD.release.170227.tar">here</a> or type on command line (this will take 12 hours or so...)
+            To download VCFs and coverage as a 103 GB tar, click                                              <a href="https://data.broadinstitute.org/gnomAD/release-170227/gnomAD.release.170227.tar">here</a> or on command line (this will take 12 hours or so...):
         </p>
             <pre class="download-code"><code>curl -O https://data.broadinstitute.org/gnomAD/release-170227/gnomAD.release.170227.tar</code></pre>
         <p class="download-header">

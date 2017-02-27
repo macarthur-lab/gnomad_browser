@@ -42,7 +42,7 @@ fi
 
 kubectl delete service $SERVER_REPLICATION_CONTROLLER_NAME
 kubectl delete hpa $SERVER_REPLICATION_CONTROLLER_NAME
-kubectl delete rc $SERVER_REPLICATION_CONTROLLER_NAME
+kubectl delete deployment $SERVER_REPLICATION_CONTROLLER_NAME
 
 if [[ $RESTART_MONGO = "true" ]]; then
   # Stop mongo
@@ -60,14 +60,14 @@ fi
 # Start the server and expose to the internet w/ autoscaling & load balancing
 kubectl create -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
 
-kubectl expose rc $SERVER_REPLICATION_CONTROLLER_NAME \
+kubectl expose deployment $SERVER_REPLICATION_CONTROLLER_NAME \
 --type="LoadBalancer" \
 --load-balancer-ip="${EXTERNAL_IP}"
 
 # kubectl create -f deploy/config/$SERVER_INGRESS_CONFIG
 
-kubectl autoscale rc $SERVER_REPLICATION_CONTROLLER_NAME \
---min=$SERVING_AUTOSCALE_MINIMUM \
---max=$SERVING_AUTOSCALE_MAXIMUM \
---cpu-percent=$SERVING_AUTOSCALE_MAXIMUM_CPU
-
+# kubectl autoscale deployment $SERVER_REPLICATION_CONTROLLER_NAME \
+# --min=$SERVING_AUTOSCALE_MINIMUM \
+# --max=$SERVING_AUTOSCALE_MAXIMUM \
+# --cpu-percent=$SERVING_AUTOSCALE_MAXIMUM_CPU
+#
