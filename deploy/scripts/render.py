@@ -10,11 +10,11 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '0.0.5',
+  'BROWSER_VERSION': '0.0.7',
   'DATA_VERSION': 'r2.0',
   'DEPLOYMENT_ENV': 'development',
 }
-
+#
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
