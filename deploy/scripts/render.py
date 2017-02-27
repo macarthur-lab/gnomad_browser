@@ -10,17 +10,17 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '0.0.7',
-  'DATA_VERSION': 'r2.0',
+  'BROWSER_VERSION': '0.0.8',
+  'DATA_VERSION': 'r2.0b1',
   'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
+  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
 }
-#
+
 loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
@@ -95,8 +95,8 @@ development_config = {
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-1',
-  'MONGO_DISK': 'gnomad-mongo-disk',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  'MONGO_DISK': 'gnomad-mongo-disk-3',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
 }

@@ -1,11 +1,14 @@
-apiVersion: v1
-kind: ReplicationController
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   labels:
     name: {{ PROJECT_ENVIRONMENT }}-mongo
   name: {{ PROJECT_ENVIRONMENT }}-mongo-controller
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: {{ PROJECT_ENVIRONMENT }}-mongo
   template:
     metadata:
       labels:
@@ -14,6 +17,9 @@ spec:
       containers:
       - image: mongo
         name: {{ PROJECT_ENVIRONMENT }}-mongo
+        env:
+          - name: DATA_VERSION
+            value: {{ DATA_VERSION }}
         ports:
         - name: {{ PROJECT_ENVIRONMENT }}-mongo
           containerPort: {{ MONGO_PORT }}

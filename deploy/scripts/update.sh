@@ -16,7 +16,7 @@ echo "Environment is ${PROJECT_ENVIRONMENT}"
 echo "Images will be rebuilt: ${REBUILD_IMAGES}"
 echo "Mongo disk set to: ${MONGO_DISK}"
 echo "Readviz disk set to: ${READVIZ_DISK}"
-echo "Mongo will be restarted: ${RESTART_MONGO}"
+echo "Mongo will be updated: ${RESTART_MONGO}"
 echo "Monitor loading cluster? ${MONITOR_LOADING}"
 
 read -p "Are you sure you want to update ${DEPLOYMENT_ENV} server deployment? (y/n) " input
@@ -35,5 +35,9 @@ if [[ $REBUILD_IMAGES = "specific" ]]; then
   gcloud docker push "${SERVER_IMAGE_TAG}"
 fi
 
-# Start the server and expose to the internet w/ autoscaling & load balancing
+if [[ $RESTART_MONGO = "true" ]]; then
+  # Stop mongo
+  kubectl apply -f deploy/config/$MONGO_CONTROLLER_CONFIG
+fi
+
 kubectl apply -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG

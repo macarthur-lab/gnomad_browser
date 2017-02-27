@@ -47,7 +47,7 @@ kubectl delete deployment $SERVER_REPLICATION_CONTROLLER_NAME
 if [[ $RESTART_MONGO = "true" ]]; then
   # Stop mongo
   kubectl delete service $MONGO_SERVICE_NAME
-  kubectl delete rc $MONGO_REPLICATION_CONTROLLER
+  kubectl delete deployment $MONGO_REPLICATION_CONTROLLER
 fi
 
 if [[ $RESTART_MONGO = "true" ]]; then
