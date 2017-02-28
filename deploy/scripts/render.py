@@ -10,15 +10,15 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.6-rc14',
-  'DATA_VERSION': 'rc2.0.1',
-  'DEPLOYMENT_ENV': 'development',
+  'BROWSER_VERSION': '1.0.6',
+  'DATA_VERSION': '2.0.1',
+  'DEPLOYMENT_ENV': 'production',
 }
-
+#
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
-  'RESTART_MONGO': 'false', # Restart mongo on every script launch?
-  'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
+  'RESTART_MONGO': 'true', # Restart mongo on every script launch?
+  'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
 }
 
 loading_config = {
@@ -68,8 +68,8 @@ production_config = {
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
 
   # mongo
-  'MONGO_VOLUME': 'gnomad-dev-mongo-persistent-storage',
-  'MONGO_DISK': 'gnomad-mongo-disk',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  'MONGO_DISK': 'gnomad-mongo-disk-3',
   'MONGO_HOST': 'gnomad-p-mongo',
   'MONGO_PORT': 27017,
 }
@@ -102,9 +102,9 @@ development_config = {
   # 'READVIZ_DISK': 'gnomad-readviz-exons-gpd-3',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
   # 'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
-  'MONGO_DISK': 'gnomad-mongo-disk-3',
+  'MONGO_DISK': 'gnomad-mongo-disk-2',
   # 'MONGO_DISK': 'gnomad-mongo-disk-2',
 
   'MONGO_HOST': 'gnomad-d-mongo',
