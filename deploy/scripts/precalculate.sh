@@ -21,23 +21,21 @@ if [[ $input = n ]]; then
   exit 0
 fi
 
+if [[ $RESTART_MONGO = "true" ]]; then
+  # Stop mongo
+  kubectl delete service $MONGO_SERVICE_NAME
+  kubectl delete deployment $MONGO_REPLICATION_CONTROLLER
+  kubectl create -f deploy/config/$MONGO_SERVICE_CONFIG
+  kubectl create -f deploy/config/$MONGO_CONTROLLER_CONFIG
+  sleep 30
+fi
+
 kubectl delete pod gnomad-d-precalculate
 
-# docker build -f deploy/dockerfiles/gnomadprecalculate.dockerfile -t gcr.io/exac-gnomad/gnomadprecalculate .
-# gcloud docker push gcr.io/exac-gnomad/gnomadprecalculate
-#
-# if [[ $REBUILD_IMAGES = "all" ]]; then
-#   "$(dirname "$0")"/images-build.sh
-#   "$(dirname "$0")"/images-push.sh
-# fi
+if [[ $REBUILD_IMAGES = "specific" ]]; then
+  echo "Rebuilding precalculate image"
+  docker build -f deploy/dockerfiles/gnomadprecalculate.dockerfile -t gcr.io/exac-gnomad/gnomadprecalculate .
+  gcloud docker push gcr.io/exac-gnomad/gnomadprecalculate
+fi
 
-# Create the replication controller
-# kubectl create -f deploy/config/mongo-service.yaml
-# kubectl create -f deploy/config/mongo-controller.yaml
-
-# Wait for mongo to initialize
-# sleep 120
-
-# load data
-
-# kubectl create -f deploy/config/gnomad-d-precalculate-pod.yaml
+kubectl create -f deploy/config/gnomad-d-precalculate-pod.yaml

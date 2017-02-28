@@ -10,33 +10,33 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.5-b',
+  'BROWSER_VERSION': '1.0.6',
   'DATA_VERSION': 'r2.0b1',
   'DEPLOYMENT_ENV': 'development',
 }
 
 options = {
-  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
 }
-
+#
 loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
-  'EXOMES_SINGLE_VCF': 'feb-2017-release/gnomad.exomes.sites.vcf.gz',
-  'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.autosomes.vcf.bgz/*.bgz',
+  'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
+  'GENOMES_VCF_GLOB': '170228-release/*.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/feb-2017-distribute',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
-  'TABIX_DISK': 'gnomad-tinabix-temp'
+  'TABIX_DISK': 'gnomad-tabix-temp'
 }
 
 production_config = {
@@ -70,7 +70,7 @@ production_config = {
 }
 
 development_config = {
-  'ENVIRONMENT_NAME': 's', # d for development
+  'ENVIRONMENT_NAME': 'd', # d for development
 
   # gcloud config
   'GCLOUD_PROJECT': 'exac-gnomad',
@@ -85,22 +85,22 @@ development_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
   'SERVER_MACHINE_TYPE': 'n1-standard-1',
   'SERVING_NODES': '1',
-  'SERVER_REPLICAS': '20',
+  'SERVER_REPLICAS': '1',
   'SERVING_AUTOSCALE_MINIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM': '1',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  # 'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-3',
-  # 'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-3',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
+  # 'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-3',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+  # 'READVIZ_DISK': 'gnomad-readviz-exons-gpd-3',
 
   # mongo config
-  # 'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
-  # 'MONGO_DISK': 'gnomad-mongo-disk-3',
-  'MONGO_DISK': 'gnomad-mongo-disk-2',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  # 'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
+  'MONGO_DISK': 'gnomad-mongo-disk-3',
+  # 'MONGO_DISK': 'gnomad-mongo-disk-2',
 
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,

@@ -16,3 +16,4 @@ exac_env
 apache
 deploy/keys/*
 deploy/config/*
+metrics

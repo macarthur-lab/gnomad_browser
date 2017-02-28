@@ -1,15 +1,11 @@
-FROM gcr.io/exac-gnomad/gnomadbase
+FROM mongo
 
-MAINTAINER MacArthur Lab
+MAINTAINER Matthew Solomonson, <msolomon@broadinstitute.org>, MacArthur Lab
 
-COPY . /var/www/
+RUN mkdir /data/metrics
 
-RUN mkdir /var/exac_data;
+COPY deploy/dockerfiles/cloudscripts/load-metrics.sh /data/metrics/
 
-CMD gcsfuse \
-  --implicit-dirs \
-  --key-file=/var/www/deploy/keys/exac-gnomad-30ea80400948.json \
-  exac /var/exac_data && \
-  ls /var/exac_data && \
-  python manage.py precalculate_metrics_exomes && \
-  python manage.py precalculate_metrics_genomes
+COPY metrics /data/metrics
+
+CMD /data/metrics/load-metrics.sh
