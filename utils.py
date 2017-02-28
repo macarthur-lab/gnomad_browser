@@ -12,7 +12,7 @@ METRICS = [
     'ReadPosRankSum',
     'VQSLOD'
 ]
-
+AS_METRICS = ['AS_RF', 'DREF_MEDIAN', 'GQ_MEDIAN', 'DP_MEDIAN', 'AB_MEDIAN']
 
 def add_transcript_coordinate_to_variants(db, variant_list, transcript_id):
     """

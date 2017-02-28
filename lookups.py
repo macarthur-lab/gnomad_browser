@@ -287,7 +287,7 @@ def get_metrics(db, variant, source):
     if 'allele_count' not in variant or variant['allele_num'] == 0:
         return None
     metrics = {}
-    for metric in METRICS:
+    for metric in METRICS + AS_METRICS:
         metrics[metric] = db[metrics_collection].find_one({'metric': metric}, projection={'_id': False})
 
     metric = None

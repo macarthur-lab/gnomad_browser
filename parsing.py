@@ -172,8 +172,7 @@ def get_variants_from_sites_vcf(sites_vcf):
                 if variant['chrom'] == 'Y':
                     variant['pop_hemis'] = variant['pop_acs']
                 variant['quality_metrics'] = dict([(x, info_field[x]) for x in METRICS if x in info_field])
-                as_metrics = ('AS_RF', 'DREF_MEDIAN', 'GQ_MEDIAN', 'DP_MEDIAN', 'AB_MEDIAN')
-                for metric in as_metrics:
+                for metric in AS_METRICS:
                     if metric in info_field and info_field[metric] != '.':
                         variant['quality_metrics'][metric] = info_field[metric].split(',')[i]
                 variant['genes'] = list({annotation['Gene'] for annotation in vep_annotations})
