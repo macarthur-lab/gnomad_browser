@@ -879,6 +879,9 @@
                             locus: locus,
                             showKaryo: false,
                             tracks: tracks,
+                            id:'hg19',
+                            fastaURL: '/read_viz/hg19.fa',
+			    indexURL: '/read_viz/hg19.fa.fai'
                         };
 
                         igv.createBrowser($("#igv-container")[0], options);
