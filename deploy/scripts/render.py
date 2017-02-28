@@ -10,17 +10,17 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.6',
-  'DATA_VERSION': 'r2.0b1',
+  'BROWSER_VERSION': '1.0.6-rc8',
+  'DATA_VERSION': 'rc2.1',
   'DEPLOYMENT_ENV': 'development',
 }
 
 options = {
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'none', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'true', # Start server on the loading cluster rather than serving
 }
-#
+
 loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
@@ -28,17 +28,21 @@ loading_config = {
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
   'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
-  'GENOMES_VCF_GLOB': '170228-release/*.bgz',
+  # 'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
+  'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
+  # 'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
   # 'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  # 'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
+  # 'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/gnomad.genomes.sites.X.vcf.bgz',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
-
+#
 production_config = {
   'ENVIRONMENT_NAME': 'p', # p for production
 
