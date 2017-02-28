@@ -860,7 +860,7 @@
                                 }
                             };
 
-                            ["genomes", "exomes"].forEach(function (genomes_or_exomes) {
+                            ["exomes", "genomes"].forEach(function (genomes_or_exomes) {
                               ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
                                   $('#load-more-'+genomes_or_exomes+'-'+het_or_hom_or_hemi+'-button').click(function () {
                                      load_one_more(genomes_or_exomes, het_or_hom_or_hemi);
