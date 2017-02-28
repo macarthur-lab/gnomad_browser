@@ -6,10 +6,15 @@ set -e
 . "$(dirname "$0")"/../config/config.sh
 
 # Set project
+# gcloud config set project $GCLOUD_PROJECT
+# gcloud container clusters get-credentials $LOADING_CLUSTER_NAME --zone=$GCLOUD_ZONE
+# kubectl config set-context $LOADING_CLUSTER
+# kubectl config set-cluster $LOADING_CLUSTER
+
 gcloud config set project $GCLOUD_PROJECT
-gcloud container clusters get-credentials $LOADING_CLUSTER_NAME --zone=$GCLOUD_ZONE
-kubectl config set-context $LOADING_CLUSTER
-kubectl config set-cluster $LOADING_CLUSTER
+gcloud container clusters get-credentials $SERVING_CLUSTER_NAME --zone=$GCLOUD_ZONE
+kubectl config set-context $SERVING_CLUSTER
+kubectl config set-cluster $SERVING_CLUSTER
 
 # Create the disk, wait 5 minutes
 # gcloud compute disks create --size=1000GB --zone=us-east1-d gnomad-readviz-exons-gpd
@@ -30,9 +35,7 @@ gcloud docker push gcr.io/exac-gnomad/gnomadcopyreadviz
 
 # sleep 60
 
-# start pod
-kubectl config set-context gke_exac-gnomad_us-east1-d_gnomad-loading-cluster
-kubectl create -f deploy/config/gnomad-copy-readviz-pod.yaml
+kubectl create -f deploy/config/gnomad-d-copy-readviz-pod.yaml
 
 # takedown pod
 # kubectl delete pod gnomad-copyreadviz

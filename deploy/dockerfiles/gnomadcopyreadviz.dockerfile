@@ -10,3 +10,5 @@ CMD \
   # gsutil -m cp -r gs://gnomad-browser/combined_bams_exomes/* /var/data/readviz/combined_bams_exomes/ && \
   # gsutil cp gs://exac/gencode.v19.sorted.bed /var/data/readviz/ && \
   # gsutil cp gs://exac/gencode.v19.sorted.bed.idx /var/data/readviz/
+  # gsutil cp gs://exac/hg19.fa /var/data/readviz/ && \
+  gsutil cp gs://exac/hg19.fa.fai /var/data/readviz/

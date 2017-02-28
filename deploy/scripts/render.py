@@ -12,7 +12,7 @@ project_config = {
   'PROJECT_NAME': 'gnomad',
   'BROWSER_VERSION': '1.0.6',
   'DATA_VERSION': '2.0.1',
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {
@@ -37,7 +37,7 @@ loading_config = {
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   # 'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
-
+#
   # 'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
   'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-distribution',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
@@ -96,7 +96,7 @@ development_config = {
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-1',
+  'READVIZ_VOLUME': 'gnomad-d-readviz-exons-vol-1',
   # 'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-3',
   'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
   # 'READVIZ_DISK': 'gnomad-readviz-exons-gpd-3',
