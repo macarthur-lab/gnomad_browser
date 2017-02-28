@@ -832,7 +832,7 @@
 
                         } else {
                             //add track #1 for het and hom (assuming they're available)
-                            ["genomes", "exomes"].forEach(function (genomes_or_exomes) {
+                            ["exomes", "genomes"].forEach(function (genomes_or_exomes) {
                               ["het", "hom", "hemi"].forEach(function (het_or_hom_or_hemi) {
                                 if (read_viz_data[genomes_or_exomes][het_or_hom_or_hemi]['n_available'] > 0) {
                                     tracks.push(get_bam_track_config(read_viz_data, genomes_or_exomes, het_or_hom_or_hemi, 0));
