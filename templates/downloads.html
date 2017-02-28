@@ -16,7 +16,7 @@
         <p class="download-header">
             <a href="https://hail.is/">Hail</a> users can download gnomAD data in <a href="https://hail.is/hail/overview.html#overview-vds">Variant Dataset (VDS) format</a>.
         </p>
-        <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil">Google Cloud Storage</a> <code>gsutil</code> tool to copy partitions in parallel to your own storage bucket or local hard drive.</p>
+        <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil">Google Cloud Storage</a> <code>gsutil</code> tool to copy partitions in parallel to your own storage bucket or local hard drive. <a href="http://discuss.hail.is/t/using-hail-on-the-google-cloud-platform/80">This blog post</a> can help you get started with Hail on the cloud.</p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
             To download individual exome sites VDS files:
@@ -40,7 +40,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
             <pre class="download-code"><code>curl -O https://data.broadinstitute.org/gnomAD/release-170228/gnomAD.release.170228.tar</code></pre>
         <p class="download-header">
             To download specific chromosomes
-            <pre class="download-code"><code>curl -O https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.bgz</code></pre>
+            <pre class="download-code"><code>curl -O https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.gz</code></pre>
         </p>
         <p class="download-header">Explore the <a href="https://data.broadinstitute.org/gnomAD/release-170228">data directory</a> to understand the folder structure.</p>
          <ul class="media-list">
@@ -271,7 +271,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.bgz">chr 1 sites VCF (6.9 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.gz">chr 1 sites VCF (6.9 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -283,7 +283,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.2.vcf.bgz">chr 2 sites VCF (7.3 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.2.vcf.gz">chr 2 sites VCF (7.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -295,7 +295,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.3.vcf.bgz">chr 3 sites VCF (6.1 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.3.vcf.gz">chr 3 sites VCF (6.1 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -307,7 +307,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.4.vcf.bgz">chr 4 sites VCF (5.7 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.4.vcf.gz">chr 4 sites VCF (5.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -319,7 +319,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.5.vcf.bgz">chr 5 sites VCF (5.4 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.5.vcf.gz">chr 5 sites VCF (5.4 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -331,7 +331,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.6.vcf.bgz">chr 6 sites VCF (5.0 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.6.vcf.gz">chr 6 sites VCF (5.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -343,7 +343,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.7.vcf.bgz">chr 7 sites VCF (5.0 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.7.vcf.gz">chr 7 sites VCF (5.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -355,7 +355,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.8.vcf.bgz">chr 8 sites VCF (4.7 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.8.vcf.gz">chr 8 sites VCF (4.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -367,7 +367,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.9.vcf.bgz">chr 9 sites VCF (3.8 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.9.vcf.gz">chr 9 sites VCF (3.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -379,7 +379,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.10.vcf.bgz">chr 10 sites VCF (4.0 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.10.vcf.gz">chr 10 sites VCF (4.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -391,7 +391,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.11.vcf.bgz">chr 11 sites VCF (4.3 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.11.vcf.gz">chr 11 sites VCF (4.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -403,7 +403,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.12.vcf.bgz">chr 12 sites VCF (4.2 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.12.vcf.gz">chr 12 sites VCF (4.2 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -415,7 +415,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.13.vcf.bgz">chr 13 sites VCF (2.7 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.13.vcf.gz">chr 13 sites VCF (2.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -427,7 +427,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.14.vcf.bgz">chr 14 sites VCF (2.8 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.14.vcf.gz">chr 14 sites VCF (2.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -439,7 +439,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.15.vcf.bgz">chr 15 sites VCF (2.7 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.15.vcf.gz">chr 15 sites VCF (2.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -451,7 +451,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.16.vcf.bgz">chr 16 sites VCF (3.1 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.16.vcf.gz">chr 16 sites VCF (3.1 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -463,7 +463,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.17.vcf.bgz">chr 17 sites VCF (2.8 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.17.vcf.gz">chr 17 sites VCF (2.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -475,7 +475,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.18.vcf.bgz">chr 18 sites VCF (2.3 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.18.vcf.gz">chr 18 sites VCF (2.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -487,7 +487,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.19.vcf.bgz">chr 19 sites VCF (2.3 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.19.vcf.gz">chr 19 sites VCF (2.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -499,7 +499,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.20.vcf.bgz">chr 20 sites VCF (1.8 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.20.vcf.gz">chr 20 sites VCF (1.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -511,7 +511,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.21.vcf.bgz">chr 21 sites VCF (1.2 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.21.vcf.gz">chr 21 sites VCF (1.2 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -523,7 +523,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.22.vcf.bgz">chr 22 sites VCF (1.3 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.22.vcf.gz">chr 22 sites VCF (1.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -535,7 +535,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.X.vcf.bgz">chr X sites VCF (4.7 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.X.vcf.gz">chr X sites VCF (4.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -547,7 +547,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                             <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.coding.autosomes.vcf.bgz">Autosomes sites VCF (coding only, 2.4 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.coding.autosomes.vcf.gz">Autosomes sites VCF (coding only, 2.4 GB)</a>
                                     </p>
                                 </td>
                                <td width="428">
@@ -559,7 +559,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                             <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.coding.X.vcf.bgz">chr X sites VCF (coding only, 0.6 GB)</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.coding.X.vcf.gz">chr X sites VCF (coding only, 0.6 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
@@ -583,7 +583,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.
                              <!-- <tr>
                                 <td width="857">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.bgz">chr Y sites VCF</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.gz">chr Y sites VCF</a>
                                     </p>
                                 </td>
                             </tr> -->
