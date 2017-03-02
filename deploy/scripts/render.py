@@ -2,6 +2,7 @@ import jinja2
 import os
 import stat
 from os import listdir
+from time import localtime, strftime
 
 template_folder_path = os.path.join(os.path.dirname(__file__), '../templates')
 config_folder_path = os.path.join(os.path.dirname(__file__), '../config')
@@ -12,13 +13,16 @@ project_config = {
   'PROJECT_NAME': 'gnomad',
   'BROWSER_VERSION': '1.0.7',
   'DATA_VERSION': '2.0.1',
-  'DEPLOYMENT_ENV': 'production',
+  'API_VERSION': '0.0.4',
+  'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
+  'DEPLOYMENT_ENV': 'development',
 }
-#
+
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
+  'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
 }
 
 loading_config = {
@@ -28,18 +32,12 @@ loading_config = {
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
   'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
-  # 'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
-  'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.X.vcf.bgz/*.bgz',
-  # 'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/*.bgz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-release/gnomad.genomes.sites.X.vcf.bgz',
-  # 'GENOMES_VCF_GLOB': 'feb-2017-testfilters/*.bgz',
+  'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
-  # 'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
-#
-  # 'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-distribution',
+
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
@@ -72,6 +70,10 @@ production_config = {
   'MONGO_DISK': 'gnomad-mongo-disk-3',
   'MONGO_HOST': 'gnomad-p-mongo',
   'MONGO_PORT': 27017,
+
+  # api
+  'API_EXTERNAL_IP': '35.185.72.124',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
 }
 
 development_config = {
@@ -106,9 +108,12 @@ development_config = {
   # 'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
   'MONGO_DISK': 'gnomad-mongo-disk-2',
   # 'MONGO_DISK': 'gnomad-mongo-disk-2',
-
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
+
+  # api
+  'API_EXTERNAL_IP': '35.185.72.124',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
 }
 
 if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
