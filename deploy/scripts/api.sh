@@ -65,11 +65,3 @@ if [[ $UPDATE_OR_RESTART = "restart" ]]; then
 elif [[ $UPDATE_OR_RESTART = "update" ]]; then
   kubectl apply -f deploy/config/$GRAPHQL_DEPLOYMENT_CONFIG
 fi
-
-# kubectl create -f deploy/config/$SERVER_INGRESS_CONFIG
-
-# kubectl autoscale deployment $SERVER_REPLICATION_CONTROLLER_NAME \
-# --min=$SERVING_AUTOSCALE_MINIMUM \
-# --max=$SERVING_AUTOSCALE_MAXIMUM \
-# --cpu-percent=$SERVING_AUTOSCALE_MAXIMUM_CPU
-#

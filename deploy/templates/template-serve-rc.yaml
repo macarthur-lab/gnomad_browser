@@ -23,7 +23,7 @@ spec:
           readOnly: true
       containers:
       - name: {{ PROJECT_ENVIRONMENT }}-serve
-        image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}
+        image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}-{{ BUILD_TIME }}
         env:
         - name: DEPLOYMENT_ENV
           value: production
@@ -44,7 +44,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: {{ READVIZ_VOLUME }}
-          mountPath: /var/data/readviz
+          mountPath: {{ READVIZ_MOUNTPATH }}
         securityContext:
           privileged: true
           capabilities:
