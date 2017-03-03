@@ -1257,6 +1257,9 @@ def report_variant(variant_id, dataset):
         print 'Failed on variant_id:', variant_id, ';Error=', traceback.format_exc()
         abort(404)
 
+@app.route('/report/<dataset>/<variant_id>')
+
+
 @app.route('/report/submit_variant_report', methods=['POST'])
 def submit_variant_report():
     data = {
