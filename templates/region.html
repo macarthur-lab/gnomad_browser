@@ -7,13 +7,26 @@
         window.start = {{ start|tojson|safe }};
         window.stop = {{ stop|tojson|safe }};
         window.table_variants = gnomad.combineDataForTable(window.variants)
+
         $(document).ready(function() {
-            if (window.coverage_stats != null) {
-                region_chart(window.coverage_stats, window.variants);
-                update_variants();
+            console.log(window.coverage_stats)
+            region_chart(window.coverage_stats, window.variants);
+            function hasCoverage(coverage_stats) {
+                var coverageExists = false
+                coverage_stats.forEach(function(pos) {
+                    if (pos.has_coverage) {
+                        coverageExists = true
+                    }
+                })
+                return coverageExists
             }
+            if (!hasCoverage(window.coverage_stats.genomes)) {
+                $('#no-region-coverage')
+                    .html('Genome coverage data not yet loaded in the browser for this region (coming soon).')
+            }
+            update_variants();
         });
-	
+
     </script>
     <div class="container">
         {% if rsid %}
@@ -40,10 +53,6 @@
         {% endif %}
         {% if genes_in_region %}
             <!-- {% if stop != None %} -->
-                <h3>Coverage summary</h3>
-                <div class="row">
-                    {% include 'region_display.html' %}
-                </div>
             {% endif %}
             <div class="section_header">Genes</div>
             <ul>
@@ -54,6 +63,11 @@
             <br/>
         {% endif %}
         {% if variants_in_region %}
+        <h3>Coverage summary</h3>
+            <p id="no-region-coverage"></p>
+            <div class="row">
+                {% include 'region_display.html' %}
+            </div>
             {% if rsid %}
                 <p>This is a dbSNP variant. Here are the possibilities</p>
             {% else %}
