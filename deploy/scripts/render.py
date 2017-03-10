@@ -11,11 +11,11 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.8',
+  'BROWSER_VERSION': '1.0.9-alpha.1',
   'DATA_VERSION': '2.0.1',
-  'API_VERSION': '0.0.4',
+  'API_VERSION': '0.1.0-alpha.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {
@@ -55,7 +55,7 @@ production_config = {
   'SERVING_CLUSTER_NAME': 'gnomad-serving-cluster',
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-highmem-8',
-  'SERVING_NODES': '3',
+  'SERVING_NODES': '1',
   'SERVER_REPLICAS': '10',
   'SERVING_AUTOSCALE_MINIMUM': '10',
   'SERVING_AUTOSCALE_MAXIMUM': '20',
