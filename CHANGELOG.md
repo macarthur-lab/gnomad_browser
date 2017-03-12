@@ -1,5 +1,9 @@
 # gnomAD Browser Changelog
 
+### 1.0.10
+
++ 🎉 Add link to interval filtering post on download page
+
 ### 1.0.9
 
 _March 10, 2017_
