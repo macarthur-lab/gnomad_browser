@@ -15,11 +15,11 @@ project_config = {
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.0-alpha.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'exacv1_production',
 }
 #
 options = {
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'exac', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
@@ -114,9 +114,9 @@ development_config = {
   'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
 }
 
-exacv1_config = {
+exacv1_development_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.0',
+  'BROWSER_VERSION': '1.0.1',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
@@ -163,6 +163,55 @@ exacv1_config = {
   'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
 }
 
+exacv1_production_config = {
+  'PROJECT_NAME': 'exac',
+  'BROWSER_VERSION': '1.0.1',
+  'DATA_VERSION': '1.0.0',
+  'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
+  'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
+  'ENVIRONMENT_NAME': 'p', # d for development
+
+  # gcloud config
+  'GCLOUD_PROJECT': 'exac-gnomad',
+  'GCLOUD_ZONE': 'us-east1-d',
+
+  # data
+  'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
+  'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
+  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
+  'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
+
+  # infrastructure config
+  'EXTERNAL_IP': '35.185.97.150',
+  'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
+
+  # serving
+  'SERVING_CLUSTER_NAME': 'gnomad-serving-cluster',
+  'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
+  'SERVER_MACHINE_TYPE': 'n1-standard-1',
+  'SERVING_NODES': '1',
+  'SERVER_REPLICAS': '5',
+  'SERVING_AUTOSCALE_MINIMUM': '1',
+  'SERVING_AUTOSCALE_MAXIMUM': '1',
+  'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
+
+  # readviz
+  'READVIZ_VOLUME': 'exac-readviz-exons-vol-2',
+  'READVIZ_DISK': 'exacv1-readviz',
+  'READVIZ_MOUNTPATH': '/readviz',
+
+  # mongo config
+  'MONGO_VOLUME': 'exac-mongo-persistent-storage-2',
+  'MONGO_DISK': 'exacv1-mongo-disk-2',
+  'MONGO_HOST': 'exac-p-mongo',
+  'MONGO_PORT': 27017,
+
+  # api
+  'API_EXTERNAL_IP': '35.185.72.124',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
+}
+
 if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
   raise StandardError
 
@@ -177,8 +226,10 @@ if config['DEPLOYMENT_ENV'] == 'production':
   config.update(production_config)
 if config['DEPLOYMENT_ENV'] == 'development':
   config.update(development_config)
-if config['DEPLOYMENT_ENV'] == 'exacv1':
-  config.update(exacv1_config)
+if config['DEPLOYMENT_ENV'] == 'exacv1_development':
+  config.update(exacv1_development_config)
+if config['DEPLOYMENT_ENV'] == 'exacv1_production':
+  config.update(exacv1_production_config)
 
 if config['ENVIRONMENT_NAME'] == '':
   config['PROJECT_ENVIRONMENT'] = config['PROJECT_NAME']
