@@ -1,5 +1,12 @@
 # gnomAD Browser Changelog
 
+### 1.0.11
+
+_March 15, 2017_
+
++ 🐛 Missing variants now show coverage if available, message if not (in progress)
+
+
 ### 1.0.10
 
 + 🎉 Add link to interval filtering post on download page

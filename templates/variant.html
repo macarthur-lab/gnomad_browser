@@ -33,6 +33,7 @@
         }
 
         $(document).ready(function() {
+            console.log(window.exac)
             $('[data-toggle="tooltip"]').tooltip();
             draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
             $('.coverage_metric_buttons').change(function () {

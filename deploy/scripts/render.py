@@ -11,11 +11,11 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.10',
+  'BROWSER_VERSION': '1.0.11.alpha.1',
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.0-alpha.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'exacv1_production',
+  'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {

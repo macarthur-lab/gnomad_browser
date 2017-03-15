@@ -51,8 +51,6 @@ DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENV', 'development')
 MONGO_HOST = os.getenv('MONGO_HOST', 'mongo')
 MONGO_PORT = os.getenv('MONGO_PORT', 27017)
 MONGO_URL = 'mongodb://%s:%s' % (MONGO_HOST, MONGO_PORT)
-print 'WAHHHH'
-print MONGO_URL
 
 if DEPLOYMENT_ENVIRONMENT == 'development':
      EXOME_FILES_DIRECTORY = '/Users/msolomon/Projects/exacg/feb2017releasetestdata/170226/exomes/'
@@ -698,7 +696,11 @@ def variant_data(variant_str, source):
         for annotation in variant['vep_annotations']:
             annotation['HGVS'] = get_proper_hgvs(annotation)
             consequences.setdefault(annotation['major_consequence'], {}).setdefault(annotation['Gene'], []).append(annotation)
-    base_coverage = lookups.get_coverage_for_bases(db, source, xpos, xpos + len(ref) - 1)
+    if source == 'exac':
+        base_coverage = lookups.get_coverage_for_bases(db, 'exome_coverage', xpos, xpos + len(ref) - 1)
+    if source == 'gnomad':
+        base_coverage = lookups.get_coverage_for_bases(db, 'genome_coverage', xpos, xpos + len(ref) - 1)
+
     any_covered = any([x['has_coverage'] for x in base_coverage])
     metrics = lookups.get_metrics(db, variant, source)
 
