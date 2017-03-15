@@ -4,7 +4,7 @@
 
 _March 15, 2017_
 
-+ 🐛 Missing variants now show coverage if available, message if not (in progress)
++ 🐛 Missing variants now show coverage if available.
 
 
 ### 1.0.10

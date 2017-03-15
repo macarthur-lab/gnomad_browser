@@ -11,15 +11,15 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.11.alpha.1',
+  'BROWSER_VERSION': '1.0.11',
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.0-alpha.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'development',
+  'DEPLOYMENT_ENV': 'production',
 }
 #
 options = {
-  'REBUILD_IMAGES': 'exac', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?

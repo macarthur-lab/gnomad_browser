@@ -35,7 +35,7 @@
         $(document).ready(function() {
             console.log(window.exac)
             $('[data-toggle="tooltip"]').tooltip();
-            draw_region_coverage(window.base_coverage, 'mean', window.variant.ref);
+            draw_region_coverage(window.exac.base_coverage, window.gnomAD.base_coverage, 'mean', window.variant.ref);
             $('.coverage_metric_buttons').change(function () {
                 var v = $(this).attr('id').replace('_covmet_button', '');
                 $('.coverage_subcat_selectors').hide();
@@ -246,6 +246,11 @@
 
     .bar rect {
         fill: steelblue;
+        shape-rendering: crispEdges;
+    }
+
+    .genomebar rect {
+        fill: rgba(115, 171, 61,  1);
         shape-rendering: crispEdges;
     }
 
@@ -676,14 +681,22 @@
                 {% else %}
                     {% if any_covered %}
                         <div class="row">
-                            <span class="section_header">Coverage</span>
-                            {% if base_coverage|length > 1 %}
+                        <span class="section_header">Exome Coverage</span>
+                            <!-- {% if base_coverage|length > 1 %}
                                 {% include 'coverage_selectors.html' %}
-                            {% endif %}
+                            {% endif %} -->
                         </div>
-                        <div id="region_coverage"></div>
+                        <div id="region_coverage_exomes"></div>
+                        <div class="row">
+                        <span class="section_header">Genome Coverage</span>
+                            <!-- {% if base_coverage|length > 1 %}
+                                {% include 'coverage_selectors.html' %}
+                            {% endif %} -->
+                        </div>
+                        <div id="region_coverage_genomes"></div>
                     {% else %}
                         <h3>This region is not covered.</h3>
+                        <p>Note that genome coverage data not yet loaded in the browser for this region (coming soon).</p>
                     {% endif %}
                 {% endif %}
             </div>

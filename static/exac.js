@@ -379,11 +379,11 @@ function add_line_to_quality_histogram(data, position, container, log) {
     }
 }
 
-function draw_region_coverage(raw_data, metric, ref) {
+function draw_region_coverage(raw_data_exomes, raw_data_genomes, metric, ref) {
     region_chart_width = 500;
     region_chart_margin = {top: 10, right: 50, bottom: 55, left: 50};
-    if (raw_data.length > 1) {
-        var data = raw_data;
+    if (raw_data_exomes.length > 1) {
+        var data = raw_data_exomes;
         var chart_width = _.min([region_chart_width, data.length*30]);
         var x = d3.scale.linear()
             .domain([0, data.length])
@@ -401,10 +401,10 @@ function draw_region_coverage(raw_data, metric, ref) {
             .scale(y)
             .orient("left");
 
-        var svg = d3.select('#region_coverage');
+        var svg = d3.select('#region_coverage_exomes');
 
         if (svg.selectAll('rect').length == 0 || svg.selectAll('rect')[0].length == 0) {
-            svg = d3.select('#region_coverage').append("svg")
+            svg = d3.select('#region_coverage_exomes').append("svg")
             .attr("width", chart_width  + region_chart_margin.left + region_chart_margin.right)
             .attr("height", quality_chart_height + region_chart_margin.top + region_chart_margin.bottom)
             .append("g")
@@ -437,7 +437,7 @@ function draw_region_coverage(raw_data, metric, ref) {
                 .attr("class", "y axis")
                 .call(yAxis);
         } else {
-            svg = d3.select('#region_coverage').select('svg').select('#inner_graph');
+            svg = d3.select('#region_coverage_exomes').select('svg').select('#inner_graph');
             svg.select(".y.axis")
                 .transition()
                 .call(yAxis);
@@ -454,15 +454,15 @@ function draw_region_coverage(raw_data, metric, ref) {
     } else {
         PADDING = 1;
         var data1 = {};
-        $.each(raw_data[0], function(d, i) {
+        $.each(raw_data_exomes[0], function(d, i) {
             var num = parseInt(d);
             if (!isNaN(num)) {
-                data1[d] = raw_data[0][d];
+                data1[d] = raw_data_exomes[0][d];
             }
         });
         var data2 = {};
-        data2['mean'] = raw_data[0]['mean'];
-        data2['median'] = raw_data[0]['median'];
+        data2['mean'] = raw_data_exomes[0]['mean'];
+        data2['median'] = raw_data_exomes[0]['median'];
 
         var coverages = Object.keys(data1);
         var other_labels = Object.keys(data2);
@@ -495,7 +495,7 @@ function draw_region_coverage(raw_data, metric, ref) {
             .scale(y2)
             .orient("right");
 
-        svg = d3.select('#region_coverage').append("svg")
+        svg = d3.select('#region_coverage_exomes').append("svg")
             .attr('id', 'inner_svg')
             .attr("width", chart_width + region_chart_margin.left + region_chart_margin.right)
             .attr("height", quality_chart_height + region_chart_margin.top + region_chart_margin.bottom)
@@ -525,6 +525,190 @@ function draw_region_coverage(raw_data, metric, ref) {
             .data(other_labels)
             .enter().append("g")
             .attr("class", "bar");
+
+        bar.append("rect")
+            .attr("x", function(d, i) { return x(i + coverages.length + PADDING); })
+            .attr("width", chart_width/total_data_length)
+            .attr("height", function(d) { return quality_chart_height - y2(data2[d]); })
+            .attr("y", function(d) { return y2(data2[d]); });
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis1);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + chart_width + " ,0)")
+            .call(yAxis2);
+
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .attr("x", region_chart_width/3)
+            .attr("y", quality_chart_height + 50)
+            .text(">= Coverage");
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -quality_chart_height/2)
+            .attr("y", -40)
+            .text("Fraction individuals covered");
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -quality_chart_height/2)
+            .attr("y", region_chart_width+40)
+            .text("Depth");
+    }
+    if (raw_data_genomes.length > 1) {
+        var data = raw_data_genomes;
+        var chart_width = _.min([region_chart_width, data.length*30]);
+        var x = d3.scale.linear()
+            .domain([0, data.length])
+            .range([0, chart_width]);
+
+        var y = d3.scale.linear()
+            .domain([0, d3.max(data, function(d) { return d[metric]; })])
+            .range([quality_chart_height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        var svg = d3.select('#region_coverage_genomes');
+
+        if (svg.selectAll('rect').length == 0 || svg.selectAll('rect')[0].length == 0) {
+            svg = d3.select('#region_coverage_genomes').append("svg")
+            .attr("width", chart_width  + region_chart_margin.left + region_chart_margin.right)
+            .attr("height", quality_chart_height + region_chart_margin.top + region_chart_margin.bottom)
+            .append("g")
+            .attr('id', 'inner_graph')
+            .attr("transform", "translate(" + region_chart_margin.left + "," + region_chart_margin.top + ")");
+
+            var bar = svg.selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar");
+
+            bar.append("rect")
+                .attr("x", function(d, i) { return x(i); })
+                .attr("width", chart_width/data.length - 1)
+                .attr("height", function(d) { return quality_chart_height - y(d[metric]); })
+                .attr("y", function(d) { return y(d[metric]); })
+                .style("fill", "rgba(115, 171, 61,  1")
+
+            xAxis = d3.svg.axis()
+                .scale(x)
+                .tickFormat(function(d) { return ref[d]; })
+                .innerTickSize(0)
+                .orient("bottom");
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + quality_chart_height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+        } else {
+            svg = d3.select('#region_coverage_genomes').select('svg').select('#inner_graph');
+            svg.select(".y.axis")
+                .transition()
+                .call(yAxis);
+
+            svg.selectAll('rect')
+                .data(data)
+                .transition()
+                .duration(500)
+                .attr("x", function(d, i) { return x(i); })
+                .attr("width", chart_width/data.length - 1)
+                .attr("height", function(d) { return quality_chart_height - y(d[metric]); })
+                .attr("y", function(d) { return y(d[metric]); });
+        }
+    } else {
+        PADDING = 1;
+        var data1 = {};
+        $.each(raw_data_genomes[0], function(d, i) {
+            var num = parseInt(d);
+            if (!isNaN(num)) {
+                data1[d] = raw_data_genomes[0][d];
+            }
+        });
+        var data2 = {};
+        data2['mean'] = raw_data_genomes[0]['mean'];
+        data2['median'] = raw_data_genomes[0]['median'];
+
+        var coverages = Object.keys(data1);
+        var other_labels = Object.keys(data2);
+        var all_labels = coverages.concat(Array.apply(null, Array(PADDING)).map(String.prototype.valueOf,""), other_labels);
+
+        var chart_width = region_chart_width;
+        var total_data_length = coverages.length + other_labels.length + PADDING;
+        var x = d3.scale.linear()
+            .domain([0, total_data_length])
+            .range([0, chart_width]);
+
+        var y1 = d3.scale.linear()
+            .domain([0, d3.max(coverages, function(d) { return data1[d]; })])
+            .range([quality_chart_height, 0]);
+
+        var y2 = d3.scale.linear()
+            .domain([0, d3.max(other_labels, function(d) { return data2[d]; })])
+            .range([quality_chart_height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .tickFormat(function(d) { return all_labels[d - 1]; })
+            .orient("bottom");
+
+        var yAxis1 = d3.svg.axis()
+            .scale(y1)
+            .orient("left");
+
+        var yAxis2 = d3.svg.axis()
+            .scale(y2)
+            .orient("right");
+
+        svg = d3.select('#region_coverage_genomes').append("svg")
+            .attr('id', 'inner_svg')
+            .attr("width", chart_width + region_chart_margin.left + region_chart_margin.right)
+            .attr("height", quality_chart_height + region_chart_margin.top + region_chart_margin.bottom)
+            .append("g")
+            .attr('id', 'inner_graph')
+            .attr("transform", "translate(" + region_chart_margin.left + "," + region_chart_margin.top + ")");
+
+        var bar = svg.selectAll(".genomebar")
+            .data(coverages)
+            .enter().append("g")
+            .attr("class", "genomebar")
+
+        bar.append("rect")
+            .attr("x", function(d, i) { return x(i); })
+            .attr("width", chart_width/total_data_length)
+            .attr("height", function(d) { return quality_chart_height - y1(data1[d]); })
+            .attr("y", function(d) { return y1(data1[d]); })
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + quality_chart_height + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .attr("transform", "translate(0, 10) rotate(45)");
+
+        var bar = svg.selectAll(".genomebar").select('g')
+            .data(other_labels)
+            .enter().append("g")
+            .attr("class", "genomebar");
 
         bar.append("rect")
             .attr("x", function(d, i) { return x(i + coverages.length + PADDING); })
