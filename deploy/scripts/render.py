@@ -22,7 +22,7 @@ options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
-  'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
+  'UPDATE_OR_RESTART': 'restart' # Apply rolling <update> update or restart service <restart>?
 }
 
 loading_config = {
@@ -56,14 +56,14 @@ production_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-highmem-8',
   'SERVING_NODES': '1',
-  'SERVER_REPLICAS': '10',
+  'SERVER_REPLICAS': '4',
   'SERVING_AUTOSCALE_MINIMUM': '10',
   'SERVING_AUTOSCALE_MAXIMUM': '20',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
+  'READVIZ_VOLUME': 'gnomad-d-readviz-exons-vol-1',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
   'READVIZ_MOUNTPATH': '/var/data/readviz',
 
   # mongo
@@ -99,8 +99,8 @@ development_config = {
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
 
   # readviz
-  'READVIZ_VOLUME': 'gnomad-d-readviz-exons-vol-1',
-  'READVIZ_DISK': 'gnomad-readviz-exons-gpd',
+  'READVIZ_VOLUME': 'gnomad-dev-readviz-exons-vol-2',
+  'READVIZ_DISK': 'gnomad-readviz-exons-gpd-2',
   'READVIZ_MOUNTPATH': '/var/data/readviz',
 
   # mongo config
@@ -116,7 +116,7 @@ development_config = {
 
 exacv1_development_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.1',
+  'BROWSER_VERSION': '1.0.2.alpha.1',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
@@ -165,7 +165,7 @@ exacv1_development_config = {
 
 exacv1_production_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.1',
+  'BROWSER_VERSION': '1.0.2',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
