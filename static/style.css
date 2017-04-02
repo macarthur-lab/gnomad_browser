@@ -651,3 +651,67 @@ TODO: come up with a better way to position tooltip
   /*display: flex;
   flex-direction: column;*/
 }
+
+.gnome-phenotype {
+  padding-top: 40px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.gnome-phenotype h1 {
+  padding-left: 40px;
+  margin-bottom: 40px;
+}
+
+.gnome-profile {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  /*border: 1px solid blue;*/
+}
+
+.gnome-attributes {
+  width: 50%;
+  /*border: 1px solid yellow;*/
+}
+
+.gnome-picture {
+  /*border: 1px solid red;*/
+}
+
+.gnome-item {
+  list-style-type: none;
+  padding-bottom: 5px;
+  font-size: 20px;
+}
+
+.gnome-picture-section {
+  width: 50%;
+  /*display: flex;*/
+  /*justify-content: center;*/
+}
+
+#gnome-picture {
+  margin: 20px;
+  width: 250px;
+  /*height: 200px;*/
+}
+
+#gnome-name {
+  font-family: 'Fontdiner Swanky', cursive;
+}
+
+.gnome-msg-container {
+  display: flex;
+
+  width: 100%;
+  align-items: center;
+  /*justify-content: center;*/
+  /*border: 1px solid #000;*/
+}
+
+.gnome-message {
+  font-family: 'Fontdiner Swanky', cursive;
+  font-size: 25px;
+  margin-left: 40px;
+}

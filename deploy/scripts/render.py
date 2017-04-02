@@ -11,9 +11,9 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.11',
+  'BROWSER_VERSION': '1.0.12',
   'DATA_VERSION': '2.0.1',
-  'API_VERSION': '0.1.0-alpha.2',
+  'API_VERSION': '0.1.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
   'DEPLOYMENT_ENV': 'production',
 }
@@ -22,7 +22,7 @@ options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
-  'UPDATE_OR_RESTART': 'restart' # Apply rolling <update> update or restart service <restart>?
+  'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
 }
 
 loading_config = {
@@ -116,7 +116,7 @@ development_config = {
 
 exacv1_development_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.2.alpha.1',
+  'BROWSER_VERSION': '1.0.3',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
@@ -165,7 +165,7 @@ exacv1_development_config = {
 
 exacv1_production_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.2',
+  'BROWSER_VERSION': '1.0.3',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
