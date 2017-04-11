@@ -28,6 +28,8 @@
             <th class="hidden">Reference</th>
             <th class="hidden">Alternate</th>
             <th id="th-data" class="tooltip-table-header" data-tooltip="Dataset/VQSR sensitivity filter & hard filters">Source</th>
+            <th class="hidden" id="th-filterexomes-csv">Filters - exomes</th>
+            <th class="hidden" id="th-filtergenomes-csv">Filters - genomes</th>
             <th id="th-hgvs" class="tooltip-table-header" data-tooltip="HGVS annotation (protein change, where defined, or transcript change for splice variants, otherwise empty)">Consequence</th>
             <th class="hidden">Protein Consequence</th>
             <th class="hidden">Transcript Consequence</th>
@@ -107,6 +109,16 @@
                         <div class="label data-indicator-child data-indicator-<%= dataset %> label-<%= span_tag %> tooltip-table-header" data-tooltip="This variant is found in the <%= dataset == 'ExAC' ? 'exome' : 'genome'%> dataset <%= variant[dataset].filter === 'PASS' ? 'with filter value PASS' : 'but is filtered for the following reasons: &#xa;' %> <%= variant[dataset].filter.split('|').map(function(filter_name) { if (filter_name  !== 'PASS') { return filter_name + ': ' + window.filter_definitions[filter_name] } }).join('&#xa;') %>"><%= avatar %></div>
                     <% }); %>
                 </div>
+            </td>
+            <td class="hidden" id="td-filterexomes-csv">
+                <% if (variant.ExAC) { %>
+                    <%= variant.ExAC.filter %><% } else { %>
+                    <%= "NA" %><% } %>
+            </td>
+            <td class="hidden" id="td-filtergenomes-csv">
+                <% if (variant.gnomAD) { %>
+                    <%= variant.gnomAD.filter %><% } else { %>
+                    <%= "NA" %><% } %>
             </td>
             <td id="td-hgvs" class='table-hgvs'>
                 <% if (variant.HGVS) { %>

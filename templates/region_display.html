@@ -28,7 +28,7 @@ var genomeLineWidth = '6px'
 
 function region_chart(data, variant_data) {
     var metric = 'mean';
-
+    console.log(data)
     var x = d3.scale.linear()
         .domain([d3.min(data.exomes, function(d) { return d.pos; }), d3.max(data.exomes, function(d) { return d.pos; })])
         .range([0, gene_chart_width]);

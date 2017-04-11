@@ -9,22 +9,25 @@
         window.table_variants = gnomad.combineDataForTable(window.variants)
 
         $(document).ready(function() {
-            console.log(window.coverage_stats)
-            region_chart(window.coverage_stats, window.variants);
-            function hasCoverage(coverage_stats) {
-                var coverageExists = false
-                coverage_stats.forEach(function(pos) {
-                    if (pos.has_coverage) {
-                        coverageExists = true
-                    }
-                })
-                return coverageExists
+            if (window.coverage_stats) {
+                console.log(window.coverage_stats)
+                console.log(window.variants)
+                region_chart(window.coverage_stats, window.variants);
+                function hasCoverage(coverage_stats) {
+                    var coverageExists = false
+                    coverage_stats.forEach(function(pos) {
+                        if (pos.has_coverage) {
+                            coverageExists = true
+                        }
+                    })
+                    return coverageExists
+                }
+                if (!hasCoverage(window.coverage_stats.genomes)) {
+                    $('#no-region-coverage')
+                        .html('Genome coverage data not yet loaded in the browser for this region (coming soon).')
+                }
+                update_variants();
             }
-            if (!hasCoverage(window.coverage_stats.genomes)) {
-                $('#no-region-coverage')
-                    .html('Genome coverage data not yet loaded in the browser for this region (coming soon).')
-            }
-            update_variants();
         });
 
     </script>
