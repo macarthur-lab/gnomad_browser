@@ -2,7 +2,7 @@
 
 ### 1.0.15
 
-+ 
++ Fix table export filename
 
 ### 1.0.14
 
