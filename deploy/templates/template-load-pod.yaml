@@ -9,7 +9,7 @@ spec:
   restartPolicy: Never
   containers:
   - name: {{ PROJECT_ENVIRONMENT }}-load
-    image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}load:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}
+    image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}load:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}-{{ BUILD_TIME }}
     env:
     - name: DEPLOYMENT_ENV
       value: 'production'

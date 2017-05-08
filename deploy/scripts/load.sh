@@ -2,7 +2,7 @@
 
 # halt on any error
 # set -e
-
+python deploy/scripts/render.py
 . "$(dirname "$0")"/../config/config.sh
 
 gcloud config set project $GCLOUD_PROJECT
@@ -35,10 +35,14 @@ fi
 if [[ $REBUILD_IMAGES = "all" ]]; then
   "$(dirname "$0")"/images-build.sh
   "$(dirname "$0")"/images-push.sh
-fi
-
-if [[ $REBUILD_IMAGES = "specific" ]]; then
+elif [[ $REBUILD_IMAGES = "specific" ]]; then
+  echo "Rebuilding loading image"
   docker build -f "deploy/dockerfiles/${LOADING_IMAGE_DOCKERFILE}" -t "${LOADING_IMAGE_TAG}" .
+  gcloud docker push "${LOADING_IMAGE_TAG}"
+elif [[ $REBUILD_IMAGES = "exac" ]]; then
+  echo "Rebuilding loading image"
+  docker build -f "${EXACV1_SRC_DIR}/deploy/dockerfiles/${LOADING_IMAGE_DOCKERFILE}" \
+    -t "${LOADING_IMAGE_TAG}" "${EXACV1_SRC_DIR}"
   gcloud docker push "${LOADING_IMAGE_TAG}"
 fi
 

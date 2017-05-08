@@ -9,6 +9,7 @@ import logging
 import lookups
 import random
 import sys
+# import requests
 from tqdm import tqdm
 from utils import *
 

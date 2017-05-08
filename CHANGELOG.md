@@ -1,11 +1,16 @@
 # gnomAD Browser Changelog
 
+### 1.0.15
+
++ 
+
 ### 1.0.14
 
-_April 3, 2017_
+_April 11, 2017_
 
 + Add filter columns to csv export
 + Fix multiallelic dbsnp search
+
 
 ### 1.0.11
 

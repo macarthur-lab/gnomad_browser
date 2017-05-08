@@ -15,7 +15,7 @@ project_config = {
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {
@@ -26,8 +26,8 @@ options = {
 }
 
 loading_config = {
-  'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
-  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
+  'LOADING_CLUSTER_NAME': 'gnomad-serving-cluster',
+  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
 
@@ -116,7 +116,7 @@ development_config = {
 
 exacv1_development_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.3',
+  'BROWSER_VERSION': '1.0.4-beta1',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
@@ -165,7 +165,7 @@ exacv1_development_config = {
 
 exacv1_production_config = {
   'PROJECT_NAME': 'exac',
-  'BROWSER_VERSION': '1.0.3',
+  'BROWSER_VERSION': '1.0.4',
   'DATA_VERSION': '1.0.0',
   'EXACV1_SRC_DIR': '/Users/msolomon/Projects/exacg/exac_browser',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),

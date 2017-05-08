@@ -58,7 +58,6 @@ export default {
     // 'genotype_qualities',
     'quality_metrics',
   ],
-
 }
 
 

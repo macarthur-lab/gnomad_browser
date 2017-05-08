@@ -140,7 +140,8 @@ def get_protein_hgvs(annotation):
     return annotation['HGVSp'].split(':')[-1]
 
 # Note that this is the current as of v81 with some included for backwards compatibility (VEP <= 75)
-csq_order = ["transcript_ablation",
+csq_order = [
+"transcript_ablation",
 "splice_acceptor_variant",
 "splice_donor_variant",
 "stop_gained",
