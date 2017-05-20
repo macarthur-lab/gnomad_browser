@@ -36,20 +36,14 @@
         </p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
-            To download individual exome sites VDS files:
+            To download VDS files <em>(update May 17, 2017: autosomes are now combined with sex chromosomes)</em>:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.exomes.r2.0.1.sites.autosomes.vds gnomad_data # 16 GB
-gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.exomes.r2.0.1.sites.X.vds gnomad_data # 413 MB
-gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.exomes.r2.0.1.sites.Y.vds gnomad_data # 5 MB</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.exomes.r2.0.1.sites.vds gnomad_data # 16 GB
+gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.vds gnomad_data # 108 GB</code></pre>
         <p class="download-header">
-        To download individual genome sites VDS files:
+        The original ExAC dataset is available here:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.autosomes.vds gnomad_data # 102 GB
-gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.X.vds gnomad_data # 5 GB</code></pre>
-        <p class="download-header">
-        Or copy everything at once:
-        </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/* gnomad_data # 124 GB</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/exac/ExAC.r1.sites.vds gnomad_data # 6.7 GB</code></pre>
         <h3 class="download-header">VCF and coverage files</h3>
         <p class="download-header">
             <em>Update: March 3, 2017 8:18 AM</em>. To increase download speed, we have made the VCF files available from Google Storage. The individual files are linked in the table below. To download multiple files in parallel on command line, follow these instructions (you will need a Google account): <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/" onclick="trackOutboundLink('https://cloud.google.com/sdk/docs/'); return false;">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil" onclick="trackOutboundLink('https://cloud.google.com/storage/docs/gsutil'); return false;">Google Cloud Storage</a> <code>gsutil</code> tool to copy files in parallel to your own storage bucket or local hard drive. You can explore the data directory <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release-170228">in a browser</a> or on command line:

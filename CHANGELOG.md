@@ -2,7 +2,10 @@
 
 ### 1.0.15
 
+_May 17, 2017_
+
 + Fix table export filename
++ Update downloads page
 
 ### 1.0.14
 
@@ -10,7 +13,6 @@ _April 11, 2017_
 
 + Add filter columns to csv export
 + Fix multiallelic dbsnp search
-
 
 ### 1.0.11
 
