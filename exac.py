@@ -9,7 +9,7 @@ import logging
 import lookups
 import random
 import sys
-# import requests
+import requests
 from tqdm import tqdm
 from utils import *
 
@@ -92,7 +92,7 @@ app.config.update(dict(
     CANONICAL_TRANSCRIPT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'canonical_transcripts.txt.gz'),
     OMIM_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'omim_info.txt.gz'),
     EXOME_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'coverage', 'exacv2.*.cov.txt.gz')),
-    GENOME_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'coverage', 'gnomad.*.cov.txt.gz')),
+    GENOME_BASE_COVERAGE_FILES=glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'coverage', '*.genome.coverage.txt.gz')),
     DBNSFP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'dbNSFP2.6_gene.gz'),
     CONSTRAINT_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'forweb_cleaned_exac_r03_march16_z_data_pLI_CNV-final.txt.gz'),
     MNP_FILE=os.path.join(os.path.dirname(__file__), SHARED_FILES_DIRECTORY, 'MNPs_NotFiltered_ForBrowserRelease.txt.gz'),
@@ -108,9 +108,6 @@ app.config.update(dict(
     #READ_VIZ_DIR=os.path.abspath(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, "readviz")),
     READ_VIZ_DIR=os.path.abspath(READ_VIZ_DIRECTORY),
 ))
-
-print app.config['GENOMES_SITES_VCFS']
-print app.config['EXOMES_SITES_VCFS']
 
 GENE_CACHE_DIR = os.path.join(os.path.dirname(__file__), 'gene_cache')
 GENES_TO_CACHE = {l.strip('\n') for l in open(os.path.join(os.path.dirname(__file__), 'genes_to_cache.txt'))}
@@ -178,18 +175,18 @@ def load_individual_coverage_files(coverage_files, collection):
     print("Dropped db.%s" % collection)
     # load coverage first; variant info will depend on coverage
     db[collection].ensure_index('xpos')
-
+    print coverage_files
     procs = []
     num_procs = app.config['LOAD_DB_PARALLEL_PROCESSES']
-    if num_procs > 4:
-        num_procs = 4
+    # if num_procs > 2:
+    #     num_procs = 2
     random.shuffle(coverage_files)
     for i in range(num_procs):
         p = Process(target=load_coverage, args=(coverage_files, collection, i, num_procs, db))
         p.start()
         procs.append(p)
     return procs
-    #print 'Done loading coverage. Took %s seconds' % int(time.time() - start_time)
+    print 'Done loading coverage. Took %s seconds' % int(time.time() - start_time)
 
 def load_base_coverage_exomes():
     coverage_files = app.config['EXOME_BASE_COVERAGE_FILES']
@@ -197,6 +194,7 @@ def load_base_coverage_exomes():
 
 def load_base_coverage_genomes():
     coverage_files = app.config['GENOME_BASE_COVERAGE_FILES']
+    print coverage_files
     return load_individual_coverage_files(coverage_files, 'genome_coverage')
 
 def load_variants_in_file_using_tabix(sites_file, i, n, db_collection):
@@ -1263,6 +1261,8 @@ def report_variant(variant_id, dataset):
 @app.route('/report/<dataset>/<variant_id>')
 
 @app.route('/report/submit_variant_report', methods=['POST'])
+
+
 def submit_variant_report():
     data = {
         'name': request.form.get('name'),
@@ -1276,6 +1276,65 @@ def submit_variant_report():
         'additional_info': request.form.get('additional-info'),
         'variant_id': request.form.get('variant-id')
     }
+
+    slack_message = '''{
+    "attachments": [
+        {
+            "fallback": "Required plain-text summary of the attachment.",
+            "color": "#36a64f",
+            "title": "Variant reported: ",
+            "fields": [
+                  {
+                     "title": "Name",
+                     "value": "%s",
+                     "short": true
+                  },
+                  {
+                     "title": "Institution",
+                     "value": "%s",
+                     "short": true
+                  },
+                  {
+                     "title": "Email",
+                     "value": "%s",
+                     "short": true
+                  },
+                  {
+                     "title": "Variant ID",
+                     "value": "%s",
+                     "short": true
+                  },
+                  {
+                     "title": "Expected phenotype",
+                     "value": "%s",
+                     "short": true
+                  },
+                  {
+                     "title": "Variant Issue",
+                     "value": "%s",
+                     "short": false
+                  },
+                  {
+                     "title": "Concern",
+                     "value": "%s",
+                     "short": false
+                  },
+                  {
+                     "title": "Additional info",
+                     "value": "%s",
+                     "short": false
+                  }
+            ],
+            "footer": "gnomAD browser",
+            "footer_icon": ":gnome:",
+        }
+    ]}''' % (data['name'], data['institution'], data['email'], data['variant_id'], data['expected_phenotype'], data['variant_issue'], data['concern'], data['additional_info'])
+
+    headers = { "Content-type": "application/json" }
+    with open('slack_notification_url.txt') as slack_url_file:
+        slack_url = slack_url_file.readline().rstrip()
+        response = requests.post(slack_url, data=slack_message, headers=headers)
+
     logging.info("Variant report: ")
     logging.info(data)
     return render_template(

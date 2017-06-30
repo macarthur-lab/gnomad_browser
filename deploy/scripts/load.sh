@@ -38,12 +38,12 @@ if [[ $REBUILD_IMAGES = "all" ]]; then
 elif [[ $REBUILD_IMAGES = "specific" ]]; then
   echo "Rebuilding loading image"
   docker build -f "deploy/dockerfiles/${LOADING_IMAGE_DOCKERFILE}" -t "${LOADING_IMAGE_TAG}" .
-  gcloud docker push "${LOADING_IMAGE_TAG}"
+  gcloud docker -- push "${LOADING_IMAGE_TAG}"
 elif [[ $REBUILD_IMAGES = "exac" ]]; then
   echo "Rebuilding loading image"
   docker build -f "${EXACV1_SRC_DIR}/deploy/dockerfiles/${LOADING_IMAGE_DOCKERFILE}" \
     -t "${LOADING_IMAGE_TAG}" "${EXACV1_SRC_DIR}"
-  gcloud docker push "${LOADING_IMAGE_TAG}"
+  gcloud docker -- push "${LOADING_IMAGE_TAG}"
 fi
 
 if [[ $RESTART_MONGO = "true" ]]; then

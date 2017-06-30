@@ -10,3 +10,4 @@ ipython==5.1.0
 pysam==0.9.1.4
 numpy==1.11.2
 tqdm==4.8.4
+requests==2.18.1

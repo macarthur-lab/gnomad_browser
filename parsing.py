@@ -50,7 +50,11 @@ def get_base_coverage_from_file(base_coverage_file):
             'pos': int(fields[1]),
         }
         for i, k in enumerate(float_header_fields):
-            d[k] = float(fields[i+2])
+            try:
+                d[k] = float(fields[i+2])
+            except IndexError:
+                print 'Index error at file:', base_coverage_file, 'index:', i, 'field:', k, 'line:', line
+
         yield d
 
 

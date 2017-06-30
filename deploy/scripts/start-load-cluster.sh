@@ -3,6 +3,7 @@
 # halt on any error
 set -e
 
+python deploy/scripts/render.py
 . "$(dirname "$0")"/../config/config.sh
 
 gcloud container clusters create $LOADING_CLUSTER_NAME \

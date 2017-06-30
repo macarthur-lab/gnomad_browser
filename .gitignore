@@ -17,3 +17,4 @@ apache
 deploy/keys/*
 deploy/config/*
 metrics
+slack_notification_url.txt

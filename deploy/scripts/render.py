@@ -11,7 +11,7 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.15',
+  'BROWSER_VERSION': '1.0.16',
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
@@ -26,10 +26,10 @@ options = {
 }
 
 loading_config = {
-  'LOADING_CLUSTER_NAME': 'gnomad-serving-cluster',
-  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
+  'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
+  'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
-  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'32'",
+  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'23'",
 
   'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
   'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
