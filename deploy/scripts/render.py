@@ -11,15 +11,15 @@ template_file_list = os.listdir(template_folder_path)
 project_config = {
   # browser config
   'PROJECT_NAME': 'gnomad',
-  'BROWSER_VERSION': '1.0.16',
+  'BROWSER_VERSION': '1.0.17',
   'DATA_VERSION': '2.0.1',
   'API_VERSION': '0.1.2',
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'exacv1_production',
 }
 #
 options = {
-  'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
+  'REBUILD_IMAGES': 'exac', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
   'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
@@ -74,7 +74,7 @@ production_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/gnomad-gql',
 }
 
 development_config = {
@@ -111,7 +111,7 @@ development_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/graphql',
 }
 
 exacv1_development_config = {
@@ -160,7 +160,7 @@ exacv1_development_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/len/graphql',
 }
 
 exacv1_production_config = {
@@ -209,7 +209,7 @@ exacv1_production_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/gnomad-gql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/graphql',
 }
 
 if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:

@@ -6,6 +6,8 @@ COPY . /var/www/
 
 RUN mkdir /var/exac_data;
 
+RUN pip install requests
+
 EXPOSE 80
 
 CMD gcsfuse \

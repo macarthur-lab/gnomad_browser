@@ -32,7 +32,7 @@ if [[ $REBUILD_IMAGES = "specific" ]]; then
   echo "Rebuilding server image"
   docker build -f "${GRAPHQL_SRC_DIR}/deploy/dockerfiles/${GRAPHQL_IMAGE_DOCKERFILE}" \
     -t "${GRAPHQL_IMAGE_TAG}" "${GRAPHQL_SRC_DIR}"
-  gcloud docker push "${GRAPHQL_IMAGE_TAG}"
+  gcloud docker -- push "${GRAPHQL_IMAGE_TAG}"
 fi
 
 if [[ $REBUILD_IMAGES = "base" ]]; then
@@ -41,8 +41,8 @@ if [[ $REBUILD_IMAGES = "base" ]]; then
     -t "${GRAPHQL_IMAGE_PREFIX}base" "${GRAPHQL_SRC_DIR}"
   docker build -f "${GRAPHQL_SRC_DIR}/deploy/dockerfiles/${GRAPHQL_IMAGE_DOCKERFILE}" \
     -t "${GRAPHQL_IMAGE_TAG}" "${GRAPHQL_SRC_DIR}"
-  gcloud docker push "${GRAPHQL_IMAGE_PREFIX}base"
-  gcloud docker push "${GRAPHQL_IMAGE_TAG}"
+  gcloud docker -- push "${GRAPHQL_IMAGE_PREFIX}base"
+  gcloud docker -- push "${GRAPHQL_IMAGE_TAG}"
 fi
 
 if [[ $RESTART_MONGO = "true" ]]; then
