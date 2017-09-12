@@ -18,59 +18,58 @@
     <div class="container" style="font-size: 16px;">
         <h1 class="download-header">Downloads</h1>
         <!-- <p>
-            Please subscribe to <a href="https://groups.google.com/forum/#!forum/exac_data_announcements" onclick="trackOutboundLink('https://groups.google.com/forum/#!forum/exac_data_announcements'); return false;">our mailing list</a>
+            Please subscribe to <a href="https://groups.google.com/forum/#!forum/exac_data_announcements" >our mailing list</a>
             to be notified when ExAC v2 and gnomAD VCFs are released.
         </p> -->
         <!-- <p>
-            Data for release from the Genome Aggregation Database (gnomAD) consortium are available via FTP <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release" onclick="trackOutboundLink('ftp://ftp.broadinstitute.org/pub/ExAC_release'); return false;">here</a> <em>(updated 02-15-2016)</em> or through the links provided below.
+            Data for release from the Genome Aggregation Database (gnomAD) consortium are available via FTP <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release" >here</a> <em>(updated 02-15-2016)</em> or through the links provided below.
         </p> -->
         <p class="download-header">
-            Genome Aggregation Database (gnomAD) data are available at the links below. Please see <a href="https://macarthurlab.org/2017/02/27/the-genome-aggregation-database-gnomad" onclick="trackOutboundLink('https://macarthurlab.org/2017/02/27/the-genome-aggregation-database-gnomad'); return false;">this blog post</a> for more information about this release.
+            Genome Aggregation Database (gnomAD) data are available at the links below. Please see <a href="https://macarthurlab.org/2017/02/27/the-genome-aggregation-database-gnomad" >this blog post</a> for more information about this release.
         </p>
         <h3 class="download-header">Variant Dataset (VDS) format</h3>
         <p class="download-header">
-            <a href="https://hail.is/" onclick="trackOutboundLink('https://hail.is/'); return false;">Hail</a> users can download gnomAD data in <a href="https://hail.is/hail/overview.html#overview-vds" onclick="trackOutboundLink('https://hail.is/hail/overview.html#overview-vds'); return false;">Variant Dataset (VDS) format</a>.
+            <a href="https://hail.is/" >Hail</a> users can download gnomAD data in <a href="https://hail.is/hail/overview.html#overview-vds" >Variant Dataset (VDS) format</a>.
         </p>
-        <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/" onclick="trackOutboundLink('https://cloud.google.com/sdk/docs/'); return false;">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil" onclick="trackOutboundLink('https://cloud.google.com/storage/docs/gsutil'); return false;">Google Cloud Storage</a> <code>gsutil</code> tool to copy partitions in parallel to your own storage bucket or local hard drive. <a href="http://discuss.hail.is/t/using-hail-on-the-google-cloud-platform/80" onclick="trackOutboundLink('http://discuss.hail.is/t/using-hail-on-the-google-cloud-platform/80'); return false;">This blog post</a> can help you get started with Hail on the cloud and <a href="http://discuss.hail.is/t/using-filter-variants-intervals-to-query-the-16gb-gnomad-sites-dataset-in-300ms-on-your-laptop/148" onclick="trackOutboundLink('http://discuss.hail.is/t/using-filter-variants-intervals-to-query-the-16gb-gnomad-sites-dataset-in-300ms-on-your-laptop/148'); return false;">
+        <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/" >Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil" >Google Cloud Storage</a> <code>gsutil</code> tool to copy partitions in parallel to your own storage bucket or local hard drive. <a href="http://discuss.hail.is/t/using-hail-on-the-google-cloud-platform/80" >This blog post</a> can help you get started with Hail on the cloud and <a href="http://discuss.hail.is/t/using-filter-variants-intervals-to-query-the-16gb-gnomad-sites-dataset-in-300ms-on-your-laptop/148" >
             this post</a> shows you how to query variants by interval on your laptop.
         </p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
             To download VDS files <em>(update May 17, 2017: autosomes are now combined with sex chromosomes)</em>:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.exomes.r2.0.1.sites.vds gnomad_data # 16 GB
-gsutil -m cp -r gs://gnomad-public/release-170228/gnomad.genomes.r2.0.1.sites.vds gnomad_data # 108 GB</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release/2.0.1/vds/exomes/gnomad.exomes.r2.0.1.sites.vds gnomad_data # 16 GB
+gsutil -m cp -r gs://gnomad-public/release/2.0.1/vds/genomes/gnomad.genomes.r2.0.1.sites.vds gnomad_data # 108 GB</code></pre>
         <p class="download-header">
         The original ExAC dataset is available here:
         </p>
-        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/exac/ExAC.r1.sites.vds gnomad_data # 6.7 GB</code></pre>
+        <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/legacy/exac_browser/ExAC.r1.sites.vds gnomad_data # 6.7 GB</code></pre>
         <h3 class="download-header">VCF and coverage files</h3>
         <p class="download-header">
-            <em>Update: March 3, 2017 8:18 AM</em>. To increase download speed, we have made the VCF files available from Google Storage. The individual files are linked in the table below. To download multiple files in parallel on command line, follow these instructions (you will need a Google account): <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/" onclick="trackOutboundLink('https://cloud.google.com/sdk/docs/'); return false;">Google Cloud SDK</a>. Then use the <a href="https://cloud.google.com/storage/docs/gsutil" onclick="trackOutboundLink('https://cloud.google.com/storage/docs/gsutil'); return false;">Google Cloud Storage</a> <code>gsutil</code> tool to copy files in parallel to your own storage bucket or local hard drive. You can explore the data directory <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release-170228">in a browser</a> or on command line:
+            Files are linked in the table below, or you can explore the data directory <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release/">here</a> . To download multiple files in parallel on command line, follow these instructions: <p class="download-header"> First, install <a href="https://cloud.google.com/sdk/docs/" >Google Cloud SDK</a> (you will need a Google account). Then use the <a href="https://cloud.google.com/storage/docs/gsutil" >Google Cloud Storage</a> <code>gsutil</code> tool to copy files in parallel to your own storage bucket or local hard drive. Here are some example commands for interacting with the storage bucket:
         </p>
-        <pre class="download-code"><code>gsutil ls gs://gnomad-public/release-170228
-gsutil ls gs://gnomad-public/release-170228/vcf/genomes</code></pre>
-        <p class="download-header">View file sizes, eg:</p>
-        <pre class="download-code"><code>gsutil du -h -s gs://gnomad-public/release-170228/vcf/genomes # size of whole folder
-gsutil du -h gs://gnomad-public/release-170228/vcf/genomes # sizes of individual files</code></pre>
+        <pre class="download-code"><code>gsutil ls gs://gnomad-public/release/2.0.1
+gsutil ls gs://gnomad-public/release/2.0.1/vcf/genomes</code></pre>
+        <p class="download-header">View file sizes:</p>
+        <pre class="download-code"><code>gsutil du -h -s gs://gnomad-public/release/2.0.1/vcf/genomes # size of whole folder
+gsutil du -h gs://gnomad-public/release/2.0.1/vcf/genomes # sizes of individual files</code></pre>
         <p class="download-header">To download, find somewhere to put the data.</p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
             <p class="download-header">
-             Download everything:
+             Download all vcf files:
             </p>
-            <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release-170228/vcf gnomad_data # 102 GB
-gsutil -m cp -r gs://gnomad-public/release-170228/coverage gnomad_data # 1.8 GB</code></pre>
+            <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release/2.0.1/vcf gnomad_data # 102 GB</code></pre>
         </p>
         <p class="download-header">
          Or specific chromosomes:
         </p>
         <p class="download-header">
             <pre class="download-code"><code># e.g. chromosome 1, 7 GB
-gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.1.vcf.gz gnomad_data</code></pre>
+gsutil -m cp -r gs://gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr1.vcf.gz gnomad_data</code></pre>
         </p>
 
-        <!-- <p class="download-header">Explore the <a href="https://data.broadinstitute.org/gnomAD/release-170228" onclick="trackOutboundLink('https://data.broadinstitute.org/gnomAD/release-170228'); return false;">data directory</a> to understand the folder structure.</p> -->
+        <!-- <p class="download-header">Explore the <a href="https://data.broadinstitute.org/gnomAD/release/2.0.1" >data directory</a> to understand the folder structure.</p> -->
          <ul class="media-list">
             <div class="media-body">
                 <div class="download-tables">
@@ -88,7 +87,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                                  <tr>
                                      <td width="428">
                                          <p>
-                                             <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/exomes/gnomad.exomes.r2.0.1.sites.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/exomes/gnomad.exomes.r2.0.1.sites.vcf.gz'); return false;">All chromosomes sites VCF (8.9 GB)</a>
+                                             <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/exomes/gnomad.exomes.r2.0.1.sites.vcf.gz" >All chromosomes sites VCF (8.9 GB)</a>
                                          </p>
                                      </td>
                                 </tr>
@@ -106,138 +105,138 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr1.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr1.cov.txt.gz'); return false;">chr 1 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr1.coverage.txt.gz" >chr 1 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr2.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr2.cov.txt.gz'); return false;">chr 2 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr2.coverage.txt.gz" >chr 2 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr3.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr3.cov.txt.gz'); return false;">chr 3 coverage</a>
-                                        </p>
-                                    </td>
-                                </tr>
-                                 <tr>
-                                    <td width="428">
-                                        <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr4.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr4.cov.txt.gz'); return false;">chr 4 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr3.coverage.txt.gz" >chr 3 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr5.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr5.cov.txt.gz'); return false;">chr 5 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr4.coverage.txt.gz" >chr 4 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr6.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr6.cov.txt.gz'); return false;">chr 6 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr5.coverage.txt.gz" >chr 5 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr7.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr7.cov.txt.gz'); return false;">chr 7 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr6.coverage.txt.gz" >chr 6 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr8.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr8.cov.txt.gz'); return false;">chr 8 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr7.coverage.txt.gz" >chr 7 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr9.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr9.cov.txt.gz'); return false;">chr 9 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr8.coverage.txt.gz" >chr 8 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr10.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr10.cov.txt.gz'); return false;">chr 10 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr9.coverage.txt.gz" >chr 9 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr11.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr11.cov.txt.gz'); return false;">chr 11 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr10.coverage.txt.gz" >chr 10 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr12.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr12.cov.txt.gz'); return false;">chr 12 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr11.coverage.txt.gz" >chr 11 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr13.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr13.cov.txt.gz'); return false;">chr 13 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr12.coverage.txt.gz" >chr 12 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr14.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr14.cov.txt.gz'); return false;">chr 14 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr13.coverage.txt.gz" >chr 13 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr15.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr15.cov.txt.gz'); return false;">chr 15 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr14.coverage.txt.gz" >chr 14 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr16.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr16.cov.txt.gz'); return false;">chr 16 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr15.coverage.txt.gz" >chr 15 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr17.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr17.cov.txt.gz'); return false;">chr 17 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr16.coverage.txt.gz" >chr 16 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr18.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr18.cov.txt.gz'); return false;">chr 18 coverage</a>
-                                        </p>
-                                    </td>
-                                </tr>
-                                    <td width="428">
-                                        <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr19.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr19.cov.txt.gz'); return false;">chr 19 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr17.coverage.txt.gz" >chr 17 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr20.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr20.cov.txt.gz'); return false;">chr 20 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr18.coverage.txt.gz" >chr 18 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr19.coverage.txt.gz" >chr 19 coverage</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="428">
+                                        <p>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr20.coverage.txt.gz" >chr 20 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
@@ -245,35 +244,35 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
 
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr21.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr21.cov.txt.gz'); return false;">chr 21 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr21.coverage.txt.gz" >chr 21 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr22.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chr22.cov.txt.gz'); return false;">chr 22 coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chr22.coverage.txt.gz" >chr 22 coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chrX.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chrX.cov.txt.gz'); return false;">chr X coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chrX.coverage.txt.gz" >chr X coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chrY.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exacv2.chrY.cov.txt.gz'); return false;">chr Y coverage</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/exomes/gnomad.exomes.r2.0.1.chrY.coverage.txt.gz" >chr Y coverage</a>
                                         </p>
                                     </td>
                                 </tr>
                                  <tr>
                                     <td width="428">
                                         <p>
-                                            <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exome.coverage.all.tar" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/exomes/exome.coverage.all.tar'); return false;">All exome coverage (1.1 GB)</a>
+                                            <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/combined_tars/gnomad.exomes.r2.0.1.coverage.all.tar" >All exome coverage (1.1 GB)</a>
                                         </p>
                                     </td>
                                 </tr>
@@ -299,300 +298,300 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                              <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.1.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.1.vcf.gz'); return false;">chr 1 sites VCF (6.9 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr1.vcf.gz" >chr 1 sites VCF (6.9 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr1.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr1.cov.txt.gz'); return false;">chr 1 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr1.coverage.txt.gz" >chr 1 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.2.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.2.vcf.gz'); return false;">chr 2 sites VCF (7.3 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr2.vcf.gz" >chr 2 sites VCF (7.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr2.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr2.cov.txt.gz'); return false;">chr 2 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr2.coverage.txt.gz" >chr 2 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.3.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.3.vcf.gz'); return false;">chr 3 sites VCF (6.1 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr3.vcf.gz" >chr 3 sites VCF (6.1 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr3.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr3.cov.txt.gz'); return false;">chr 3 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr3.coverage.txt.gz" >chr 3 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.4.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.4.vcf.gz'); return false;">chr 4 sites VCF (5.7 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr4.vcf.gz" >chr 4 sites VCF (5.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr4.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr4.cov.txt.gz'); return false;">chr 4 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr4.coverage.txt.gz" >chr 4 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.5.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.5.vcf.gz'); return false;">chr 5 sites VCF (5.4 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr5.vcf.gz" >chr 5 sites VCF (5.4 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr5.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr5.cov.txt.gz'); return false;">chr 5 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr5.coverage.txt.gz" >chr 5 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.6.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.6.vcf.gz'); return false;">chr 6 sites VCF (5.0 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr6.vcf.gz" >chr 6 sites VCF (5.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr6.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr6.cov.txt.gz'); return false;">chr 6 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr6.coverage.txt.gz" >chr 6 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.7.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.7.vcf.gz'); return false;">chr 7 sites VCF (5.0 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr7.vcf.gz" >chr 7 sites VCF (5.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr7.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr7.cov.txt.gz'); return false;">chr 7 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr7.coverage.txt.gz" >chr 7 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.8.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.8.vcf.gz'); return false;">chr 8 sites VCF (4.7 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr8.vcf.gz" >chr 8 sites VCF (4.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr8.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr8.cov.txt.gz'); return false;">chr 8 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr8.coverage.txt.gz" >chr 8 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.9.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.9.vcf.gz'); return false;">chr 9 sites VCF (3.8 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr9.vcf.gz" >chr 9 sites VCF (3.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr9.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr9.cov.txt.gz'); return false;">chr 9 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr9.coverage.txt.gz" >chr 9 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.10.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.10.vcf.gz'); return false;">chr 10 sites VCF (4.0 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr10.vcf.gz" >chr 10 sites VCF (4.0 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr10.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr10.cov.txt.gz'); return false;">chr 10 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr10.coverage.txt.gz" >chr 10 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.11.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.11.vcf.gz'); return false;">chr 11 sites VCF (4.3 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr11.vcf.gz" >chr 11 sites VCF (4.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr11.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr11.cov.txt.gz'); return false;">chr 11 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr11.coverage.txt.gz" >chr 11 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.12.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.12.vcf.gz'); return false;">chr 12 sites VCF (4.2 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr12.vcf.gz" >chr 12 sites VCF (4.2 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr12.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr12.cov.txt.gz'); return false;">chr 12 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr12.coverage.txt.gz" >chr 12 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.13.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.13.vcf.gz'); return false;">chr 13 sites VCF (2.7 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr13.vcf.gz" >chr 13 sites VCF (2.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr13.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr13.cov.txt.gz'); return false;">chr 13 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr13.coverage.txt.gz" >chr 13 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.14.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.14.vcf.gz'); return false;">chr 14 sites VCF (2.8 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr14.vcf.gz" >chr 14 sites VCF (2.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr14.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr14.cov.txt.gz'); return false;">chr 14 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr14.coverage.txt.gz" >chr 14 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.15.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.15.vcf.gz'); return false;">chr 15 sites VCF (2.7 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr15.vcf.gz" >chr 15 sites VCF (2.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr15.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr15.cov.txt.gz'); return false;">chr 15 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr15.coverage.txt.gz" >chr 15 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.16.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.16.vcf.gz'); return false;">chr 16 sites VCF (3.1 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr16.vcf.gz" >chr 16 sites VCF (3.1 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr16.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr16.cov.txt.gz'); return false;">chr 16 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr16.coverage.txt.gz" >chr 16 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.17.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.17.vcf.gz'); return false;">chr 17 sites VCF (2.8 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr17.vcf.gz" >chr 17 sites VCF (2.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr17.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr17.cov.txt.gz'); return false;">chr 17 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr17.coverage.txt.gz" >chr 17 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.18.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.18.vcf.gz'); return false;">chr 18 sites VCF (2.3 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr18.vcf.gz" >chr 18 sites VCF (2.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr18.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr18.cov.txt.gz'); return false;">chr 18 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr18.coverage.txt.gz" >chr 18 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.19.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.19.vcf.gz'); return false;">chr 19 sites VCF (2.3 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr19.vcf.gz" >chr 19 sites VCF (2.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr19.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr19.cov.txt.gz'); return false;">chr 19 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr19.coverage.txt.gz" >chr 19 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.20.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.20.vcf.gz'); return false;">chr 20 sites VCF (1.8 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr20.vcf.gz" >chr 20 sites VCF (1.8 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr20.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr20.cov.txt.gz'); return false;">chr 20 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr20.coverage.txt.gz" >chr 20 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.21.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.21.vcf.gz'); return false;">chr 21 sites VCF (1.2 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr21.vcf.gz" >chr 21 sites VCF (1.2 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr21.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr21.cov.txt.gz'); return false;">chr 21 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr21.coverage.txt.gz" >chr 21 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.22.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.22.vcf.gz'); return false;">chr 22 sites VCF (1.3 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chr22.vcf.gz" >chr 22 sites VCF (1.3 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr22.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chr22.cov.txt.gz'); return false;">chr 22 coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chr22.coverage.txt.gz" >chr 22 coverage</a>
                                     </p>
                                 </td>
                             </tr>
                              <tr>
                                 <td width="429">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.X.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.X.vcf.gz'); return false;">chr X sites VCF (4.7 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.chrX.vcf.gz" >chr X sites VCF (4.7 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chrX.cov.txt.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/coverage/genomes/gnomad.chrX.cov.txt.gz'); return false;">chr X coverage</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/coverage/genomes/gnomad.genomes.r2.0.1.chrX.coverage.txt.gz" >chr X coverage</a>
                                     </p>
                                 </td>
                             </tr>
                             <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.autosomes.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.autosomes.vcf.gz'); return false;">Autosomes sites VCF (coding only, 2.4 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.autosomes.vcf.gz" >Autosomes sites VCF (coding only, 2.4 GB)</a>
                                     </p>
                                 </td>
                                <td width="428">
                                    <p>
-                                       <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/coverage/genome.coverage.all.tar" onclick="trackOutboundLink('https://data.broadinstitute.org/gnomAD/release-170228/genomes/coverage/genome.coverage.all.tar'); return false;">All genome coverage (0.8 GB)</a>
+                                       <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release/2.0.1/coverage/genomes/" >Genome coverage</a>
                                    </p>
                                </td>
                            </tr>
                             <tr>
                                 <td width="428">
                                     <p>
-                                        <a href="https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.X.vcf.gz" onclick="trackOutboundLink('https://storage.googleapis.com/gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.X.vcf.gz'); return false;">chr X sites VCF (coding only, 0.6 GB)</a>
+                                        <a href="https://storage.googleapis.com/gnomad-public/release/2.0.1/vcf/genomes/gnomad.genomes.r2.0.1.sites.coding.chrX.vcf.gz" >chr X sites VCF (coding only, 0.6 GB)</a>
                                     </p>
                                 </td>
                                 <td width="428">
                                     <p>
-
+                                        <a href="https://console.cloud.google.com/storage/browser/gnomad-public/release/2.0.1/coverage/genomes_exons_only/" >Genome coverage (exon calling regions only)</a>
                                     </p>
                                 </td>
                            </tr>
@@ -611,7 +610,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                              <!-- <tr>
                                 <td width="857">
                                     <p>
-                                        <a href="https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.gz" onclick="trackOutboundLink('https://data.broadinstitute.org/gnomAD/release-170228/genomes/vcf/gnomad.genomes.r2.0.1.sites.1.vcf.gz'); return false;">chr Y sites VCF</a>
+                                        <a href="https://data.broadinstitute.org/gnomAD/release/2.0.1/genomes/vcf/gnomad.genomes.r2.0.1.sites.chr1.vcf.gz" >chr Y sites VCF</a>
                                     </p>
                                 </td>
                             </tr> -->
@@ -637,7 +636,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                         <tr>
                             <td width="357">
                                 <p>
-                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage" onclick="trackOutboundLink('ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage'); return false;">Exome coverage</a>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage" >Exome coverage</a>
                                 </p>
                             </td>
                             <td width="500">
@@ -649,7 +648,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                         <tr>
                             <td width="357">
                                 <p>
-                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage" onclick="trackOutboundLink('ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage'); return false;">Genome coverage</a>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/coverage" >Genome coverage</a>
                                 </p>
                             </td>
                             <td width="500">
@@ -662,7 +661,7 @@ gsutil -m cp -r gs://gnomad-public/release-170228/vcf/genomes/gnomad.genomes.r2.
                         <tr>
                             <td width="357">
                                 <p>
-                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/subsets" onclick="trackOutboundLink('ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/subsets'); return false;">Subsets</a>
+                                    <a href="ftp://ftp.broadinstitute.org/pub/ExAC_release/release0.3.1/subsets" >Subsets</a>
                                 </p>
                             </td>
                             <td width="500">
