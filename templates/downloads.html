@@ -27,6 +27,9 @@
         <p class="download-header">
             Genome Aggregation Database (gnomAD) data are available at the links below. Please see <a href="https://macarthurlab.org/2017/02/27/the-genome-aggregation-database-gnomad" >this blog post</a> for more information about this release.
         </p>
+        <p class="download-header">
+            Last updated <em>September 12, 2017 10:05 AM</em>
+        </p>
         <h3 class="download-header">Variant Dataset (VDS) format</h3>
         <p class="download-header">
             <a href="https://hail.is/" >Hail</a> users can download gnomAD data in <a href="https://hail.is/hail/overview.html#overview-vds" >Variant Dataset (VDS) format</a>.
@@ -36,7 +39,7 @@
         </p>
         <pre class="download-code"><code>mkdir gnomad_data</code></pre>
         <p class="download-header">
-            To download VDS files <em>(update May 17, 2017: autosomes are now combined with sex chromosomes)</em>:
+            To download VDS files <em>(note: autosomes are now combined with sex chromosomes)</em>:
         </p>
         <pre class="download-code"><code>gsutil -m cp -r gs://gnomad-public/release/2.0.1/vds/exomes/gnomad.exomes.r2.0.1.sites.vds gnomad_data # 16 GB
 gsutil -m cp -r gs://gnomad-public/release/2.0.1/vds/genomes/gnomad.genomes.r2.0.1.sites.vds gnomad_data # 108 GB</code></pre>
