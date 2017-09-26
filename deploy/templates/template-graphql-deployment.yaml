@@ -24,9 +24,9 @@ spec:
         - name: GRAPHQL_PORT
           value: '80'
         - name: GNOMAD_MONGO_URL
-          value: mongodb://gnomad-d-mongo:{{ MONGO_PORT }}/exac
+          value: mongodb://gnomad-p-mongo:{{ MONGO_PORT }}/exac
         - name: EXACV1_MONGO_URL
-          value: mongodb://exac-d-mongo:{{ MONGO_PORT }}/exac
+          value: mongodb://exac-p-mongo:{{ MONGO_PORT }}/exac
         ports:
         - containerPort: 80
           protocol: TCP

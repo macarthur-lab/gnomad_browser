@@ -14,11 +14,8 @@ CMD gcsfuse \
   --implicit-dirs \
   --key-file=/var/www/deploy/keys/exac-gnomad-30ea80400948.json \
   gnomad-browser /var/data/loading_data && \
-  ls /var/data/loading_data && \
-  # python manage.py load_db
-  # echo $DEPLOYMENT_ENV
+  ls /var/data/loading_data
   # python manage.py drop_exome_variants && \
-  # python manage.py load_exome_variants
-  # python manage.py drop_genome_variants
+  # python manage.py load_exome_variants && \
+  # python manage.py drop_genome_variants && \
   # python manage.py load_genome_variants
-    python manage.py load_base_coverage_genomes

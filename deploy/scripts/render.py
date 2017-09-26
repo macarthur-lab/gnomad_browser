@@ -17,14 +17,14 @@ project_config = {
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
   # 'DEPLOYMENT_ENV': 'exacv1_production',
   # 'DEPLOYMENT_ENV': 'exacv1_development',
-  'DEPLOYMENT_ENV': 'development',
+  'DEPLOYMENT_ENV': 'production',
 }
 #
 options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
-  'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
+  'UPDATE_OR_RESTART': 'restart' # Apply rolling <update> update or restart service <restart>?
 }
 
 loading_config = {
@@ -33,13 +33,13 @@ loading_config = {
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
   'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'23'",
 
-  'EXOMES_SINGLE_VCF': '170228-release/gnomad.exomes.sites.vcf.bgz',
-  'GENOMES_VCF_GLOB': '170228-release/gnomad.genomes.sites.autosomes.vds.autosomes.vcf.bgz/*.bgz',
+  'EXOMES_SINGLE_VCF': 'sept-2017-release-202/gnomad.exomes.r2.0.2.sites.vcf.bgz',
+  'GENOMES_VCF_GLOB': 'sept-2017-release-202-parts/gnomad.genomes.r2.0.2.sites.parts.vcf.bgz/*.bgz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/170228-release/*.bgz',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/sept-2017-release-202-parts/gnomad.genomes.r2.0.2.sites.parts.vcf.bgz/*.bgz',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
@@ -58,7 +58,7 @@ production_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-highmem-8',
   'SERVING_NODES': '1',
-  'SERVER_REPLICAS': '4',
+  'SERVER_REPLICAS': '1',
   'SERVING_AUTOSCALE_MINIMUM': '10',
   'SERVING_AUTOSCALE_MAXIMUM': '20',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
@@ -76,7 +76,7 @@ production_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/gnomad-gql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/exacg/gnomad-graphql',
 }
 
 development_config = {
@@ -113,7 +113,7 @@ development_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/graphql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/exacg/gnomad-graphql',
 }
 
 exacv1_development_config = {
@@ -211,7 +211,7 @@ exacv1_production_config = {
 
   # api
   'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/lens/graphql',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/exacg/gnomad-graphql',
 }
 
 if production_config['READVIZ_DISK'] == development_config['READVIZ_DISK']:
