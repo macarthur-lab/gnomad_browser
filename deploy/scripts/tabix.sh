@@ -2,6 +2,7 @@
 
 # set -e
 
+python deploy/scripts/render.py
 . "$(dirname "$0")"/../config/config.sh
 
 # Takedown pod if already running
@@ -34,7 +35,7 @@ fi
 
 if [[ $REBUILD_IMAGES = "specific" ]]; then
   docker build -f deploy/dockerfiles/$TABIX_IMAGE_DOCKERFILE -t $TABIX_IMAGE_TAG .
-  gcloud docker push $TABIX_IMAGE_TAG
+  gcloud docker push -- $TABIX_IMAGE_TAG
 fi
 
 # start pod

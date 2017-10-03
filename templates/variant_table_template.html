@@ -136,8 +136,8 @@
             </b> </td>
             <td id="td-flags">
                 <% _.each(variant.flags, function(flag) { %>
-                    <% if (flag == 'LoF flag') { span_tag = 'warning' } else { span_tag = 'danger' } %>
-                    <a href="/variant/<%= variant.chrom %>-<%= variant.pos %>-<%= variant.ref %>-<%= variant.alt %>" target="_blank"><span class="label label-<%= span_tag %> tooltip-table-header" data-tooltip="Variant annotation dubious: &#xa; see variant page for details"><%= flag %></span></a>
+                    <% if (flag == 'LoF flag') { span_tag = 'warning' } else if (flag == 'LC LoF') { span_tag = 'danger' } else if (flag === 'LCR' || flag === 'SEGDUP') { span_tag = 'info' } %>
+                    <a href="/variant/<%= variant.chrom %>-<%= variant.pos %>-<%= variant.ref %>-<%= variant.alt %>" target="_blank"><span class="label label-<%= span_tag %> tooltip-table-header" data-tooltip="Variant annotation or quality dubious: &#xa; see variant page for details"><%= flag %></span></a>
                 <% }); %>
             </td>
             <td id="td-ac" class='table-allele-count'> <%= variant.allele_count %> </td>

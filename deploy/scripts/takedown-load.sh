@@ -1,8 +1,9 @@
-w#!/bin/bash
+#!/bin/bash
 
 # halt on any error
 # set -e
 
+python deploy/scripts/render.py
 . "$(dirname "$0")"/../config/config.sh
 
 gcloud config set project $GCLOUD_PROJECT

@@ -24,14 +24,14 @@ options = {
   'REBUILD_IMAGES': 'specific', # Which images to rebuild: none, all, specific?
   'RESTART_MONGO': 'false', # Restart mongo on every script launch?
   'MONITOR_LOADING': 'false', # Start server on the loading cluster rather than serving
-  'UPDATE_OR_RESTART': 'restart' # Apply rolling <update> update or restart service <restart>?
+  'UPDATE_OR_RESTART': 'update' # Apply rolling <update> update or restart service <restart>?
 }
 
 loading_config = {
   'LOADING_CLUSTER_NAME': 'gnomad-loading-cluster',
   'LOADING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-loading-cluster',
   'LOADING_MACHINE_TYPE': 'n1-highmem-32',
-  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'23'",
+  'LOAD_DB_PARALLEL_PROCESSES_NUMB': "'28'",
 
   'EXOMES_SINGLE_VCF': 'sept-2017-release-202/gnomad.exomes.r2.0.2.sites.vcf.bgz',
   'GENOMES_VCF_GLOB': 'sept-2017-release-202-parts/gnomad.genomes.r2.0.2.sites.parts.vcf.bgz/*.bgz',
@@ -39,7 +39,7 @@ loading_config = {
   'EXOMES_SINGLE_VCF_TEST': 'feb-2017-test/gnomad.exomes.sites.all.vcf.gz',
   'GENOMES_VCF_GLOB_TEST': 'feb-2017-testfilters/*.bgz',
 
-  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/genomes/sept-2017-release-202-parts/gnomad.genomes.r2.0.2.sites.parts.vcf.bgz/*.bgz',
+  'TABIX_BUCKET_PATH': 'gs://gnomad-browser/exomes/sept-2017-release-202',
   'TABIX_VOLUME': 'gnomad-tabix-vol',
   'TABIX_DISK': 'gnomad-tabix-temp'
 }
@@ -58,7 +58,7 @@ production_config = {
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-serving-cluster',
   'SERVER_MACHINE_TYPE': 'n1-highmem-8',
   'SERVING_NODES': '1',
-  'SERVER_REPLICAS': '1',
+  'SERVER_REPLICAS': '4',
   'SERVING_AUTOSCALE_MINIMUM': '10',
   'SERVING_AUTOSCALE_MAXIMUM': '20',
   'SERVING_AUTOSCALE_MAXIMUM_CPU': '70',
@@ -69,8 +69,8 @@ production_config = {
   'READVIZ_MOUNTPATH': '/var/data/readviz',
 
   # mongo
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
-  'MONGO_DISK': 'gnomad-mongo-disk-3',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
+  'MONGO_DISK': 'gnomad-mongo-disk-2',
   'MONGO_HOST': 'gnomad-p-mongo',
   'MONGO_PORT': 27017,
 
@@ -106,8 +106,8 @@ development_config = {
   'READVIZ_MOUNTPATH': '/var/data/readviz',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-2',
-  'MONGO_DISK': 'gnomad-mongo-disk-2',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
+  'MONGO_DISK': 'gnomad-mongo-disk-3',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
 

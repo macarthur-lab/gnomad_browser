@@ -3,8 +3,8 @@
 # halt on any error
 # set -e
 
+python deploy/scripts/render.py
 . "$(dirname "$0")"/../config/config.sh
-
 gcloud config set project $GCLOUD_PROJECT
 gcloud container clusters get-credentials $SERVING_CLUSTER_NAME --zone=$GCLOUD_ZONE
 kubectl config set-context $SERVING_CLUSTER

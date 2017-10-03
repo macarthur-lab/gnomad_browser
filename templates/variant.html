@@ -31,6 +31,7 @@
             }
             return false
         }
+        console.log(window.variant)
 
         $(document).ready(function() {
             console.log(window.exac)
@@ -416,11 +417,19 @@
         <hr/>
 {#      Upper display #}
         {% if variant.variant_id %}
-            {% if variant.allele_num < 97129.6 %}
+            {% if variant.lcr %}
+                <p><span class="label label-warning">Warning!</span> This variant is found in a low complexity region (LCR) region, which may indicate a low-quality site.</p>
+                <hr/>
+            {% endif %}
+            {% if variant.segdup %}
+                <p><span class="label label-warning">Warning!</span> This variant is found in a segmental duplication region (SEGDUP), which may indicate a low-quality site.</p>
+                <hr/>
+            {% endif %}
+            <!-- {% if variant.allele_num < 97129.6 %}
                 <p><span class="label label-warning">Warning!</span> This variant is only covered in {{ (variant.allele_num/2)|int }} individuals (adjusted allele number = {{ variant.allele_num }}).<br/>
                 This means that the site is covered in fewer than 80% of the individuals in ExAC, which may indicate a low-quality site.</p>
                 <hr/>
-            {% endif %}
+            {% endif %} -->
             <div class="row">
                 <div class="col-md-6">
                     <dl class="dl-horizontal" style="margin-bottom: 0px;">
