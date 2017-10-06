@@ -17,7 +17,7 @@ project_config = {
   'BUILD_TIME': strftime("%Y%m%d-%H%M%S", localtime()),
   # 'DEPLOYMENT_ENV': 'exacv1_production',
   # 'DEPLOYMENT_ENV': 'exacv1_development',
-  'DEPLOYMENT_ENV': 'production',
+  'DEPLOYMENT_ENV': 'development',
 }
 #
 options = {
@@ -93,7 +93,7 @@ development_config = {
   # serving
   'SERVING_CLUSTER_NAME': 'gnomad-dev-cluster',
   'SERVING_CLUSTER': 'gke_exac-gnomad_us-east1-d_gnomad-dev-cluster',
-  'SERVER_MACHINE_TYPE': 'n1-standard-1',
+  'SERVER_MACHINE_TYPE': 'n1-standard-4',
   'SERVING_NODES': '1',
   'SERVER_REPLICAS': '1',
   'SERVING_AUTOSCALE_MINIMUM': '1',
@@ -106,14 +106,14 @@ development_config = {
   'READVIZ_MOUNTPATH': '/var/data/readviz',
 
   # mongo config
-  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-3',
-  'MONGO_DISK': 'gnomad-mongo-disk-3',
+  'MONGO_VOLUME': 'gnomad-mongo-persistent-storage-1',
+  'MONGO_DISK': 'gnomad-mongo-disk-1',
   'MONGO_HOST': 'gnomad-d-mongo',
   'MONGO_PORT': 27017,
 
   # api
-  'API_EXTERNAL_IP': '35.185.72.124',
-  'GRAPHQL_SRC_DIR': '/Users/msolomon/Projects/exacg/gnomad-graphql',
+  'API_EXTERNAL_IP': '35.185.9.245',
+  'GRAPHQL_SRC_DIR': '/Users/msolomon/gnomadjs/packages/api',
 }
 
 exacv1_development_config = {

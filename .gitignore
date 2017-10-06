@@ -13,6 +13,7 @@ exac_env
 *node_modules
 *public
 *gnomad.js
+genepage.js
 apache
 deploy/keys/*
 deploy/config/*

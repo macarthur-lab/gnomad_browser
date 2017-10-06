@@ -860,36 +860,42 @@ def get_gene_data(db, gene_id, gene, request_type, cache_key):
         print 'Failed on gene:', gene_id, ';Error=', traceback.format_exc()
         abort(404)
 
-@app.route('/gene/<gene_id>')
-def gene_page(gene_id):
-    # if gene_id in GENES_TO_CACHE:
-    #
-    #     return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
-    #     print 'accessing from gene page'
-    # else:
-    db = get_db()
-    gene = lookups.get_gene(db, gene_id)
-    if gene is None:
-        abort(404)
-    cache_key = 'template-gene-{}'.format(gene_id)
-    template = cache.get(cache_key)
-    if template is None:
-        template = get_gene_data(db, gene_id, gene, 'template', cache_key)
-    print 'Rendering gene: %s' % gene_id
-    return template
+# @app.route('/gene/<gene_id>')
+# def gene_page(gene_id):
+#     # if gene_id in GENES_TO_CACHE:
+#     #
+#     #     return open(os.path.join(GENE_CACHE_DIR, '{}.html'.format(gene_id))).read()
+#     #     print 'accessing from gene page'
+#     # else:
+#     db = get_db()
+#     gene = lookups.get_gene(db, gene_id)
+#     if gene is None:
+#         abort(404)
+#     cache_key = 'template-gene-{}'.format(gene_id)
+#     template = cache.get(cache_key)
+#     if template is None:
+#         template = get_gene_data(db, gene_id, gene, 'template', cache_key)
+#     print 'Rendering gene: %s' % gene_id
+#     return template
+#
+# @app.route('/api/gene/<gene_id>')
+# def gene_api(gene_id):
+#     db = get_db()
+#     gene = lookups.get_gene(db, gene_id)
+#     if gene is None:
+#         abort(404)
+#     cache_key = 'json-gene-{}'.format(gene_id)
+#     json = cache.get(cache_key)
+#     if json is None:
+#         json = get_gene_data(db, gene_id, gene, 'json', cache_key)
+#     print 'Sending json for gene: %s' % gene_id
+#     return json
 
-@app.route('/api/gene/<gene_id>')
-def gene_api(gene_id):
-    db = get_db()
-    gene = lookups.get_gene(db, gene_id)
-    if gene is None:
-        abort(404)
-    cache_key = 'json-gene-{}'.format(gene_id)
-    json = cache.get(cache_key)
-    if json is None:
-        json = get_gene_data(db, gene_id, gene, 'json', cache_key)
-    print 'Sending json for gene: %s' % gene_id
-    return json
+@app.route('/gene/<gene_id>')
+def new_gene_page(gene_id):
+    return render_template(
+        'new_gene_page.html'
+    )
 
 def get_transcript_data(db, transcript_id, transcript, request_type, cache_key):
     try:

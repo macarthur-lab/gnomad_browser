@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block body %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+<link type="image/x-icon" rel="shortcut icon" />
+<style>
+  * {
+    /* include padding, etc., in box model */
+    /*box-sizing: border-box;*/
+  }
+
+  *:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+  }
+
+  html {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    background-color: #FAFAFA;
+  }
+
+  h1 {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+  }
+
+</style>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='genepage.js') }}"></script>
+<div id="root">hello</div>
+<script type="text/javascript">
+  var root = document.getElementById('root')
+  ReactDOM.render(React.createElement(ReactGnomad.App), root)
+</script>
+{% endblock %}

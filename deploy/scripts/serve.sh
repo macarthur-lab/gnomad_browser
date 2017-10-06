@@ -55,8 +55,8 @@ if [[ $UPDATE_OR_RESTART = "restart" ]]; then
   kubectl delete deployment $SERVER_REPLICATION_CONTROLLER_NAME
   kubectl create -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
   kubectl expose deployment $SERVER_REPLICATION_CONTROLLER_NAME \
-  --type="LoadBalancer" \
-  --load-balancer-ip="${EXTERNAL_IP}"
+  --type="LoadBalancer"
+  # --load-balancer-ip="${EXTERNAL_IP}"
 elif [[ $UPDATE_OR_RESTART = "update" ]]; then
   kubectl apply -f deploy/config/$SERVER_REPLICATION_CONTROLLER_CONFIG
 fi
