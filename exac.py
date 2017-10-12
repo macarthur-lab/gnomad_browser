@@ -961,57 +961,62 @@ def transcript_api(transcript_id):
 
 
 @app.route('/region/<region_id>')
-def region_page(region_id):
-    db = get_db()
-    try:
-        region = region_id.split('-')
-        cache_key = 't-region-{}'.format(region_id)
-        t = cache.get(cache_key)
-        if t is None:
-            chrom = region[0]
-            start = None
-            stop = None
-            if len(region) == 3:
-                chrom, start, stop = region
-                start = int(start)
-                stop = int(stop)
-            if start is None or stop - start > REGION_LIMIT or stop < start:
-                return render_template(
-                    'region.html',
-                    genes_in_region=None,
-                    variants_in_region=None,
-                    chrom=chrom,
-                    start=start,
-                    stop=stop,
-                    coverage=None
-                )
-            if start == stop:
-                start -= 20
-                stop += 20
-            genes_in_region = lookups.get_genes_in_region(db, chrom, start, stop)
-            variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
-            xstart = get_xpos(chrom, start)
-            xstop = get_xpos(chrom, stop)
-            coverage_stats_exomes = lookups.get_coverage_for_bases(db, 'exome_coverage', xstart, xstop)
-            coverage_stats_genomes = lookups.get_coverage_for_bases(db, 'genome_coverage', xstart, xstop)
-            coverage_stats = {
-                "exomes": coverage_stats_exomes,
-                "genomes": coverage_stats_genomes
-            }
-            t = render_template(
-                'region.html',
-                genes_in_region=genes_in_region,
-                variants_in_region=variants_in_region,
-                chrom=chrom,
-                start=start,
-                stop=stop,
-                coverage=coverage_stats
-            )
-        print 'Rendering region: %s' % region_id
-        return t
-    except Exception, e:
-        print 'Failed on region:', region_id, ';Error=', traceback.format_exc()
-        abort(404)
+def new_region_page(region_id):
+    return render_template(
+        'new_gene_page.html'
+    )
+# @app.route('/region/<region_id>')
+# def region_page(region_id):
+#     db = get_db()
+#     try:
+#         region = region_id.split('-')
+#         cache_key = 't-region-{}'.format(region_id)
+#         t = cache.get(cache_key)
+#         if t is None:
+#             chrom = region[0]
+#             start = None
+#             stop = None
+#             if len(region) == 3:
+#                 chrom, start, stop = region
+#                 start = int(start)
+#                 stop = int(stop)
+#             if start is None or stop - start > REGION_LIMIT or stop < start:
+#                 return render_template(
+#                     'region.html',
+#                     genes_in_region=None,
+#                     variants_in_region=None,
+#                     chrom=chrom,
+#                     start=start,
+#                     stop=stop,
+#                     coverage=None
+#                 )
+#             if start == stop:
+#                 start -= 20
+#                 stop += 20
+#             genes_in_region = lookups.get_genes_in_region(db, chrom, start, stop)
+#             variants_in_region = lookups.get_variants_in_region(db, chrom, start, stop)
+#             xstart = get_xpos(chrom, start)
+#             xstop = get_xpos(chrom, stop)
+#             coverage_stats_exomes = lookups.get_coverage_for_bases(db, 'exome_coverage', xstart, xstop)
+#             coverage_stats_genomes = lookups.get_coverage_for_bases(db, 'genome_coverage', xstart, xstop)
+#             coverage_stats = {
+#                 "exomes": coverage_stats_exomes,
+#                 "genomes": coverage_stats_genomes
+#             }
+#             t = render_template(
+#                 'region.html',
+#                 genes_in_region=genes_in_region,
+#                 variants_in_region=variants_in_region,
+#                 chrom=chrom,
+#                 start=start,
+#                 stop=stop,
+#                 coverage=coverage_stats
+#             )
+#         print 'Rendering region: %s' % region_id
+#         return t
+#     except Exception, e:
+#         print 'Failed on region:', region_id, ';Error=', traceback.format_exc()
+#         abort(404)
 
 @app.route('/api/region/<region_id>')
 def region_json(region_id):

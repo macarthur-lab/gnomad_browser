@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"> -->
 <link type="image/x-icon" rel="shortcut icon" />
 <style>
   * {
     /* include padding, etc., in box model */
-    /*box-sizing: border-box;*/
+    box-sizing: content-box;
   }
 
   *:focus {
@@ -31,6 +31,24 @@
   h1 {
     padding: 0 0 0 0;
     margin: 0 0 0 0;
+  }
+
+  .form-control {
+    max-height: 20px;
+  }
+
+  .navbar {
+    max-height: 50px !important;
+  }
+
+  .navbar-collapse {
+    max-height: 50px !important;
+  }
+
+  .navbar-brand {
+    max-height: 35px;
+    padding-bottom: 0;
+    padding-top: 15px;
   }
 
 </style>

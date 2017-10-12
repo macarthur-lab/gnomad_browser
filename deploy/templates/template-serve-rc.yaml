@@ -26,7 +26,7 @@ spec:
         image: gcr.io/{{ GCLOUD_PROJECT }}/{{ PROJECT_NAME }}serve:{{ BROWSER_VERSION }}-{{ DATA_VERSION }}-{{ BUILD_TIME }}
         env:
         - name: DEPLOYMENT_ENV
-          value: production
+          value: production 35.188.80.128
         - name: MONGO_HOST
           value: {{ MONGO_HOST }}
         - name: MONGO_PORT

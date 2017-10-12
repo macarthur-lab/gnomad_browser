@@ -87,7 +87,8 @@ development_config = {
   'GCLOUD_ZONE': 'us-east1-d',
 
   # infrastructure config
-  'EXTERNAL_IP': '104.196.46.19',
+  # 'EXTERNAL_IP': '104.196.46.19',
+  'EXTERNAL_IP': '35.196.242.244',
   'SERVICE_ACCOUNT_KEY_FILE': 'exac-gnomad-30ea80400948.json',
 
   # serving
