@@ -223,6 +223,7 @@ def get_awesomebar_result(db, query):
         query = query.lstrip('CHR')
     # Region
     m = R1.match(query)
+    print m
     if m:
         if int(m.group(3)) < int(m.group(2)):
             return 'region', 'invalid'

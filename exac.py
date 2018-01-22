@@ -59,17 +59,6 @@ if DEPLOYMENT_ENVIRONMENT == 'development':
      EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, 'gnomad.exomes.sites.X.vcf.bgz'))
      GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, 'gnomad.genomes.sites.coding.X.vcf.bgz'))
 
-if DEPLOYMENT_ENVIRONMENT == 'production':
-    EXOME_FILES_DIRECTORY = '/var/data/loading_data/exomes'
-    GENOME_FILES_DIRECTORY = '/var/data/loading_data/genomes'
-    EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF')))
-    GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, os.getenv('GENOMES_VCF_GLOB')))
-
-if DEPLOYMENT_ENVIRONMENT == 'production_test':
-    EXOME_FILES_DIRECTORY = '/var/data/loading_data/exomes'
-    GENOME_FILES_DIRECTORY = '/var/data/loading_data/genomes'
-    EXOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), EXOME_FILES_DIRECTORY, os.getenv('EXOMES_SINGLE_VCF_TEST')))
-    GENOMES_SITES_VCFS = glob.glob(os.path.join(os.path.dirname(__file__), GENOME_FILES_DIRECTORY, os.getenv('GENOMES_VCF_GLOB_TEST')))
 
 SHARED_FILES_DIRECTORY = '../data/loading_data/shared_files'
 READ_VIZ_DIRECTORY = '../data/readviz'
@@ -78,8 +67,8 @@ REGION_LIMIT = 1E5
 EXON_PADDING = 50
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DB_HOST='localhost',
-    DB_PORT=27017,
+    DB_HOST=MONGO_HOST,
+    DB_PORT=int(MONGO_PORT),
     DB_NAME='exac',
     DEBUG=True,
     SECRET_KEY='development key',

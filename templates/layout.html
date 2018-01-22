@@ -21,6 +21,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
     <script type="text/javascript" src="{{  url_for('static', filename='exac.js') }}"></script>
     <script type="text/javascript" src="{{  url_for('static', filename='gnomad.js') }}"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -103,13 +104,13 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div class="container-fluid jobs">
+<!-- <div class="container-fluid jobs">
     <p>
         Interested in working on the development of this resource?
         <a href="https://macarthurlab.org/jobs/">
             Apply here.
         </a>
     </p>
-</div>
+</div> -->
 {% block body %}{% endblock %}
 </body>
