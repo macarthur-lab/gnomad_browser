@@ -113,3 +113,6 @@ For testing, you can open up an interactive shell with:
 
     python manage.py shell
 
+Cross browser testing generously provided by:
+
+<a href="https://www.browserstack.com/"><img width="200px" src="https://bstacksupport.zendesk.com/attachments/token/airtOtwpHYsJj6MspvpNU26tf/?name=browserstack-logo-600x315.png" /></a>
