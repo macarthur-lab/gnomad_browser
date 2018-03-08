@@ -576,6 +576,28 @@ TODO: come up with a better way to position tooltip
   }
 }
 
+.notification {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(66, 133, 244);
+  width: 100%;
+}
+
+.notification a {
+  text-align: center;
+  margin-bottom: 0px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.notification p {
+  text-align: center;
+  margin-bottom: 0px;
+  color: #FFFFFF;
+  font-weight: normal;
+}
+
 .disclaimer {
   background-color: #B71C1C;
   color: #FFFFFF;
