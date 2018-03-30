@@ -1139,7 +1139,17 @@ def page_not_found(error):
 
 @app.route('/downloads')
 def downloads_page():
-    return render_template('downloads.html')
+    # json file with decriptions of VCF fields - for example:
+
+    json_file_path = "src/gnomad_vcf_header.json"
+    try:
+        with open(json_file_path) as f:
+            gnomad_vcf_header = json.load(f)
+    except Exception as e:
+        print "WARNING: couldn't parse %s: %s" % (json_file_path, e)
+        gnomad_vcf_header = []
+
+    return render_template('downloads.html', gnomad_vcf_header)
 
 @app.route('/about')
 def about_page():
