@@ -55,7 +55,7 @@
 
             $('.awesomebar').typeahead(
                 {
-                    autoselect: true,
+                    autoselect: false,
                 },
                 {
                     name: 'best-pictures',
@@ -65,6 +65,7 @@
             );
             $('.awesomebar').bind('typeahead:selected', function(obj, datum) {
                 window.location.href = '/awesome?query=' + datum.value;
+                consologe.log(obj, datum)
             });
         });
     </script>
