@@ -28,8 +28,11 @@ Now clone the repo:
 
 ### Dependencies
 
-Follow these instructions to get Python and Homebrew installed on your Mac:
-http://docs.python-guide.org/en/latest/starting/install/osx/
+These instructions assume you are using macOS and either
+[Homebrew](https://brew.sh) or [MacPorts](https://www.macports.org)
+for package management.
+
+#### Mongo
 
 Install MongoDB:
 
@@ -49,6 +52,11 @@ This local server needs to be running at all times when you are working on the s
 You could do this in the background if you want or set up some startup service,
 but I think it's easier just to open a tab you can monitor.
 
+#### Python
+
+Follow these instructions to get Python installed on your Mac:
+http://docs.python-guide.org/en/latest/starting/install/osx/
+
 Finally, you may want to keep the system in a virtualenv:
 
     sudo port install py27-virtualenv # Or whatever version
@@ -59,6 +67,13 @@ If so, you can create a python virtual environment where the browser will live:
     virtualenv exac_env
     source exac_env/bin/activate
 
+#### Node.js
+
+Follow these instructions to install Node.js with a package manager: https://nodejs.org/en/download/package-manager/
+
+Or download and install it directly from:
+https://nodejs.org/en/download/
+
 ### Installation
 
 Install the python requirements:
@@ -66,6 +81,12 @@ Install the python requirements:
     pip install -r requirements.txt
 
 Note that this installs xBrowse too. Some packages will require Python headers (python-dev on some systems).
+
+Install JavaScript dependencies and build gnomad.js:
+
+    cd gnomad_browser/gnomad
+    npm install
+    npm run build
 
 ### Setup
 
