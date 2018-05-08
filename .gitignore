@@ -9,7 +9,6 @@ gene_cache/
 exac_env/
 *npm-debug.log
 exac_env
-*dist
 *node_modules
 *public
 *gnomad.js

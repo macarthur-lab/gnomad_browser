@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:webpack": "webpack -d",
-    "build": "webpack --config webpack.config.build.js -d && cp ./dist/bundle.js ../static/gnomad.js",
+    "build": "webpack --config webpack.config.build.js -d",
     "test": "node_modules/.bin/mocha",
     "test:watch": "node_modules/.bin/mocha --watch",
     "start": "../exac_env/bin/python ../exac.py --port 5006"
