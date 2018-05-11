@@ -644,7 +644,9 @@
                                             {% endif %}
                                             <td id="table-count-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             <td id="table-number-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
-                                            <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                            {% if chrom != 'Y' %}
+                                                <td id="table-homozygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
+                                            {% endif %}
                                             {% if chrom == 'X' or chrom == 'Y' %}
                                                 <td id="table-hemizygotes-{{ pop.replace(' ', '').replace('(', '').replace(')', '') }}"></td>
                                             {% endif %}
