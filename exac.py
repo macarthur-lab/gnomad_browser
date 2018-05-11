@@ -264,17 +264,17 @@ def load_variants(sites_vcfs, collection_name):
     if len(sites_vcfs) == 0:
         raise IOError("No vcf file found")
     elif len(sites_vcfs) == 1:
-        load_variants_single_vcf(sites_vcfs, collection_name)
+        return load_variants_single_vcf(sites_vcfs, collection_name)
     else:
-        load_variants_chunks(sites_vcfs, collection_name)
+        return load_variants_chunks(sites_vcfs, collection_name)
 
 def load_exome_variants():
     exomes_sites_vcfs = app.config['EXOMES_SITES_VCFS']
-    load_variants(exomes_sites_vcfs, 'exome_variants')
+    return load_variants(exomes_sites_vcfs, 'exome_variants')
 
 def load_genome_variants():
     genomes_sites_vcfs = app.config['GENOMES_SITES_VCFS']
-    load_variants(genomes_sites_vcfs, 'genome_variants')
+    return load_variants(genomes_sites_vcfs, 'genome_variants')
 
 def drop_exome_variants():
     db = get_db()
