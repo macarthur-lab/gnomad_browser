@@ -786,7 +786,7 @@ def variant_page(variant_str):
             exac_base_coverage=exac['base_coverage'],
             gnomad_base_coverage=gnomad['base_coverage'],
 
-            consequences=exac['consequences'], # TODO clean these up
+            consequences=(exac['consequences'] if 'variant_id' in exac['variant'] else gnomad['consequences']), # TODO clean these up
             exac_consequences=exac['consequences'],
             gnomad_consequences=gnomad['consequences'],
 
