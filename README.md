@@ -1,3 +1,9 @@
+Notice
+=======
+
+This repository is no longer maintained. Development of the [gnomAD browser](https://gnomad.broadinstitute.org) has moved
+to [macarthur-lab/gnomadjs](https://github.com/macarthur-lab/gnomadjs). Please file browser related issues there.
+
 Usage
 =======
 
